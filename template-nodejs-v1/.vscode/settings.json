@@ -1,0 +1,7 @@
+{
+    "mochaExplorer.files": [
+        "test/*.js"
+    ],
+    "mochaExplorer.logpanel": true
+}
+    

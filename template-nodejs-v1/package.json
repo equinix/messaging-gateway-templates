@@ -1,0 +1,18 @@
+{
+  "name": "emg_template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/service-bus": "^1.1.8",
+    "fast-safe-stringify": "^2.0.6",
+    "uuid": "^3.3.2",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
+  }
+}
