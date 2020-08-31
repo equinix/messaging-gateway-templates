@@ -21,8 +21,7 @@ The Templates includes:
 ## Requirements
 
 1. Node.js Templates 
-
-- [Node.js](https://nodejs.org/en/download/) - v10.16.2+
+  - [Node.js](https://nodejs.org/en/download/) v10.16.2+
 
 2. Python Templates:
 
