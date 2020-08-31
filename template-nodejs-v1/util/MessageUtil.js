@@ -1,3 +1,35 @@
+/** EQUINIX MESSAGING GATEWAY TEMPLATE **/
+
+/*************************************************************************
+* 
+* EQUINIX CONFIDENTIAL
+* __________________
+* 
+*  © 2020 Equinix, Inc. All rights reserved.
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*
+* Terms of Use: https://www.equinix.com/company/legal/terms/
+*
+*************************************************************************/
+
+
 'use strict'
 const safeStringify = require('fast-safe-stringify');
 var sbb = require('./ServiceBusBase');
@@ -139,9 +171,9 @@ function processErrorResponse(errorObj, connectionString, entityName, mode) {
             if (error.Body.Description == 'Missing Endpoint in Connection String.' ||
                 (error.Body.Description).includes('The token has an invalid signature') ||
                 (error.Body.Description).includes('getaddrinfo ENOTFOUND')) {
-                return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using connection string : ${connectionString}`);
+                return formatErrorResponse(error.Body.StatusCode, `'Invalid incoming queue connection string. Either Client Shared Key Name/Shared Key value is invalid`);
             } else if ((error.Body.Description).includes('The messaging entity')) {
-                return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using queue name : ${entityName}`);
+                return formatErrorResponse(error.Body.StatusCode, `'Invalid connection string. Invalid incoming queue name for  ${entityName}`);
             } else {
                 return formatErrorResponse(500, 'Internal Server Error');
             }
@@ -149,9 +181,9 @@ function processErrorResponse(errorObj, connectionString, entityName, mode) {
             if (error.Body.Description == 'Missing Endpoint in Connection String.' ||
                 (error.Body.Description).includes('The token has an invalid signature') ||
                 (error.Body.Description).includes('getaddrinfo ENOTFOUND')) {
-                return formatErrorResponse(error.Body.StatusCode, `Error occured while reading message using connection string : ${connectionString}`);
+                return formatErrorResponse(error.Body.StatusCode, `Invalid outgoing queue connection string. Either Client Shared Key Name/Shared Key value is invalid`);
             } else if ((error.Body.Description).includes('The messaging entity')) {
-                return formatErrorResponse(error.Body.StatusCode, `Error occured while reading message using queue name : ${entityName}`);
+                return formatErrorResponse(error.Body.StatusCode, `'Invalid connection string. Invalid outgoing queue name for ${entityName}`);
             } else {
                 return formatErrorResponse(500, 'Internal Server Error');
             }
