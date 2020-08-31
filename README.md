@@ -1,8 +1,9 @@
 Templates for Equinix Messaging Gateway
-Equinix Messaging Gateway (EMG) is an event-based communication channel for Platform Equinix. EMG automates the creation, update, and closure or cancellation of SmartHands, Trouble Ticket, Work Visit and Shipments tickets along with notification of statuses such as 2-Way Communications, technician notes and status advancement. The Templates provide sample code for customers to integrate with EMG. These Templates are available in two versions ñ node.js and python. 
+Equinix Messaging Gateway (EMG) is an event-based communication channel for Platform Equinix. EMG automates the creation, update, and closure or cancellation of SmartHands, Trouble Ticket, Work Visit and Shipments tickets along with notification of statuses such as 2-Way Communications, technician notes and status advancement. The Templates provide sample code for customers to integrate with EMG. These Templates are available in two versions ‚Äì node.js and python. 
+
 Template Details 
 The Templates includes:
-* Template with sample code to integrate with EMG and create, update, cancel and get order status notifications for Equinix Ticket Types ñ SmartHands, Trouble Ticket, Work Visit.
+* Template with sample code to integrate with EMG and create, update, cancel and get order status notifications for Equinix Ticket Types ‚Äì SmartHands, Trouble Ticket, Work Visit.
 o EquinixSmartHandsTemplate
 o EquinixTroubleTicketTemplate
 o EquinixWorkVisitTemplate
@@ -21,7 +22,7 @@ o pytest-asyncio -v0.14.0+
 Prerequisites 
 * Visit Equinix Developer Platform & follow the steps to generate Client ID and Client Secret keys.
 * Node.js Templates:
-o Run "npm install" from the root directory to install azure-bus package and other dependent libraries as per ìpackage.jsonî
+o Run "npm install" from the root directory to install azure-bus package and other dependent libraries as per ‚Äúpackage.json‚Äù
 * Python Templates:
 o Install Azure Service Bus Package
 pip install azure-servicebus
