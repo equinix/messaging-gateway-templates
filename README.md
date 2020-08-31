@@ -1,68 +1,53 @@
-Templates for Equinix Messaging Gateway
+# Templates for Equinix Messaging Gateway
 Equinix Messaging Gateway (EMG) is an event-based communication channel for Platform Equinix. EMG automates the creation, update, and closure or cancellation of SmartHands, Trouble Ticket, Work Visit and Shipments tickets along with notification of statuses such as 2-Way Communications, technician notes and status advancement. The Templates provide sample code for customers to integrate with EMG. These Templates are available in two versions – node.js and python. 
 
-Template Details 
+---
+
+## Template Details 
 
 The Templates includes:
-* Template with sample code to integrate with EMG and create, update, cancel and get order status notifications for Equinix Ticket Types – SmartHands, Trouble Ticket, Work Visit.
 
-o EquinixSmartHandsTemplate
+1. Template with sample code to integrate with EMG and create, update, cancel and get order status notifications for Equinix Ticket Types – SmartHands, Trouble Ticket, Work Visit.
+ - EquinixSmartHandsTemplate
+ - EquinixTroubleTicketTemplate
+ - EquinixWorkVisitTemplate
 
-o EquinixTroubleTicketTemplate
+2. TestClient with sample code on how to integrate with EMG Templates following EMG message schemas.
+- /test/TestClient
 
-o EquinixWorkVisitTemplate
+3. Configurations for EMG queues. These configurations will be provided by Equinix during the onboarding process. 
+- /config/config
 
-* TestClient with sample code on how to integrate with EMG Templates following EMG message schemas.
+## Requirements
 
-o /test/TestClient
+1. Node.js Templates 
 
-* Configurations for EMG queues. These configurations will be provided by Equinix during the onboarding process. 
+- [Node.js](https://nodejs.org/en/download/) - v10.16.2+
 
-o /config/config
+2. Python Templates:
 
-Requirements
+- [Python](https://www.python.org/downloads/) - v3.8.5+
+- [Azure SDK for Python](https://azuresdkdocs.blob.core.windows.net/%24web/python/azure-servicebus/0.50.3/index.html) - v0.50.3+
+- [pytest](https://docs.pytest.org/en/stable/getting-started.html) - v6.0.1+
+- [pytest-asyncio](https://pypi.org/project/pytest-asyncio/) - v0.14.0+
 
-* Node.js Templates 
+## Prerequisites 
+1. Visit [Equinix Developer Platform](https://developer.equinix.com/) & follow the [steps](https://developer.equinix.com/docs/ecp-getting-started#generating-client-id-and-client-secret-key) to generate Client ID and Client Secret keys.
 
-o Node.js Installation - v10.16.2+
+2. Node.js Templates:
+- Run "npm install" from the root directory to install azure-bus package and other dependent libraries as per “package.json”
 
-* Python Templates:
-
-o Python Installation - v3.8.5+ 
-
-o Azure SDK for Python -v0.50.3+ 
-
-o pytest -v6.0.1+  
-
-o pytest-asyncio -v0.14.0+
-
-Prerequisites 
-
-* Visit Equinix Developer Platform & follow the steps to generate Client ID and Client Secret keys.
-
-* Node.js Templates:
-
-o Run "npm install" from the root directory to install azure-bus package and other dependent libraries as per “package.json”
-
-* Python Templates:
-
-o Install Azure Service Bus Package
-
+3. Python Templates:
+- Install Azure Service Bus Package
 pip install azure-servicebus
-
-o Install pytest framework to run Test Client:
-
+- Install pytest framework to run Test Client:
 pip install pytest
-
 pip install pytest-asyncio
 
-How to Run Test Client
-
-* Navigate to test/TestClient and run on individual tests to submit orders. 
-
-* After creating an order, take note of the ServicerId displayed in the console, and replace ORDER_NUMBER constant in TestClient.js. 
-
-* Output will be displayed in the console.
+## How to Run Test Client
+1. Navigate to test/TestClient and run on individual tests to submit orders. 
+2. After creating an order, take note of the ServicerId displayed in the console, and replace ORDER_NUMBER constant in TestClient.js. 
+3. Output will be displayed in the console.
 
 
 
