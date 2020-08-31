@@ -39,10 +39,15 @@ The Templates includes:
 
 3. Python Templates:
 - Install Azure Service Bus Package
-pip install azure-servicebus
+  ```sh
+   pip install azure-servicebus
+   ```
 - Install pytest framework to run Test Client:
-pip install pytest
-pip install pytest-asyncio
+  ```sh
+   pip install pytest
+   
+   pip install pytest-asyncio
+   ```
 
 ## How to Run Test Client
 1. Navigate to test/TestClient and run on individual tests to submit orders. 
