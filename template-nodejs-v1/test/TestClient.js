@@ -34,6 +34,7 @@
 const workVisitTemplate = require('../EquinixWorkVisitTemplate')
 const smartHandsTemplate = require('../EquinixSmartHandsTemplate')
 const troubleTicketTemplate = require('../EquinixTroubleTicketTemplate')
+const shipmentTemplate = require('../EquinixShipmentTemplate')
 const safeStringify = require('fast-safe-stringify');
 const config = require('../config/config');
 
@@ -128,11 +129,131 @@ const UPDATE_TROUBLETICKET_PAYLOAD = {
     "Description": "Test description for TroubleTicket Update",
     "Attachments": [],
     "ServicerId": ORDER_NUMBER,
-    "CallFromCage": false,
+    "CallFromCage": false
 }
 
 const CANCEL_TROUBLETICKET_PAYLOAD = {
     "Description": "Test description for TroubleTicket Cancel",
+    "ServicerId": ORDER_NUMBER,
+    "State": "Cancelled"
+}
+
+const CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD = {
+    "RequestorId": "102894102Test1234",
+    "RequestorIdUnique": false,
+    "CustomerContact": "<CUSTOMER_CONTACT>",
+    "Operation": "0000/0000",
+    "Location": "<LOCATION>",
+    "Description": "Test description for Inbound Shipment Create",
+    "Attachments": [],
+    "CarrierName": "TEST",
+    "ShipmentDateTime": "2020-09-20T07:05:00.000Z",
+    "ShipmentIdentifier": "TRACK123456",
+    "ServiceDetails": {
+      "NoOfBoxes": 99,
+      "DeliverToCage": false
+    }
+}
+
+const CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD = {
+    "RequestorId": "102894102Test1234",
+    "RequestorIdUnique": false,
+    "CustomerContact": "<CUSTOMER_CONTACT>",
+    "Operation": "0000/0001",
+    "Location": "<LOCATION>",
+    "Description": "Test description for Inbound Shipment Create",
+    "Attachments": [],
+    "CarrierName": "TEST",
+    "ShipmentDateTime": "2020-09-20T04:05:00.000Z",
+    "ServiceDetails": {
+      "NoOfBoxes": 99,
+      "DeliverToCage": false
+    }
+}
+
+const CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD = {
+    "RequestorId": "102894102Test1234",
+    "RequestorIdUnique": false,
+    "Operation": "0001/0000",
+    "Location": "<LOCATION>",
+    "CustomerContact": "<CUSTOMER_CONTACT>",
+    "Description": "Test description for Outbound Shipment Create",
+    "Attachments": [],
+    "CarrierName": "TEST",
+    "ShipmentIdentifier": "12345dse456546456",
+    "ShipmentDateTime": "2020-09-20T10:05:00.000Z",
+    "ShipmentLabel": [{ "Name": "atta1.jpeg", "Url": "https://eqixazurestorage.blob.core.windows.net/emg-download-blob/atta1.jpeg" }],
+    "ShipmentLabelInsideBox": false,
+    "ServiceDetails": {
+          "NoOfBoxes": 3,
+          "DeclaredValue": "3",
+          "ShipmentDescription": "Test ShipmentDescription",
+          "ShipToName": "test",
+          "ShipToAddress": "1188 test address",
+          "ShipToCity": "Sunnyvale",
+          "ShipToCountry": "US",
+          "ShipToState": "CALIFORNIA",
+          "ShipToZipCode": "94085",
+          "ShipToPhoneNumber": "+1 1331313",
+          "ShipToCarrierAccountNumber": "111",
+          "InsureShipment": false,
+          "PickUpFromCageSuite": false,
+        }
+}
+
+const CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD = {
+    "RequestorId": "102894102Test1234",
+    "RequestorIdUnique": false,
+    "Operation": "0001/0001",
+    "Location": "<LOCATION>",
+    "CustomerContact": "<CUSTOMER_CONTACT>",
+    "Description": "Test description for Outbound Shipment Create",
+    "Attachments": [],
+    "ShipmentDateTime": "2020-09-20T07:05:00.000Z",
+    "ShipmentLabelInsideBox": false
+}
+
+const UPDATE_INBOUNDSHIPMENT_PAYLOAD = {
+    "RequestorId": "102894102Test1234",
+    "ServicerId": ORDER_NUMBER,
+    "Description": "Test description for Inbound Shipment Update",
+    "Attachments": [],
+    "CarrierName": "OTHER",
+    "ServiceDetails": {
+        "NoOfBoxes": 999,
+        "DeliverToCage": true
+    }
+}
+
+const UPDATE_OUTBOUNDSHIPMENT_PAYLOAD = {
+    "RequestorId": "102894102Test1234",
+    "ServicerId": ORDER_NUMBER,
+    "Attachments": [],
+    "Description": "Test description for Outbound Shipment Update",
+    "ShipmentIdentifier": "12345dse456546456",
+    "ShipmentDateTime": "2020-09-20T07:05:00.000Z",
+    "CarrierName": "OTHER",
+    "ShipmentLabelInsideBox": true,
+    "ServiceDetails": {
+      "NoOfBoxes": 3,
+      "DeclaredValue": "3",
+      "ShipmentDescription": "Test ShipmentDescription",
+      "ShipToName": "test",
+      "ShipToAddress": "1188 test address",
+      "ShipToCity": "Sunnyvale",
+      "ShipToCountry": "US",
+      "ShipToState": "CALIFORNIA",
+      "ShipToZipCode": "94085",
+      "ShipToPhoneNumber": "+1 1331313",
+      "ShipToCarrierAccountNumber": "111",
+      "InsureShipment": false,
+      "PickUpFromCageSuite": false,
+    }
+}
+
+const CANCEL_SHIPMENT_PAYLOAD = {
+    "Description": "Test description for Shipment Cancel",
+    "RequestorId": "102894102Test1234",
     "ServicerId": ORDER_NUMBER,
     "State": "Cancelled"
 }
@@ -249,5 +370,82 @@ describe('EMG Template Test Suite', function () {
         //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Pending Customer Input, Cancelled, Closed)
         const result = await troubleTicketTemplate.getNotifications(null, ORDER_NUMBER, null, "Open")
         console.log("\n\nReceiving TroubleTicket Notification Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Create InboundShipment Carrier Type', async function () {
+        console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipment(
+            JSON.stringify(CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Create InboundShipment Customer Carry Type', async function () {
+        console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipment(
+            JSON.stringify(CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Create OutboundShipment Carrier Type', async function () {
+        console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipment(
+            JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Create OutboundShipment Customer Carry Type', async function () {
+        console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipment(
+            JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Update InboundShipment', async function () {
+        console.log("\n\nSending Update Inbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.updateShipment(
+            JSON.stringify(UPDATE_INBOUNDSHIPMENT_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Update Inbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Update OutboundShipment', async function () {
+        console.log("\n\nSending Update Outbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.updateShipment(
+            JSON.stringify(UPDATE_OUTBOUNDSHIPMENT_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Update Outbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Cancel Shipment', async function () {
+        console.log("\n\nSending Cancel Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.cancelShipment(
+            JSON.stringify(CANCEL_SHIPMENT_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Cancel Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Get Notifications for Shipment, Open', async function () {
+        console.log("\n\nSending Shipment Notification Request Message  **********\n\n")
+        //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Pending Customer Input, Cancelled, Closed)
+        const result = await shipmentTemplate.getNotifications(null, ORDER_NUMBER, null, "Open")
+        console.log("\n\nReceiving Shipment Notification Response Message  **********\n\n", safeStringify(result))
     })
 })
