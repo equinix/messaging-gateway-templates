@@ -1,42 +1,11 @@
 /** EQUINIX MESSAGING GATEWAY TEST CLIENT **/
 
-/*************************************************************************
-* 
-* EQUINIX CONFIDENTIAL
-* __________________
-* 
-*  © 2020 Equinix, Inc. All rights reserved.
-* 
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*
-* Terms of Use: https://www.equinix.com/company/legal/terms/
-*
-*************************************************************************/
-
-
 'use strict'
 const workVisitTemplate = require('../EquinixWorkVisitTemplate')
 const smartHandsTemplate = require('../EquinixSmartHandsTemplate')
 const troubleTicketTemplate = require('../EquinixTroubleTicketTemplate')
 const shipmentTemplate = require('../EquinixShipmentTemplate')
 const safeStringify = require('fast-safe-stringify');
-const config = require('../config/config');
 
 var ORDER_NUMBER = "<ORDER_NUMBER>";
 var CLIENT_ID = "<CLIENT_ID>"; // Will be supplied by Customer
@@ -86,6 +55,76 @@ const CANCEL_WORKVISIT_PAYLOAD = {
     "ServicerId": ORDER_NUMBER,
     "Description": "Test description for WorkVisit Cancel",
 }
+
+const CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
+    "ibxLocation": {
+        "cages": [
+            {
+                "cage": "<LOCATION>",
+                "accountNumber":"1"
+
+            }
+        ],
+        "ibx": "<IBX>"
+    },
+    "attachments": [],
+    "customerReferenceNumber": "102894102Test1234",
+    "serviceDetails": {
+        "schedule": {
+            "startDateTime": "2020-09-20T07:05:00.000Z",
+            "endDateTime": "2020-09-21T10:00:00Z"
+        },
+        "openCabinet": true,
+        "additionalDetails": "Test description for WorkVisit Create",
+        "visitors": [
+            {
+                "firstName": "Test FirstName",
+                "lastName": "Test LastName",
+                "company": "Test Company"
+            }
+        ]
+    },
+    "contacts": [
+        {
+            "contactType": "ORDERING",
+            "userName": "<USER_NAME>"
+        },
+        {
+            "contactType": "TECHNICAL",
+            "userName": "<USER_NAME>",
+            "workPhonePrefToCall": "ANYTIME"
+        },
+        {
+            "contactType": "NOTIFICATION",
+            "userName": "<USER_NAME>"
+        }
+    ]
+}
+
+const UPDATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
+    "attachments": [],
+    "orderNumber": ORDER_NUMBER,
+    "serviceDetails": {
+        "startDateTime": "2020-09-25T07:05:00.000Z",
+        "endDateTime": "2020-09-27T10:00:00Z",
+        "openCabinet": false,
+        "additionalDetails": "Test description for WorkVisit Update",
+        "visitors": [
+            {
+                "firstName": "Test FirstName New",
+                "lastName": "Test LastName New",
+                "company": "Test Company New"
+            }
+        ]
+    }
+}
+
+const CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
+    "orderNumber": ORDER_NUMBER,
+    "cancellationReason": "Test description for WorkVisit Cancel"
+}
+
+
 
 const CREATE_SMARTHAND_PAYLOAD = {
     "CustomerContact": "<CUSTOMER_CONTACT>",
@@ -260,7 +299,7 @@ const CANCEL_SHIPMENT_PAYLOAD = {
 
 describe('EMG Template Test Suite', function () {
     this.timeout(10000000);
-    it('#Create WorkVisit', async function () {
+    it('# Create WorkVisit', async function () {
         console.log("\n\nSending Create WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.createWorkVisit(
             JSON.stringify(CREATE_WORKVISIT_PAYLOAD),
@@ -270,7 +309,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Update WorkVisit', async function () {
+    it('# Update WorkVisit', async function () {
         console.log("\n\nSending Update WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.updateWorkVisit(
             JSON.stringify(UPDATE_WORKVISIT_PAYLOAD),
@@ -280,10 +319,40 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Cancel WorkVisit', async function () {
+    it('# Cancel WorkVisit', async function () {
         console.log("\n\nSending Cancel WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.cancelWorkVisit(
             JSON.stringify(CANCEL_WORKVISIT_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Create WorkVisit Extension', async function () {
+        console.log("\n\nSending Create WorkVisit Request Message as per API Schema  **********\n\n")
+        const result = await workVisitTemplate.createWorkVisitExtn(
+            JSON.stringify(CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
+            CLIENT_ID,
+            CLIENT_SECRET
+        );
+        console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Update WorkVisit Extension', async function () {
+        console.log("\n\nSending Update WorkVisit Request Message as per API Schema **********\n\n")
+        const result = await workVisitTemplate.updateWorkVisitExtn(
+            JSON.stringify(UPDATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('#Cancel WorkVisit Extension', async function () {
+        console.log("\n\nSending Cancel WorkVisit Request Message as per API Schema **********\n\n")
+        const result = await workVisitTemplate.cancelWorkVisitExtn(
+            JSON.stringify(CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
             CLIENT_ID,
             CLIENT_SECRET
         )
