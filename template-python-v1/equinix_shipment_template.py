@@ -1,11 +1,11 @@
-# EQUINIX MESSAGING GATEWAY TROUBLE TICKET TEMPLATE
+# EQUINIX MESSAGING GATEWAY SHIPMENT TEMPLATE
 
 # ************************************************************************
 # 
 #  EQUINIX CONFIDENTIAL
 # __________________
 # 
-#   Â© 2020 Equinix, Inc. All rights reserved.
+#   © 2020 Equinix, Inc. All rights reserved.
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,12 +36,12 @@ import time
 import uuid
 
 from util.message_util import (CANCEL_OPERATION, CREATE_OPERATION,
-                               TICKET_TYPE_BREAKFIX, UPDATE_OPERATION,
+                               TICKET_TYPE_SHIPPING, UPDATE_OPERATION,
                                message_processor, read_from_queue)
 
 
-async def create_troubleticket(request_json, client_id, client_secret):
-    """Sends the create Trouble Ticket message to Equinix Messaging Gateway.
+async def create_shipment(request_json, client_id, client_secret):
+    """Sends the create Shipment message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -55,13 +55,11 @@ async def create_troubleticket(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CREATE_OPERATION, TICKET_TYPE_BREAKFIX, client_id, client_secret)
+    response_json = await message_processor(request_json_obj, CREATE_OPERATION, TICKET_TYPE_SHIPPING,client_id, client_secret)
     return response_json
 
-
-
-async def update_troubleticket(request_json, client_id, client_secret):
-    """Sends the update Trouble Ticket message to Equinix Messaging Gateway.
+async def update_shipment(request_json, client_id, client_secret):
+    """Sends the update Shipment message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -75,13 +73,11 @@ async def update_troubleticket(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, UPDATE_OPERATION, TICKET_TYPE_BREAKFIX, client_id, client_secret)
+    response_json = await message_processor(request_json_obj, UPDATE_OPERATION, TICKET_TYPE_SHIPPING, client_id, client_secret)
     return response_json
 
-
-
-async def cancel_troubleticket(request_json, client_id, client_secret):
-    """Sends the cancel Trouble Ticket message to Equinix Messaging Gateway.
+async def cancel_shipment(request_json, client_id, client_secret):
+    """Sends the cancel Shipment message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -95,19 +91,17 @@ async def cancel_troubleticket(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_BREAKFIX, client_id, client_secret)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SHIPPING, client_id, client_secret)
     return response_json
-
-
 
 async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state):
     """Receive ticket notification from Equinix Messaging Gateway that matches the provided filter criteria.
 
         Args:
-            requestor_id (str): Customer Reference Number of the Trouble Ticket.
-            servicer_id (str): Ticket Number of the Trouble Ticket.
-            activity_id (str): Activity Number of the Trouble Ticket.
-            ticket_state (str): State of the Trouble Ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed). 
+            requestor_id (str): Customer Reference Number of the Shipment ticket.
+            servicer_id (str): Ticket Number of the Shipment ticket.
+            activity_id (str): Activity Number of the Shipment ticket.
+            ticket_state (str): State of the Shipment ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed). 
 
         Raises:
             obj: returns an error if Equinix Messaging Gateway returns an error while retrieving notification.
@@ -115,7 +109,7 @@ async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state
         Returns:
             str: Received notification message
         """
-    all_filters = {"ResourceType": TICKET_TYPE_BREAKFIX}
+    all_filters = {"ResourceType": TICKET_TYPE_SHIPPING}
     if requestor_id:
         all_filters.update({"RequestorId": requestor_id})
     if servicer_id:

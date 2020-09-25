@@ -35,13 +35,13 @@ import json
 import time
 import uuid
 
-from util.message_util import (exception_handler, loop_read_queue,
-                               message_processor, response_message_error,
-                               response_message_success)
+from util.message_util import (CANCEL_OPERATION, CREATE_OPERATION,
+                               TICKET_TYPE_SMARTHANDS, UPDATE_OPERATION,
+                               message_processor, read_from_queue)
 
 
 async def create_smarthands(request_json, client_id, client_secret):
-    '''Sends the given create SmartHands message to Equinix Incoming Queue.
+    """Sends the create SmartHands message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -49,33 +49,18 @@ async def create_smarthands(request_json, client_id, client_secret):
             client_secret (str): Equinix issued client_secret.
 
         Raises:
-            obj: returns an error while processing message.
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
         Returns:
             str: Received response message
-        '''
-    ERROR_MESSAGE = "Processing failed with following error: "
-    request_json_obj = json.loads(request_json)
-    try:
-        service_bus_response = await message_processor(request_json_obj, "Create", "SmartHands",client_id, client_secret)
-        if 'errors' in service_bus_response:
-            return service_bus_response
-        response_json_obj = json.loads(service_bus_response)
-        if response_json_obj["Body"]["StatusCode"] == 201 :
-            return response_message_success(response_json_obj)
-        else:
-            if response_json_obj["Body"]["Description"] in ERROR_MESSAGE:
-                res = json.loads(response_json_obj["Body"]["Description"].replace(ERROR_MESSAGE, ""))
-                res["statusCode"] = response_json_obj["Body"]["StatusCode"]
-                return res
-            else:
-                return response_message_error(response_json_obj)
-    except Exception as err:
-        return exception_handler(err, 400)
-
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret)
+    return response_json
+               
 
 async def update_smarthands(request_json, client_id, client_secret):
-    '''Sends the given update SmartHands message to Equinix Incoming Queue.
+    """Sends the update SmartHands message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -83,36 +68,18 @@ async def update_smarthands(request_json, client_id, client_secret):
             client_secret (str): Equinix issued client_secret.
 
         Raises:
-            obj: returns an error while processing message.
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
         Returns:
             str: Received response message
-        '''
-    ERROR_MESSAGE = "Processing failed with following error: "
-    MULTIPLE_MESSAGE_ERROR = "Multiple tickets found for RequestorID"
-    request_json_obj = json.loads(request_json)
-    try:
-        service_bus_response = await message_processor(request_json_obj, "Update", "SmartHands", client_id, client_secret)
-        if 'errors' in service_bus_response:
-            return service_bus_response
-        response_json_obj = json.loads(service_bus_response)
-        if response_json_obj["Body"]["StatusCode"] == 202 :
-            return response_message_success(response_json_obj)
-        else:
-            if response_json_obj["Body"]["Description"] in ERROR_MESSAGE:
-                res = json.loads(response_json_obj["Body"]["Description"].replace(ERROR_MESSAGE, ""))
-                res["statusCode"] = response_json_obj["Body"]["StatusCode"]
-                return res
-            elif response_json_obj["Body"]["StatusCode"] == 404 or MULTIPLE_MESSAGE_ERROR in response_json_obj["Body"]["Description"]:
-                return exception_handler(MULTIPLE_MESSAGE_ERROR, 400)
-            else:
-                return response_message_error(response_json_obj)
-    except Exception as err:
-        return exception_handler(err, 400)
-
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret)
+    return response_json
+   
 
 async def cancel_smarthands(request_json, client_id, client_secret):
-    '''Sends the given cancel SmartHands message to Equinix Incoming Queue.
+    """Sends the cancel SmartHands message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -120,53 +87,39 @@ async def cancel_smarthands(request_json, client_id, client_secret):
             client_secret (str): Equinix issued client_secret.
 
         Raises:
-            obj: returns an error while processing message.
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
         Returns:
             str: Received response message
-        '''
-    ERROR_MESSAGE = "Processing failed with following error: "
+        """
     request_json_obj = json.loads(request_json)
-    try:
-        service_bus_response = await message_processor(request_json_obj, "Cancelled", "SmartHands", client_id, client_secret)
-        if 'errors' in service_bus_response:
-            return service_bus_response
-        response_json_obj = json.loads(service_bus_response)
-        if response_json_obj["Body"]["StatusCode"] == 202 :
-            return response_message_success(response_json_obj)
-        else:
-            if response_json_obj["Body"]["Description"] in ERROR_MESSAGE:
-                res = json.loads(response_json_obj["Body"]["Description"].replace(ERROR_MESSAGE, ""))
-                res["statusCode"] = response_json_obj["Body"]["StatusCode"]
-                return res
-            else:
-                return response_message_error(response_json_obj)
-    except Exception as err:
-        return exception_handler(err, 400)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret)
+    return response_json
 
-async def get_notifications(customer_reference_number, servicer_id, activity_id, state):
-    '''Receive SmartHands notification that matches the filter criteria from Equinix Outgoing Queue.
+  
+async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state):
+    """Receive ticket notification from Equinix Messaging Gateway that matches the provided filter criteria.
 
         Args:
-            customer_reference_number (str): Customer Reference Number used for searching SmartHands order
-            servicer_id (str): Order Number used for searching SmartHands order
-            activity_id (str): Activity ID used for searching SmartHands Activity
-            state (str): SmartHands order state (eg: Open, InProgress, Pending Customer Input, Cancelled, Closed) 
+            requestor_id (str): Customer Reference Number of the SmartHands ticket.
+            servicer_id (str): Ticket Number of the SmartHands ticket.
+            activity_id (str): Activity Number of the SmartHands ticket.
+            ticket_state (str): State of the SmartHands ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed). 
 
         Raises:
-            obj: if the service returns an error while retrieving notification.
+            obj: returns an error if Equinix Messaging Gateway returns an error while retrieving notification.
 
         Returns:
-            str: Received response message
-        '''
-    all_filters = {"ResourceType": "SmartHands"}
-    if customer_reference_number:
-        all_filters.update({"RequestorId": customer_reference_number})
+            str: Received notification message
+        """
+    all_filters = {"ResourceType": TICKET_TYPE_SMARTHANDS}
+    if requestor_id:
+        all_filters.update({"RequestorId": requestor_id})
     if servicer_id:
         all_filters.update({"ServicerId": servicer_id})
     if activity_id:
         all_filters.update({"Activity": activity_id})
-    if state:
-        all_filters.update({"State": state})
-    queue_message = await loop_read_queue( None, all_filters)
-    return queue_message
+    if ticket_state:
+        all_filters.update({"State": ticket_state})
+    notification_msg = await read_from_queue( None, all_filters)
+    return notification_msg

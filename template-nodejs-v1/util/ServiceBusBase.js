@@ -2,12 +2,12 @@
 
 /*************************************************************************
 * 
-* EQUINIX CONFIDENTIAL
+ * EQUINIX CONFIDENTIAL
 * __________________
 * 
-*  © 2020 Equinix, Inc. All rights reserved.
+ *  © 2020 Equinix, Inc. All rights reserved.
 * 
-* Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -28,11 +28,10 @@
 * Terms of Use: https://www.equinix.com/company/legal/terms/
 *
 *************************************************************************/
-
 'Option Strict';
 const safeStringify = require('fast-safe-stringify')
 const { ServiceBusClient} = require("@azure/service-bus");
-
+const config = require('../config/config');
 
 function createServiceBusClient(connectionString) {
     var sbc = ServiceBusClient.createFromConnectionString(connectionString);
@@ -70,11 +69,32 @@ function serializeBody(msg) {
     }
 }
 
+async function sendMessageToQueue(payload, label) {
+    try {
+        var sbns = createServiceBusClient(config.EQUINIX_INCOMING_QUEUE_CONNECTION_STRING);
+        var tc = createTopicClient(sbns, config.EQUINIX_INCOMING_QUEUE);
+        var sender = getSender(tc);
+        const messageToSend = {
+            body: payload,
+            label: label
+        };
+        await sendMessage(sender, messageToSend);
+        await closeSender(sender);
+        await closeServiceBusClient(sbns);
+    } catch (e) {
+        throw Error(
+            safeStringify(formatError(400,e.message))
+        );
+    } 
+}
+
+
 module.exports = {
     createServiceBusClient: createServiceBusClient,
     closeServiceBusClient: closeServiceBusClient,
     createTopicClient: createTopicClient,
     getSender: getSender,
     sendMessage: sendMessage,
-    closeSender: closeSender
+    closeSender: closeSender,
+    sendMessageToQueue: sendMessageToQueue
 }

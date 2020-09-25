@@ -1,22 +1,22 @@
 # EQUINIX MESSAGING GATEWAY TEMPLATE
 
 # ************************************************************************
-# 
+#
 #  EQUINIX CONFIDENTIAL
 # __________________
-# 
+#
 #   © 2020 Equinix, Inc. All rights reserved.
-# 
+#
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,119 +24,69 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 # Terms of Use: https://www.equinix.com/company/legal/terms/
-# 
+#
 # ************************************************************************
 
 import datetime
 import json
 import time
 import uuid
-
-from azure.servicebus.aio import ReceiveSettleMode, ServiceBusClient
+from datetime import timezone
+from http import HTTPStatus
 
 from config.config import (EQUINIX_INCOMING_QUEUE, EQUINIX_OUTGOING_QUEUE,
                            EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING, SOURCE_ID)
-from util.service_bus_base import send_to_topic_message
+from util.service_bus_base import read_messages_from_queue, send_message_to_queue
+
+
+FAILED_ESTABLISH_CONNECTION = "Please confirm target hostname exists"
+INVALID_ENTITY = "Invalid connection string. Please check the target host"
+INVALID_INCOMING_QUEUE_CONNECTION = "Invalid incoming queue connection string. Either NameSpace or Client Shared Key Name/Shared Key value is invalid."
+INVALID_OUTGOING_QUEUE_CONNECTION = "Invalid outgoing queue connection string. Either Client Shared Key Name/Shared Key value is invalid."
+INVALID_TOKEN_SIGNATURE = "CBS Token authentication failed"
+INTERNAL_SERVER_ERROR = 'Internal Server Error'
+ACK = "Ack"
+
+CREATE_OPERATION = "Create"
+UPDATE_OPERATION = "Update"
+CANCEL_OPERATION = "Cancelled"
+TICKET_TYPE_SHIPPING = "Shipping"
+TICKET_TYPE_SMARTHANDS = "SmartHands"
+TICKET_TYPE_WORKVISIT = "WorkVisit"
+TICKET_TYPE_BREAKFIX = "BreakFix"
 
 
 def datetime_iso_format(date):
     return date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
-async def create_workvisit_wrapper_helper(json_obj):
-    visitor_array = []
-    temp = {
-        "FirstName":"Test FirstName",
-        "LastName":"Test LastName",
-        "CompanyName":"Test Company"
-    }
-    for visitor in json_obj["serviceDetails"]["visitors"]:
-        temp["FirstName"] = visitor["firstName"]
-        temp["LastName"] = visitor["lastName"]
-        temp["CompanyName"] = visitor["company"]
-        visitor_array.append(temp)
-
-    res = {
-        "CustomerContact": json_obj["contacts"][0]["userName"],
-        "RequestorId": json_obj["customerReferenceNumber"],
-        "RequestorIdUnique": False,
-        "Location": json_obj["ibxLocation"]["cages"][0]["cage"],
-        "Attachments": json_obj["attachments"],
-        "Description": json_obj["serviceDetails"]["additionalDetails"],
-        "ServiceDetails": {
-            "StartDateTime": json_obj["serviceDetails"]["schedule"]["startDateTime"],
-            "EndDateTime": json_obj["serviceDetails"]["schedule"]["endDateTime"],
-            "OpenCabinet": json_obj["serviceDetails"]["openCabinet"],
-            "Visitors": visitor_array
-        }
-    }
-    return res
-
-async def update_workvisit_wrapper_helper(json_obj):
-    res = {
-        "ServicerId": json_obj["orderNumber"] if "orderNumber" in json_obj else None,
-        "RequestorId": json_obj["customerReferenceNumber"] if "customerReferenceNumber" in json_obj else None,
-        "Attachments": json_obj["attachments"] if "attachments" in json_obj else None,
-        "Description": json_obj["serviceDetails"]["additionalDetails"] if ("serviceDetails" in json_obj and "additionalDetails" in json_obj['serviceDetails']) else None,
-        "ServiceDetails": {
-            "StartDateTime": json_obj["serviceDetails"]["startDateTime"] if ("serviceDetails" in json_obj and "startDateTime" in json_obj["serviceDetails"]) else None,
-            "EndDateTime": json_obj["serviceDetails"]["endDateTime"] if ("serviceDetails" in json_obj and "endDateTime" in json_obj["serviceDetails"]) else None,
-            "OpenCabinet": json_obj["serviceDetails"]["openCabinet"] if ("serviceDetails" in json_obj and "openCabinet" in json_obj["serviceDetails"]) else None,
-            "Visitors": json_obj["serviceDetails"]["visitors"] if ("serviceDetails" in json_obj and "visitors" in json_obj["serviceDetails"]) else None
-        }
-    }
-    return res
-
-
-
-async def cancel_workvisit_wrapper_helper(json_obj):
-    res = {
-        "State": "Cancelled",
-        "RequestorId": json_obj["customerReferenceNumber"] if 'customerReferenceNumber' in json_obj else None,
-        "ServicerId": json_obj["orderNumber"] if 'orderNumber' in json_obj else None,
-        "Attachments": json_obj["attachments"] if 'attachments' in json_obj else None,
-        "Description": json_obj["cancellationReason"] if 'cancellationReason' in json_obj else None
-    }
-    return res
-
-
 async def message_processor(json_obj, action_verb, resource_type, client_id, client_secret):
     verb = action_verb
-    null = None
-    body_payload = ""
 
     if action_verb == "Cancelled":
         verb = "Update"
 
-    if resource_type == "WorkVisit":
-        if action_verb == "Create":
-            body_payload = await create_workvisit_wrapper_helper(json_obj)
-        elif action_verb == "Update":
-            body_payload = await update_workvisit_wrapper_helper(json_obj)
-        elif action_verb == "Cancelled":
-            body_payload = await cancel_workvisit_wrapper_helper(json_obj)
-        json_obj = body_payload
-
-    message_input = get_payload(json_obj, verb, resource_type, client_id, client_secret)
+    message_input = create_payload(
+        json_obj, verb, resource_type, client_id, client_secret)
     message_input["Task"] = json.dumps(message_input["Task"])
     message_id = json.loads(message_input["Task"])["Id"]
-    message_to_send = json.dumps(message_input)
     try:
-        await send_to_topic_message(EQUINIX_INCOMING_QUEUE, message_to_send, "IOMA-Message")
-        queueMsg = await loop_read_queue( message_id, null)
-        return queueMsg
+        send_message_to_queue(json.dumps(message_input))
     except Exception as err:
-        if "Invalid authorization token signature" in err.args[0]:
-             return exception_handler("Invalid incoming queue connection string. Either Client Shared Key Name/Shared Key value is invalid.", 400)
-        if err.status_code == 404 or "AzureMissingResourceHttpError" in err.args[0]:
-            return exception_handler("Invalid connection string. Invalid incoming queue name for {0}".format(EQUINIX_INCOMING_QUEUE), 400)
-        
+        return process_error_response(err, "send", json.loads(message_input["Task"]))
+    try:
+        queue_msg = await read_from_queue(message_id, None)
+        if queue_msg == None:
+            return json.loads(json.dumps(format_error_response(HTTPStatus.NOT_FOUND, "Order is still Processing", message_input)))
+        else:
+            return json.loads(queue_msg)
+    except Exception as err:
+        return process_error_response(err, "receive", json.loads(message_input["Task"]))
 
 
-def get_payload(json_obj, verb, resource_type, client_id, client_secret):
+def create_payload(json_obj, verb, resource_type, client_id, client_secret):
     authentication = {}
-    null = None
     message_input = {
         "Task": {
             "Id": str(uuid.uuid4()),
@@ -145,9 +95,9 @@ def get_payload(json_obj, verb, resource_type, client_id, client_secret):
             "Version": "1.0",
             "Resource": resource_type,
             "ContentType": "application/json",
-            "CreateTimeUTC": str(datetime_iso_format(datetime.datetime.now())),
-            "OriginationId": null,
-            "OriginationVerb": null,
+            "CreateTimeUTC": str(datetime_iso_format(datetime.datetime.now(tz=timezone.utc))),
+            "OriginationId": None,
+            "OriginationVerb": None,
             "Body": json_obj
         }
     }
@@ -162,100 +112,115 @@ def get_payload(json_obj, verb, resource_type, client_id, client_secret):
     return message_input
 
 
-def response_message_success(response_json_obj):
-    res = {
-        "status": "Success",
-        "Description": response_json_obj["Body"]["Description"],
-        "errorCode": "",
-        "errorMessage": ""
-    }
-    res["statusCode"] = response_json_obj["Body"]["StatusCode"]
-    return res
+def format_error(status_code, description):
 
-
-def response_message_error(response_json_obj):
-    res = {
-        "errors": [{
-            "code": response_json_obj["Body"]["StatusCode"],
-            "message": response_json_obj["Body"]["Description"]
-        }]
-    }
-    res["statusCode"] = response_json_obj["Body"]["StatusCode"]
-    return res
-
-
-def wv_response_message_error(response_json_obj):
-    res = {
-        "errors": [{
-            "code": response_json_obj["Body"]["StatusCode"],
-            "message": response_json_obj["Body"]["Description"]
-        }]
-    }
-    return res
-
-
-def create_wv_response_message_success(response_json_obj, request_json_obj):
-    null = None
-    res = {
-        "successes": [
-            {
-                "ibxLocation": {
-                    "ibxTime": null,
-                    "timezone": null,
-                    "ibx": null,
-                    "region": null,
-                    "address1": null,
-                    "city": null,
-                    "state": null,
-                    "country": null,
-                    "zipCode": null,
-                    "cageDetails": [
-                        {
-                            "cage": request_json_obj["ibxLocation"]["cages"][0]["cage"],
-                            "cageUSID": null,
-                            "systemName": null,
-                            "accountNumber": null,
-                            "cabinets": [
-                                {
-                                    "cabinet": null
-                                }
-                            ],
-                            "notes": [
-                                {
-                                    "noteDescription": null,
-                                    "noteType": ""
-                                }
-                            ],
-                            "multiCabinet": False
-                        }
-                    ]
-                },
-                "response": {
-                    "OrderNumber": response_json_obj["Body"]["ServicerId"]
-                }
-            }
-        ]}
-    res["statusCode"] = response_json_obj["Body"]["StatusCode"]
-    return res
-
-
-def exception_handler(err, status_code):
-    res = {
-            "errors": [{
-                "code": status_code,
-                "message": err
-            }]
+    return {
+        "Body": {
+            "StatusCode": status_code,
+            "Description": description
         }
-    if 'args' in err:
-        res["errors"][0]["message"] = err.args[0]
+    }
+
+
+def format_error_response(status_code, description, message_input):
+    res = {
+        "Id": str(uuid.uuid4()),
+        "Body": {
+            "StatusCode": status_code,
+            "Description": description
+        },
+        "Verb": ACK,
+        "Source": SOURCE_ID,
+        "Version": "1.0",
+        "Resource": message_input["Resource"],
+        "ContentType": "application/json",
+        "CreateTimeUTC": str(datetime_iso_format(datetime.datetime.now(tz=timezone.utc))),
+        "OriginationId": None,
+        "OriginationVerb": None
+    }
+
+    if message_input and "Task" in message_input:
+        task_message = json.loads(message_input["Task"])
+
+        if "Verb" in task_message:
+            res["OriginationVerb"] = task_message["Verb"]
+
+        if "Id" in task_message:
+            res["OriginationId"] = task_message["Id"]
+
+        if "Resource" in task_message:
+            res["Resource"] = task_message["Resource"]
+
+    if 'args' in description:
+        res["Body"]["Description"] = description.args[0]
+        return res
     return res
+
+
+def process_error_response(error_obj, mode, message_input):
+    # if FAILED_ESTABLISH_CONNECTION in str(error_obj.args[0]):
+    #     return json.dumps(format_error_response(HTTPStatus.BAD_REQUEST, INVALID_INCOMING_QUEUE_CONNECTION, message_input))
+
+    error = json.loads(json.dumps(format_error(
+        HTTPStatus.BAD_REQUEST, error_obj.args[0])))
+    if "Body" in error:
+        if mode == 'send':
+            if "Description" in error["Body"] and (FAILED_ESTABLISH_CONNECTION in error["Body"]["Description"]):
+                return json.dumps(format_error_response(HTTPStatus.BAD_REQUEST, INVALID_ENTITY, message_input))
+            elif "Description" in error["Body"] and (str(HTTPStatus.NOT_FOUND.value) in error["Body"]["Description"] or INVALID_TOKEN_SIGNATURE in error["Body"]["Description"]):
+                return json.dumps(format_error_response(HTTPStatus.BAD_REQUEST, INVALID_INCOMING_QUEUE_CONNECTION, message_input))
+            else:
+                return json.dumps(format_error_response(HTTPStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR, message_input))
+
+        elif mode == 'receive':
+            if "Description" in error["Body"] and FAILED_ESTABLISH_CONNECTION in error["Body"]["Description"]:
+                return json.dumps(format_error_response(HTTPStatus.BAD_REQUEST, INVALID_ENTITY, message_input))
+            elif "Description" in error["Body"] and INVALID_TOKEN_SIGNATURE in error["Body"]["Description"]:
+                return json.dumps(format_error_response(HTTPStatus.BAD_REQUEST, INVALID_OUTGOING_QUEUE_CONNECTION, message_input))
+            else:
+                return json.dumps(format_error_response(HTTPStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR, message_input))
+    else:
+        return json.dumps(format_error_response(HTTPStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR, message_input))
+
+async def read_from_queue(message_id, filters):
+    res = []
+    receiver = read_messages_from_queue()
+    with receiver:
+        count = 3
+        # if filters != None:
+        #     count = 1
+        for i in range(count):
+            if filters == None:
+                time.sleep(5)
+            received_msgs = receiver.receive_messages(
+                max_message_count=25, max_wait_time=30)
+            for message in received_msgs:
+                if filters:
+                    json_temp = json.loads(str(message))["Task"]
+                    json_obj = json.loads(json_temp)
+                    if json_obj:
+                        result = filter_notification(json_obj, filters)
+                        if len(result) > 0:
+                            res.append(json_obj)
+                            message.complete()
+                            break
+                else:
+                    json_temp = json.loads(str(message))["Task"]
+                    json_obj = json.loads(json_temp)
+                    if json_obj["OriginationId"] == message_id and json_obj["Verb"] == ACK:
+                        res.append(json_obj)
+                        message.complete()
+                        break
+            if len(res) > 0:
+                receiver.close()
+                return json.dumps(res[0])        
 
 
 def filter_notification(list_obj, filters):
     result = []
     all_filters = []
     if list_obj["Resource"]:
-        f1 = lambda x: x["Resource"] == filters["ResourceType"]
+        f1 = lambda x: x["Resource"] == "WorkVisit"
         all_filters.append(f1)
     
     if filters:
@@ -283,64 +248,6 @@ def filter_notification(list_obj, filters):
         if "State" in filters:
             f5 = lambda x: x["Body"]["State"] == filters["State"] 
             all_filters.append(f5)
-
     
     result = list(filter(lambda x : all([f(x) for f in all_filters]), [list_obj]))
     return result
-    
-
-async def loop_read_queue(message_id, filters):
-    timeout = time.time() + 60*1   # 1 minutes 
-    while 1:
-        try:
-            response = await read_from_destination_queue(EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING, EQUINIX_OUTGOING_QUEUE, message_id, filters)
-            if time.time() > timeout:
-                return exception_handler("Could not find corresponding response message in the outgoing queue",400)
-            if response:
-                return response
-        except Exception as err:
-            return exception_handler("Error while reading outgoing queue", 400)
-        
-
-async def read_from_destination_queue(connection_string, queue_name, message_id, filters):
-    res = []
-    try:
-        client = ServiceBusClient.from_connection_string(conn_str=connection_string)
-        queue_client = client.get_queue(queue_name=queue_name)
-        # Receive the message from the queue
-        async with queue_client.get_receiver(mode=ReceiveSettleMode.PeekLock, prefetch=10) as receiver :
-            batch = await receiver.fetch_next(max_batch_size=10)
-            for message in batch:
-                try:
-                    message
-                except NameError:
-                    res.append("No msgs to read")
-                    break
-                if filters:
-                    json_temp = json.loads(str(message))["Task"]
-                    json_obj = json.loads(json_temp)
-                    if json_obj:
-                        result = filter_notification(json_obj, filters)                        
-                        if len(result) > 0:
-                            res.append(json_obj)
-                            await message.complete()
-                            break
-                else:
-                    json_temp = json.loads(str(message))["Task"]
-                    json_obj = json.loads(json_temp)
-                    if json_obj["OriginationId"] == message_id and json_obj["Verb"] == "Ack":
-                        res.append(json_obj)
-                        await message.complete()
-                        break
-        if len(res) > 0 :
-            return json.dumps(res[0])
-        await receiver.close()
-    except Exception as err:
-        QUEUE_ERROR_MESSAGE = "Specificed queue does not exist."
-        UNAUTHORIZED_MESSAGE = "Unauthorized"
-        if err.args[0] == QUEUE_ERROR_MESSAGE:
-            return exception_handler("Invalid connection string. Invalid outgoing queue name for {0}".format(queue_name),400)
-        if UNAUTHORIZED_MESSAGE in err.args[0]:
-            return exception_handler("Invalid outgoing queue connection string. Either Client Shared Key Name/Shared Key value is invalid.",400)
-    finally:
-        pass

@@ -32,71 +32,71 @@
 const messageUtil = require('./util/MessageUtil');
 
 /**
-  * Sends the given create SmartHands message to Equinix Incoming Queue.
+  * Sends the create SmartHands message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message.
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const createSmartHands = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Create", "SmartHands", clientID, clientSecret);
-    return serviceBusResponse;
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    return responseJSON;
 }
 
 /**
-  * Sends the given update SmartHands message to Equinix Incoming Queue.
+  * Sends the update SmartHands message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const updateSmartHands = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Update", "SmartHands", clientID, clientSecret);
-    return serviceBusResponse;
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    return responseJSON;
 }
 
 /**
-  * Sends the given cancel SmartHands message to Equinix Incoming Queue.
+  * Sends the cancel SmartHands message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const cancelSmartHands = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Cancelled", "SmartHands", clientID, clientSecret);
-    return serviceBusResponse;
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    return responseJSON;
 }
 
 /**
-  * Receive SmartHands notification that matches the filter criteria from Equinix Outgoing Queue.
+  * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
   *
-  * @param customerReferenceNumber - Customer Reference Number used for searching SmartHands order
-  * @param servicerId - Order Number used for searching SmartHands order
-  * @param activityId - Activity ID used for searching SmartHands Activity
-  * @param state - SmartHands order state (eg: Open, InProgress, Pending Customer Input, Cancelled, Closed) 
-  * @returns queueMsg - Received response message
-  * @throws error if the service returns an error while retrieving notification.
+  * @param requestorId - Customer Reference Number of the SmartHands ticket.
+  * @param servicerId – Ticket Number of the SmartHands ticket.
+  * @param activityId - Activity Number of the SmartHands ticket.
+  * @param ticketState - State of the SmartHands ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
+  * @returns notificationMsg - Received notification message.
+  * @throws error if Equinix Messaging Gateway returns an error while retrieving notification.
   */
-const getNotifications = async (customerReferenceNumber, servicerId, activityId, state) => {
+const getNotifications = async (requestorId, servicerId, activityId, ticketState) => {
     var filterCriteria = {
-        ResourceType: 'SmartHands',
-        RequestorId: customerReferenceNumber,
+        ResourceType: messageUtil.TICKET_TYPE_SMARTHANDS,
+        RequestorId: requestorId,
         ServicerId: servicerId,
         Activity: activityId,
-        State: state
+        State: ticketState
     };
 
-    var queueMsg = await messageUtil.readFromQueue(null, filterCriteria);
-    return queueMsg;
+    var notificationMsg = await messageUtil.readFromQueue(null, filterCriteria);
+    return notificationMsg;
 }
 
 

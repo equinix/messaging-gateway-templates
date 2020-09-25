@@ -32,72 +32,72 @@
 const messageUtil = require('./util/MessageUtil');
 
 /**
-  * Sends the given create inbound Shipment message to Equinix Incoming Queue.
+  * Sends the create Shipment message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const createShipment = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Create", "Shipping", clientID, clientSecret);
-    return serviceBusResponse;
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret);
+    return responseJSON;
 }
 
 /**
-  * Sends the given update inbound Shipment message to Equinix Incoming Queue.
+  * Sends the update Shipment message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const updateShipment = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Update", "Shipping", clientID, clientSecret);
-    return serviceBusResponse;
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret);
+    return responseJSON;
 }
 
 
 /**
-  * Sends the given cancel Shipment message to Equinix Incoming Queue.
+  * Sends the cancel Shipment message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const cancelShipment = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Cancelled", "Shipping", clientID, clientSecret);
-    return serviceBusResponse;
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret);
+    return responseJSON;
 }
 
 /**
-  * Receive Shipment notification that matches the filter criteria from Equinix Outgoing Queue.
+  * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
   *
-  * @param customerReferenceNumber - Customer Reference Number used for searching Shipment order
-  * @param servicerId - Order Number used for searching Shipment order
-  * @param activityId - Activity ID used for searching Shipment Activity
-  * @param state - Shipment order state (eg: Open, InProgress, Pending Customer Input, Cancelled, Closed) 
-  * @returns queueMsg - Received response message
-  * @throws error if the service returns an error while retrieving notification.
+  * @param requestorId - Customer Reference Number of the Shipment ticket.
+  * @param servicerId – Ticket Number of the Shipment ticket.
+  * @param activityId - Activity Number of the Shipment ticket.
+  * @param ticketState - State of the Shipment ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
+  * @returns notificationMsg - Received notification message.
+  * @throws error if Equinix Messaging Gateway returns an error while retrieving notification.
   */
-const getNotifications = async (customerReferenceNumber, servicerId, activityId, state) => {
+const getNotifications = async (requestorId, servicerId, activityId, ticketState) => {
     var filterCriteria = {
-        ResourceType: 'Shipping',
-        RequestorId: customerReferenceNumber,
+        ResourceType: messageUtil.TICKET_TYPE_SHIPPING,
+        RequestorId: requestorId,
         ServicerId: servicerId,
         Activity: activityId,
-        State: state
+        State: ticketState
     };
 
-    var queueMsg = await messageUtil.readFromQueue(null, filterCriteria);
-    return queueMsg;
+    var notificationMsg = await messageUtil.readFromQueue(null, filterCriteria);
+    return notificationMsg;
 }
 
 

@@ -29,187 +29,185 @@
 *
 *************************************************************************/
 const messageUtil = require('./util/MessageUtil');
+const HttpStatus = require('http-status-codes');
 
 /**
-  * Sends the given create WorkVisit message to Equinix Incoming Queue.
+  * Sends the create WorkVisit message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const createWorkVisit = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = JSON.parse(requestJSON);
-  var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Create", "WorkVisit", clientID, clientSecret);
-  return serviceBusResponse;
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  return responseJSON;
 }
 
 /**
-* Sends the given update WorkVisit message to Equinix Incoming Queue.
+* Sends the update WorkVisit message to Equinix Messaging Gateway.
 *
 * @param requestJSON - Message to send.
 * @param clientID - Equinix issued clientID.
 * @param clientSecret - Equinix issued clientSecret.
-* @returns serviceBusResponse - Received response message
-* @throws error if the service returns an error while processing message.
+* @returns responseJSON - Received response message
+* @throws error if Equinix Messaging Gateway returns an error while processing the message.
 */
 const updateWorkVisit = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = JSON.parse(requestJSON);
-  var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Update", "WorkVisit", clientID, clientSecret);
-  return serviceBusResponse
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  return responseJSON
 }
 
 /**
-* Sends the given cancel WorkVisit message to Equinix Incoming Queue.
+* Sends the cancel WorkVisit message to Equinix Messaging Gateway.
 *
 * @param requestJSON - Message to send.
 * @param clientID - Equinix issued clientID.
 * @param clientSecret - Equinix issued clientSecret.
-* @returns serviceBusResponse - Received response message
-* @throws error if the service returns an error while processing message.
+* @returns responseJSON - Received response message
+* @throws error if Equinix Messaging Gateway returns an error while processing the message.
 */
 const cancelWorkVisit = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = JSON.parse(requestJSON);
-  var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Cancelled", "WorkVisit", clientID, clientSecret);
-  return serviceBusResponse;
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  return responseJSON;
 }
 
 
 /**
-  * Sends the given create WorkVisit message to Equinix Incoming Queue as per API Schema.
+  * Sends the create WorkVisit message to Equinix Messaging Gateway as per API Schema.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const createWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
   var jsonObj = JSON.parse(requestJSON);
-  var JSONObj = await createWorkVisitHelper(JSON.parse(requestJSON));
-  var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Create", "WorkVisit", clientID, clientSecret);
-  return processCreateResponse(serviceBusResponse, jsonObj);
+  var JSONObj = createWorkVisitHelper(JSON.parse(requestJSON));
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  return processCreateResponse(responseJSON, jsonObj);
 }
 
 /**
-  * Sends the given update WorkVisit message to Equinix Incoming Queue as per API Schema.
+  * Sends the update WorkVisit message to Equinix Messaging Gateway as per API Schema.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const updateWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
-  var JSONObj = await updateWorkVisitHelper(JSON.parse(requestJSON));
-  var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Update", "WorkVisit", clientID, clientSecret);
-  return processReponse(serviceBusResponse)
+  var JSONObj = updateWorkVisitHelper(JSON.parse(requestJSON));
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  return processReponse(responseJSON)
 }
 
 /**
-  * Sends the given cancel WorkVisit message to Equinix Incoming Queue as per API Schema.
+  * Sends the cancel WorkVisit message to Equinix Messaging Gateway as per API Schema.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
   * @param clientSecret - Equinix issued clientSecret.
-  * @returns serviceBusResponse - Received response message
-  * @throws error if the service returns an error while processing message.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
 const cancelWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
-  var JSONObj = await cancelWorkVisitHelper(JSON.parse(requestJSON));
-  var serviceBusResponse = await messageUtil.messageProcessor(JSONObj, "Cancelled", "WorkVisit", clientID, clientSecret);
-  return processReponse(serviceBusResponse);
+  var JSONObj = cancelWorkVisitHelper(JSON.parse(requestJSON));
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  return processReponse(responseJSON);
 }
 
 /**
-  * Receive WorkVisit notification that matches the filter criteria from Equinix Outgoing Queue.
+  * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
   *
-  * @param customerReferenceNumber - Customer Reference Number used for searching WorkVisit order
-  * @param servicerId - Order used for searching WorkVisit order
-  * @param activityId - Activity ID used for searching WorkVisit Activity
-  * @param state - WorkVisit states (eg: Open, InProgress, Cancelled, Closed)
-  * @returns queueMsg - Received response message
-  * @throws error if the service returns an error while retrieving notification.
+  * @param requestorId - Customer Reference Number of the WorkVisit ticket.
+  * @param servicerId – Ticket Number of the WorkVisit ticket.
+  * @param activityId - Activity Number of the WorkVisit ticket.
+  * @param ticketState - State of the WorkVisit ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
+  * @returns notificationMsg - Received notification message.
+  * @throws error if Equinix Messaging Gateway returns an error while retrieving notification.
   */
-const getNotifications = async (customerReferenceNumber, servicerId, activityId, state) => {
+const getNotifications = async (requestorId, servicerId, activityId, ticketState) => {
   var filterCriteria = {
-    ResourceType: 'WorkVisit',
-    RequestorId: customerReferenceNumber,
+    ResourceType: messageUtil.TICKET_TYPE_WORKVISIT,
+    RequestorId: requestorId,
     ServicerId: servicerId,
     Activity: activityId,
-    State: state
+    State: ticketState
   };
 
-  var queueMsg = await messageUtil.readFromQueue(null, filterCriteria);
-  return queueMsg;
+  var notificationMsg = await messageUtil.readFromQueue(null, filterCriteria);
+  return notificationMsg;
 }
 
 const createWorkVisitHelper = (params) => {
-  return new Promise((resolve, reject) => {
-    var vistorArray = []
-    var temp = {
-      FirstName: "Test FirstName",
-      LastName: "Test LastName",
-      CompanyName: "Test Company"
-    }
+  var vistorArray = []
+  var temp = {
+    FirstName: "Test FirstName",
+    LastName: "Test LastName",
+    CompanyName: "Test Company"
+  }
+  if (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('visitors')) {
     for (let visitor of params.serviceDetails.visitors) {
-      temp.FirstName = visitor.firstName,
-        temp.LastName = visitor.lastName,
-        temp.CompanyName = visitor.company
+      temp.FirstName = (visitor.hasOwnProperty('firstName')) ? visitor.firstName : undefined,
+        temp.LastName = (visitor.hasOwnProperty('lastName')) ? visitor.lastName : undefined,
+        temp.CompanyName = (visitor.hasOwnProperty('company')) ? visitor.company : undefined
 
-      vistorArray.push(temp)
+      vistorArray.push(temp);
     }
-    var response = {
-      CustomerContact: params.contacts[0].userName,
-      RequestorId: params.customerReferenceNumber,
-      RequestorIdUnique: false,
-      Location: params.ibxLocation.cages[0].cage,
-      Attachments: params.attachments,
-      Description: params.serviceDetails.additionalDetails,
-      ServiceDetails: {
-        StartDateTime: params.serviceDetails.schedule.startDateTime,
-        EndDateTime: params.serviceDetails.schedule.endDateTime,
-        OpenCabinet: params.serviceDetails.openCabinet,
-        Visitors: vistorArray
-      }
-    };
-    resolve(response);
-  })
+  }
+  return map_create_workvisit(params, vistorArray);
 }
 
 const updateWorkVisitHelper = (params) => {
-  return new Promise((resolve, reject) => {
-    var response = {
-      ServicerId: params.orderNumber,
-      Attachments: params.attachments,
-      Description: params.serviceDetails.additionalDetails,
-      ServiceDetails: {
-        StartDateTime: params.serviceDetails.startDateTime,
-        EndDateTime: params.serviceDetails.endDateTime,
-        OpenCabinet: params.serviceDetails.openCabinet,
-        Visitors: params.serviceDetails.visitors
-      }
-    };
-    resolve(response);
-  })
+  return {
+    ServicerId: (params.hasOwnProperty('orderNumber'))?params.orderNumber : undefined,
+    Attachments: (params.hasOwnProperty('attachments'))?params.attachments : undefined,
+    Description: (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('additionalDetails'))? params.serviceDetails.additionalDetails : undefined,
+    ServiceDetails: {
+      StartDateTime: (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('startDateTime'))? params.serviceDetails.startDateTime : undefined,
+      EndDateTime: (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('endDateTime'))? params.serviceDetails.endDateTime : undefined,
+      OpenCabinet: (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('openCabinet'))?params.serviceDetails.openCabinet : undefined,
+      Visitors: (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('visitors'))?params.serviceDetails.visitors : undefined
+    }
+  };
 }
 
 const cancelWorkVisitHelper = (params) => {
-  return new Promise((resolve, reject) => {
-    var response = {
-      State: "Cancelled",
-      RequestorId: params.customerReferenceNumber,
-      ServicerId: params.orderNumber,
-      Attachments: params.attachments,
-      Description: params.cancellationReason,
-    };
-    resolve(response);
-  })
+  return {
+    State: "Cancelled",
+    RequestorId: (params.hasOwnProperty('customerReferenceNumber'))?params.customerReferenceNumber: undefined,
+    ServicerId: (params.hasOwnProperty('orderNumber'))?params.orderNumber: undefined,
+    Attachments: (params.hasOwnProperty('attachments'))?params.attachments: undefined,
+    Description: (params.hasOwnProperty('cancellationReason'))?params.cancellationReason: undefined,
+  };
 }
 
-function processCreateResponse(serviceBusResponse, jsonObj) {
-  if (serviceBusResponse.Body.StatusCode == 201) {
+const map_create_workvisit= (params, vistorArray) =>{
+  return {
+    CustomerContact: (params.contacts[0].hasOwnProperty('userName'))?params.contacts[0].userName: undefined,
+    RequestorId: (params.hasOwnProperty('customerReferenceNumber'))?params.customerReferenceNumber: undefined,
+    RequestorIdUnique: false,
+    Location: (params.hasOwnProperty('ibxLocation')&& params.ibxLocation.hasOwnProperty('cages') && params.ibxLocation.cages[0].hasOwnProperty('cage'))?params.ibxLocation.cages[0].cage: undefined,
+    Attachments: (params.hasOwnProperty('attachments'))?params.attachments : undefined,
+    Description: (params.hasOwnProperty('serviceDetails') && params.serviceDetails.hasOwnProperty('additionalDetails'))?params.serviceDetails.additionalDetails:undefined,
+    ServiceDetails: {
+      StartDateTime: (params.serviceDetails.hasOwnProperty('schedule') && params.serviceDetails.schedule.hasOwnProperty('startDateTime'))?params.serviceDetails.schedule.startDateTime: undefined,
+      EndDateTime: (params.serviceDetails.hasOwnProperty('schedule') && params.serviceDetails.schedule.hasOwnProperty('endDateTime'))?params.serviceDetails.schedule.endDateTime: undefined,
+      OpenCabinet: (params.serviceDetails.hasOwnProperty('openCabinet'))?params.serviceDetails.openCabinet : undefined,
+      Visitors: vistorArray
+    }
+  };
+}
+
+function processCreateResponse(responseJSON, jsonObj) {
+  if (responseJSON.Body.StatusCode == HttpStatus.CREATED) {
     var res = {
       "successes": [
         {
@@ -245,55 +243,64 @@ function processCreateResponse(serviceBusResponse, jsonObj) {
             ]
           },
           "response": {
-            "OrderNumber": serviceBusResponse.Body.ServicerId
+            "OrderNumber": responseJSON.Body.ServicerId
           }
         }
       ]
     };
-    res.statusCode = serviceBusResponse.Body.StatusCode;
+    res.statusCode = responseJSON.Body.StatusCode;
     return res;
   } else {
-    if (serviceBusResponse.Body.Description.includes("Processing failed with following error: ")) {
+    if (responseJSON.Body.Description.includes("Processing failed with following error: ")) {
 
-      var res = JSON.parse(serviceBusResponse.Body.Description.replace("Processing failed with following error: ", ""));
-      res.statusCode = serviceBusResponse.Body.StatusCode;
+      var res = JSON.parse(responseJSON.Body.Description.replace("Processing failed with following error: ", ""));
+      res.statusCode = responseJSON.Body.StatusCode;
       return res;
 
 
     } else {
       var res = {
         "errors": [{
-          "code": serviceBusResponse.Body.StatusCode,
-          "message": serviceBusResponse.Body.Description
+          "code": responseJSON.Body.StatusCode,
+          "message": responseJSON.Body.Description
         }]
       };
-      res.statusCode = serviceBusResponse.Body.StatusCode;
+      res.statusCode = responseJSON.Body.StatusCode;
       return res;
 
     }
   }
 }
 
-function processReponse(serviceBusResponse) {
-  if (serviceBusResponse.Body.StatusCode == 202) {
-    var res = {
-      "status": "Success",
-      "Description": serviceBusResponse.Body.Description,
-      "errorCode": "",
-      "errorMessage": ""
-    };
-    res.statusCode = serviceBusResponse.Body.StatusCode;
-    return res;
-  } else {
-    if (serviceBusResponse.Body.Description.includes("Processing failed with following error: ")) {
-      return JSON.parse(serviceBusResponse.Body.Description.replace("Processing failed with following error: ", ""));
+function processReponse(responseJSON) {
+  if (responseJSON.hasOwnProperty('Body') && responseJSON.Body.hasOwnProperty('Description') && responseJSON.Body.hasOwnProperty('StatusCode')) {
+    if (responseJSON.Body.StatusCode == HttpStatus.ACCEPTED) {
+      var res = {
+        "status": "Success",
+        "Description": responseJSON.Body.Description,
+        "errorCode": "",
+        "errorMessage": ""
+      };
+      res.statusCode = responseJSON.Body.StatusCode;
+      return res;
     } else {
-      return {
-        "errors": [{
-          "code": serviceBusResponse.Body.StatusCode,
-          "message": serviceBusResponse.Body.Description
-        }]
+      if (responseJSON.Body.Description.includes("Processing failed with following error: ")) {
+        return JSON.parse(responseJSON.Body.Description.replace("Processing failed with following error: ", ""));
+      } else {
+        return {
+          "errors": [{
+            "code": responseJSON.Body.StatusCode,
+            "message": responseJSON.Body.Description
+          }]
+        }
       }
+    }
+  }else{
+    return {
+      "errors": [{
+        "code": StatusCodes.BAD_REQUEST,
+        "message": "Null Exception"
+      }]
     }
   }
 }

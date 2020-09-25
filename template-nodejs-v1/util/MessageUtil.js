@@ -2,12 +2,12 @@
 
 /*************************************************************************
 * 
-* EQUINIX CONFIDENTIAL
+ * EQUINIX CONFIDENTIAL
 * __________________
 * 
-*  © 2020 Equinix, Inc. All rights reserved.
+ *  © 2020 Equinix, Inc. All rights reserved.
 * 
-* Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -29,7 +29,6 @@
 *
 *************************************************************************/
 
-
 'use strict'
 const safeStringify = require('fast-safe-stringify');
 var sbb = require('./ServiceBusBase');
@@ -43,20 +42,37 @@ const EQUINIX_OUTGOING_QUEUE = config.EQUINIX_OUTGOING_QUEUE;
 const EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING = config.EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING;
 const SOURCE_ID = config.SOURCE_ID;
 
+const INVALID_TOKEN_SIGNATURE = 'The token has an invalid signature';
+const INVALID_INCOMING_QUEUE_CONNECTION = 'Missing Endpoint in Connection String.';
+const INVALID_ENTITY = 'The messaging entity';
+const INVALID_OUTGOING_QUEUE_CONNECTION = 'Missing Endpoint in Connection String.';
+const FAILED_ESTABLISH_CONNECTION = 'getaddrinfo ENOTFOUND';
+const INTERNAL_SERVER_ERROR = 'Internal Server Error';
+
+
+const CREATE_OPERATION = "Create"
+const UPDATE_OPERATION = "Update"
+const CANCEL_OPERATION = "Cancelled"
+const TICKET_TYPE_SHIPPING = "Shipping"
+const TICKET_TYPE_SMARTHANDS = "SmartHands"
+const TICKET_TYPE_WORKVISIT = "WorkVisit"
+const TICKET_TYPE_BREAKFIX = "BreakFix"
+
+
 const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret) => {    
     var messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
     const messageId = JSON.parse(messageInput.Task).Id;
     console.log("Message ID:   ", messageId);
     try {
-        await sendMessageToQueue(EQUINIX_INCOMING_QUEUE_CONNECTION_STRING, EQUINIX_INCOMING_QUEUE, messageInput, "IOMA-Message");
+        await sbb.sendMessageToQueue(messageInput, "IOMA-Message");
     } catch (e) {
-        return processErrorResponse(e,EQUINIX_INCOMING_QUEUE_CONNECTION_STRING, EQUINIX_INCOMING_QUEUE, "send");
+        return processErrorResponse(e,"send", JSON.parse(messageInput.Task));
     }
     try {
         var queueMsg = await readFromQueue(messageId, null);
         return queueMsg;
     } catch (e) {
-        return processErrorResponse(e,EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING, EQUINIX_OUTGOING_QUEUE, "receive");
+        return processErrorResponse(e,"receive", JSON.parse(messageInput.Task));
     }
 }
 
@@ -64,7 +80,7 @@ function createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, ClientId, C
     var messageInput = {
         Task: {
             Id: uuid(),
-            Verb: (actionVerb == "Cancelled") ? "Update" : actionVerb,
+            Verb: (actionVerb == CANCEL_OPERATION) ? UPDATE_OPERATION : actionVerb,
             Source: SOURCE_ID,
             Version: "1.0",
             Resource: ResourceType,
@@ -83,24 +99,6 @@ function createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, ClientId, C
     return messageInput;
 }
 
-async function sendMessageToQueue(connectionString, topic, payload, label) {
-    try {
-        var sbns = sbb.createServiceBusClient(connectionString);
-        var tc = sbb.createTopicClient(sbns, topic);
-        var sender = sbb.getSender(tc);
-        const messageToSend = {
-            body: payload,
-            label: label
-        };
-        await sbb.sendMessage(sender, messageToSend);
-        await sbb.closeSender(sender);
-        await sbb.closeServiceBusClient(sbns);
-    } catch (e) {
-        throw Error(
-            safeStringify(formatError(400,e.message))
-        );
-    } 
-}
 
 async function readFromQueue(messageId, filterCriteria) {
     var res;
@@ -155,37 +153,46 @@ function formatError(StatusCode, Description){
         }
     };
 }
-function formatErrorResponse (StatusCode, Description){
-    return safeStringify( {
-        errors: [{
-            code: StatusCode,
-            message: Description
-        }]
+function formatErrorResponse (StatusCode, Description, messageInput){
+    return safeStringify({
+        "Id": uuid(),
+        "Body": {
+            "StatusCode": StatusCode,
+            "Description": Description,
+        },
+        "Verb": "Ack",
+        "Source": SOURCE_ID,
+        "Version": "1.0",
+        "Resource": messageInput.Resource,
+        "ContentType": messageInput.ContentType,
+        "CreateTimeUTC": messageInput.CreateTimeUTC,
+        "OriginationId": (messageInput.Verb == "Create") ? null : messageInput.Id,
+        "OriginationVerb": messageInput.Verb
     });
 }
 
-function processErrorResponse(errorObj, connectionString, entityName, mode) {
+function processErrorResponse(errorObj, mode, messageInput) {
     var error = JSON.parse(errorObj.message);
     if (error.hasOwnProperty('Body')) {
         if (mode == 'send') {
-            if (error.Body.Description == 'Missing Endpoint in Connection String.' ||
-                (error.Body.Description).includes('The token has an invalid signature') ||
-                (error.Body.Description).includes('getaddrinfo ENOTFOUND')) {
-                return formatErrorResponse(error.Body.StatusCode, `'Invalid incoming queue connection string. Either Client Shared Key Name/Shared Key value is invalid`);
-            } else if ((error.Body.Description).includes('The messaging entity')) {
-                return formatErrorResponse(error.Body.StatusCode, `'Invalid connection string. Invalid incoming queue name for  ${entityName}`);
+            if (error.Body.Description == INVALID_INCOMING_QUEUE_CONNECTION ||
+                (error.Body.Description).includes(INVALID_TOKEN_SIGNATURE) ||
+                (error.Body.Description).includes(FAILED_ESTABLISH_CONNECTION)) {
+                return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using connection string : ${EQUINIX_INCOMING_QUEUE_CONNECTION_STRING}`, messageInput);
+            } else if ((error.Body.Description).includes(INVALID_ENTITY)) {
+                return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using queue name : ${EQUINIX_INCOMING_QUEUE}`);
             } else {
-                return formatErrorResponse(500, 'Internal Server Error');
+                return formatErrorResponse(500, INTERNAL_SERVER_ERROR, messageInput);
             }
         } else if (mode == 'receive') {
-            if (error.Body.Description == 'Missing Endpoint in Connection String.' ||
-                (error.Body.Description).includes('The token has an invalid signature') ||
-                (error.Body.Description).includes('getaddrinfo ENOTFOUND')) {
-                return formatErrorResponse(error.Body.StatusCode, `Invalid outgoing queue connection string. Either Client Shared Key Name/Shared Key value is invalid`);
-            } else if ((error.Body.Description).includes('The messaging entity')) {
-                return formatErrorResponse(error.Body.StatusCode, `'Invalid connection string. Invalid outgoing queue name for ${entityName}`);
+            if (error.Body.Description == INVALID_OUTGOING_QUEUE_CONNECTION ||
+                (error.Body.Description).includes(INVALID_TOKEN_SIGNATURE) ||
+                (error.Body.Description).includes(FAILED_ESTABLISH_CONNECTION)) {
+                return formatErrorResponse(error.Body.StatusCode, `Error occured while reading message using connection string : ${EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING}`, messageInput);
+            } else if ((error.Body.Description).includes(INVALID_ENTITY)) {
+                return formatErrorResponse(error.Body.StatusCode, `Error occured while reading message using queue name : ${EQUINIX_OUTGOING_QUEUE}`, messageInput);
             } else {
-                return formatErrorResponse(500, 'Internal Server Error');
+                return formatErrorResponse(500, INTERNAL_SERVER_ERROR);
             }
         }
     } else {
@@ -194,6 +201,12 @@ function processErrorResponse(errorObj, connectionString, entityName, mode) {
 }
 module.exports = {
     messageProcessor: messageProcessor,
-    sendMessageToQueue: sendMessageToQueue,
-    readFromQueue : readFromQueue
+    readFromQueue : readFromQueue,
+    CREATE_OPERATION,
+    UPDATE_OPERATION,
+    CANCEL_OPERATION,
+    TICKET_TYPE_BREAKFIX,
+    TICKET_TYPE_SHIPPING,
+    TICKET_TYPE_SMARTHANDS,
+    TICKET_TYPE_WORKVISIT
 };

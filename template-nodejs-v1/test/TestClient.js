@@ -11,6 +11,11 @@ var ORDER_NUMBER = "<ORDER_NUMBER>";
 var CLIENT_ID = "<CLIENT_ID>"; // Will be supplied by Customer
 var CLIENT_SECRET = "<CLIENT_SECRET>"; // Will be supplied by Customer
 
+const NOTIFICATION_PENDING_CUSTOMER_INPUT = "Pending Customer Input";
+const NOTIFICATION_OPEN = "Open";
+const NOTIFICATION_INPROGRESS = "InProgress";
+const NOTIFICATION_CANCELLED = "Cancelled";
+
 const CREATE_WORKVISIT_PAYLOAD = {
     "CustomerContact": "<CUSTOMER_CONTACT>",
     "RequestorId": "102894102Test1234",
@@ -299,7 +304,7 @@ const CANCEL_SHIPMENT_PAYLOAD = {
 
 describe('EMG Template Test Suite', function () {
     this.timeout(10000000);
-    it('# Create WorkVisit', async function () {
+    it('test_create_work_visit', async function () {
         console.log("\n\nSending Create WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.createWorkVisit(
             JSON.stringify(CREATE_WORKVISIT_PAYLOAD),
@@ -309,7 +314,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('# Update WorkVisit', async function () {
+    it('test_update_work_visit', async function () {
         console.log("\n\nSending Update WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.updateWorkVisit(
             JSON.stringify(UPDATE_WORKVISIT_PAYLOAD),
@@ -319,7 +324,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('# Cancel WorkVisit', async function () {
+    it('test_cancel_work_visit', async function () {
         console.log("\n\nSending Cancel WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.cancelWorkVisit(
             JSON.stringify(CANCEL_WORKVISIT_PAYLOAD),
@@ -329,7 +334,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Create WorkVisit Extension', async function () {
+    it('test_create_work_visit_extension', async function () {
         console.log("\n\nSending Create WorkVisit Request Message as per API Schema  **********\n\n")
         const result = await workVisitTemplate.createWorkVisitExtn(
             JSON.stringify(CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
@@ -339,7 +344,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Update WorkVisit Extension', async function () {
+    it('test_update_work_visit_extension', async function () {
         console.log("\n\nSending Update WorkVisit Request Message as per API Schema **********\n\n")
         const result = await workVisitTemplate.updateWorkVisitExtn(
             JSON.stringify(UPDATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
@@ -349,7 +354,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Cancel WorkVisit Extension', async function () {
+    it('test_cancel_work_visit_extension', async function () {
         console.log("\n\nSending Cancel WorkVisit Request Message as per API Schema **********\n\n")
         const result = await workVisitTemplate.cancelWorkVisitExtn(
             JSON.stringify(CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
@@ -359,15 +364,15 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Get Notifications for WorkVisit, Open', async function () {
+    it('test_workvisit_notifications_open', async function () {
         console.log("\n\nSending WorkVisit Notification Request Message  **********\n\n")
         //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
-        const result = await workVisitTemplate.getNotifications(null, ORDER_NUMBER, null, "Open")
+        const result = await workVisitTemplate.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN)
         console.log("\n\nReceiving WorkVisit Notification Response Message  **********\n\n", safeStringify(result))
     })
 
 
-    it('#Create SmartHands', async function () {
+    it('test_create_smarthands', async function () {
         console.log("\n\nSending Create SmartHands Request Message  **********\n\n")
         const result = await smartHandsTemplate.createSmartHands(
             JSON.stringify(CREATE_SMARTHAND_PAYLOAD),
@@ -377,7 +382,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create SmartHands Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Update SmartHands', async function () {
+    it('test_update_smarthands', async function () {
         console.log("\n\nSending Update SmartHands Request Message  **********\n\n")
         const result = await smartHandsTemplate.updateSmartHands(
             JSON.stringify(UPDATE_SMARTHAND_PAYLOAD),
@@ -387,7 +392,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update SmartHands Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Cancel SmartHands', async function () {
+    it('test_cancel_smarthands', async function () {
         console.log("\n\nSending Cancel SmartHands Request Message  **********\n\n")
         const result = await smartHandsTemplate.cancelSmartHands(
             JSON.stringify(CANCEL_SMARTHAND_PAYLOAD),
@@ -397,14 +402,14 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Cancel SmartHands Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Get Notifications for SmartHands, Open', async function () {
+    it('test_smarthands_notifications_open', async function () {
         console.log("\n\nSending SmartHands Notification Request Message  **********\n\n")
         //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Pending Customer Input, Cancelled, Closed)
-        const result = await smartHandsTemplate.getNotifications(null, ORDER_NUMBER, null, "Open")
+        const result = await smartHandsTemplate.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN)
         console.log("\n\nReceiving SmartHands Notification Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Create TroubleTicket', async function () {
+    it('test_create_troubleticket', async function () {
         console.log("\n\nSending Create TroubleTicket Request Message  **********\n\n")
         const result = await troubleTicketTemplate.createTroubleTicket(
             JSON.stringify(CREATE_TROUBLETICKET_PAYLOAD),
@@ -414,7 +419,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create TroubleTicket Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Update TroubleTicket', async function () {
+    it('test_update_troubleticket', async function () {
         console.log("\n\nSending Update TroubleTicket Request Message  **********\n\n")
         const result = await troubleTicketTemplate.updateTroubleTicket(
             JSON.stringify(UPDATE_TROUBLETICKET_PAYLOAD),
@@ -424,7 +429,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update TroubleTicket Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Cancel TroubleTicket', async function () {
+    it('test_cancel_troubleticket', async function () {
         console.log("\n\nSending Cancel TroubleTicket Request Message  **********\n\n")
         const result = await troubleTicketTemplate.cancelTroubleTicket(
             JSON.stringify(CANCEL_TROUBLETICKET_PAYLOAD),
@@ -434,14 +439,14 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Get Notifications for TroubleTicket, Open', async function () {
+    it('test_troubleticket_notifications_open', async function () {
         console.log("\n\nSending TroubleTicket Notification Request Message  **********\n\n")
         //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Pending Customer Input, Cancelled, Closed)
-        const result = await troubleTicketTemplate.getNotifications(null, ORDER_NUMBER, null, "Open")
+        const result = await troubleTicketTemplate.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN)
         console.log("\n\nReceiving TroubleTicket Notification Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Create InboundShipment Carrier Type', async function () {
+    it('test_create_inbound_shipment_carriertype', async function () {
         console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.createShipment(
             JSON.stringify(CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD),
@@ -451,7 +456,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Create InboundShipment Customer Carry Type', async function () {
+    it('test_create_inbound_shipment_customercarrytype', async function () {
         console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.createShipment(
             JSON.stringify(CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
@@ -461,7 +466,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Create OutboundShipment Carrier Type', async function () {
+    it('test_create_outbound_shipment_carriertype', async function () {
         console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.createShipment(
             JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD),
@@ -471,7 +476,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Create OutboundShipment Customer Carry Type', async function () {
+    it('test_create_outbound_shipment_customercarrytype', async function () {
         console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.createShipment(
             JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
@@ -481,7 +486,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Update InboundShipment', async function () {
+    it('test_update_inbound_shipment', async function () {
         console.log("\n\nSending Update Inbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.updateShipment(
             JSON.stringify(UPDATE_INBOUNDSHIPMENT_PAYLOAD),
@@ -491,7 +496,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update Inbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Update OutboundShipment', async function () {
+    it('test_update_outbound_shipment', async function () {
         console.log("\n\nSending Update Outbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.updateShipment(
             JSON.stringify(UPDATE_OUTBOUNDSHIPMENT_PAYLOAD),
@@ -501,7 +506,7 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update Outbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Cancel Shipment', async function () {
+    it('test_cancel_shipment', async function () {
         console.log("\n\nSending Cancel Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.cancelShipment(
             JSON.stringify(CANCEL_SHIPMENT_PAYLOAD),
@@ -511,10 +516,10 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Cancel Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
-    it('#Get Notifications for Shipment, Open', async function () {
+    it('test_shipment_notifications_open', async function () {
         console.log("\n\nSending Shipment Notification Request Message  **********\n\n")
         //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Pending Customer Input, Cancelled, Closed)
-        const result = await shipmentTemplate.getNotifications(null, ORDER_NUMBER, null, "Open")
+        const result = await shipmentTemplate.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN)
         console.log("\n\nReceiving Shipment Notification Response Message  **********\n\n", safeStringify(result))
     })
 })
