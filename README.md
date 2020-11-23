@@ -11,6 +11,7 @@ The Templates includes:
  - EquinixSmartHandsTemplate
  - EquinixTroubleTicketTemplate
  - EquinixWorkVisitTemplate
+ - EquinixShipmentsTemplate
 
 2. TestClient with sample code on how to integrate with EMG Templates following EMG message schemas.
 - /test/TestClient
@@ -21,7 +22,7 @@ The Templates includes:
 ## Requirements
 
 1. Node.js Templates 
-  - [Node.js](https://nodejs.org/en/download/) v10.16.2+
+- [Node.js](https://nodejs.org/en/download/) v10.16.2+
 
 2. Python Templates:
 
@@ -29,6 +30,11 @@ The Templates includes:
 - [Azure SDK for Python](https://azuresdkdocs.blob.core.windows.net/%24web/python/azure-servicebus/0.50.3/index.html) - v0.50.3+
 - [pytest](https://docs.pytest.org/en/stable/getting-started.html) - v6.0.1+
 - [pytest-asyncio](https://pypi.org/project/pytest-asyncio/) - v0.14.0+
+
+3. Java Templates
+- Java 8 & above
+- IntelliJ IDEA or Eclipse IDE
+
 
 ## Prerequisites 
 1. Visit [Equinix Developer Platform](https://developer.equinix.com/) & follow the [steps](https://developer.equinix.com/docs/ecp-getting-started#generating-client-id-and-client-secret-key) to generate Client ID and Client Secret keys.
@@ -47,10 +53,16 @@ The Templates includes:
    
    pip install pytest-asyncio
    ```
+3. Java Templates
+- Download and import the Java Template project into the Java IDE of your choice - Intellij IDEA or Eclipse IDE
+- Run the below script from with the parent folder \template_java_v1
+  mvn install
+- Ensure all the dependent libraries are successful installed under ‘External Libraries’ of your project.
+   
 
 ## How to Run Test Client
 1. Navigate to test/TestClient and run on individual tests to submit orders. 
-2. After creating an order, take note of the ServicerId displayed in the console, and replace ORDER_NUMBER constant in TestClient.js. 
+2. After creating an order, take note of the ServicerId displayed in the console, and replace ORDER_NUMBER constant in TestClient 
 3. Output will be displayed in the console.
 
 
