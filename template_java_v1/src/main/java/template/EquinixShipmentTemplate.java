@@ -1,4 +1,4 @@
- /** EQUINIX MESSAGING GATEWAY WORKVISIT TEMPLATE **/
+/** EQUINIX MESSAGING GATEWAY WORKVISIT TEMPLATE **/
 
 /*************************************************************************
  *
@@ -28,8 +28,8 @@
  * Terms of Use: https://www.equinix.com/company/legal/terms/
  *
  *************************************************************************/
-
 package template;
+
 import org.json.*;
 import util.*;
 
@@ -96,11 +96,11 @@ public class EquinixShipmentTemplate {
 	public JSONObject getNotifications(String requestorId, String servicerId, String activityId, String ticketState ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject filterCriteria = new JSONObject("{\"ResourceType\": \""+util.TICKET_TYPE_SHIPPING+"\",\n" +
-				"\"RequestorId\": \""+requestorId+"\",\n" +
-				"\"ServicerId\": \""+servicerId+"\",\n" +
-				"\"Activity\": \""+activityId+"\",\n" +
-				"\"State\": \""+ticketState+"\"\n" +
+		JSONObject filterCriteria = new JSONObject("{ResourceType:"+util.TICKET_TYPE_SHIPPING+",\n" +
+				"RequestorId:"+requestorId+",\n" +
+				"ServicerId:"+servicerId+",\n" +
+				"Activity:"+activityId+",\n" +
+				"State:"+ticketState+"\n" +
 				"}");
 		JSONObject notificationMsg = util.read_messages_from_queue(null ,filterCriteria);
 		return notificationMsg;

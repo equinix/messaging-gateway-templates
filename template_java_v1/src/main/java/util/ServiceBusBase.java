@@ -35,7 +35,7 @@ import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.json.JSONObject;
-import config.*;
+import config.config;
 
 public class ServiceBusBase {
 	public static void sendMessageToQueue(JSONObject payload, String label) throws Exception {

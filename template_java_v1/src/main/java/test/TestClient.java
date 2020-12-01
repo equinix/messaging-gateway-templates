@@ -34,12 +34,14 @@ package test;
 import org.json.JSONObject;
 import template.EquinixShipmentTemplate;
 import template.EquinixWorkVisitTemplate;
+import template.EquinixSmartHandsTemplate;
+import template.EquinixTroubleTicketTemplate;
 
 public class TestClient {
 
-	public static final String CLIENT_ID = "<CLIENT_ID>";
-	public static final String CLIENT_SECRET = "<CLIENT_SECRET>";
-	public static final String ORDER_NUMBER = "<ORDER_NUMBER>";
+	public static final String CLIENT_ID = "<CLIENTID>";
+	public static final String CLIENT_SECRET = "<CLIENTSECRET>";
+	public static final String ORDER_NUMBER = "<ORDERNUMBER>";
 
 	public static final String NOTIFICATION_OPEN = "Open";
 	public static final String NOTIFICATION_INPROGRESS = "InProgress";
@@ -47,15 +49,15 @@ public class TestClient {
 	public static final String NOTIFICATION_CANCELLED = "Cancelled";
 	public static final String NOTIFICATION_PENDING_CUSTOMER_INPUT = "Pending Customer Input";
 
-	public static final JSONObject CREATE_WORKVISIT_PAYLOAD = new JSONObject("{\"CustomerContact\": \"<CUSTOMER_CONTACT>\",\n" +
+	public static final JSONObject CREATE_WORKVISIT_PAYLOAD = new JSONObject("{\"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
 			"\"RequestorId\": \"<REQUESTOR ID>\",\n" +
 			"\"RequestorIdUnique\": false,\n" +
 			"\"Location\": \"<LOCATION>\",\n" +
 			"\"Attachments\": [],\n" +
 			"\"Description\": \"Test description for WorkVisit Create\",\n" +
 			"\"ServiceDetails\": {\n" +
-			"\"StartDateTime\": \"2020-12-01T00:00:00.000Z\",\n" +
-			"\"EndDateTime\": \"2020-12-02T00:00:00.000Z\",\n" +
+			"\"StartDateTime\": \"2020-12-01T07:05:00.000Z\",\n" +
+			"\"EndDateTime\": \"2020-12-02T10:00:00.000Z\",\n" +
 			"\"OpenCabinet\": true,\n" +
 			"\"Visitors\": [\n" +
 			"{\n" +
@@ -70,8 +72,8 @@ public class TestClient {
 			"\"Attachments\": [],\n" +
 			"\"Description\": \"Test description for WorkVisit Update\",\n" +
 			"\"ServiceDetails\": {\n" +
-			"\"StartDateTime\": \"2020-12-03T00:00:00.000Z\",\n" +
-			"\"EndDateTime\": \"2020-12-04T00:00:00Z\",\n" +
+			"\"StartDateTime\": \"2020-12-03T07:05:00.000Z\",\n" +
+			"\"EndDateTime\": \"2020-12-04T10:00:00Z\",\n" +
 			"\"OpenCabinet\": true,\n" +
 			"\"Visitors\": [\n" +
 			"{\n" +
@@ -90,13 +92,13 @@ public class TestClient {
 	public static final JSONObject CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD = new JSONObject("{\n" +
 			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
 			"    \"RequestorIdUnique\": false,\n" +
-			"    \"CustomerContact\": \"<CUSTOMER_CONTACT>\",\n" +
+			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
 			"    \"Operation\": \"0000/0000\",\n" +
 			"    \"Location\": \"<LOCATION>\",\n" +
 			"    \"Description\": \"Test description for Inbound Shipment Create\",\n" +
 			"    \"Attachments\": [],\n" +
 			"    \"CarrierName\": \"TEST\",\n" +
-			"    \"ShipmentDateTime\": \"2020-12-01T00:00:00.000Z\",\n" +
+			"    \"ShipmentDateTime\": \"2020-12-01T07:05:00.000Z\",\n" +
 			"    \"ShipmentIdentifier\": \"TRACK123456\",\n" +
 			"    \"ServiceDetails\": {\n" +
 			"    \"NoOfBoxes\": 99,\n" +
@@ -107,13 +109,13 @@ public class TestClient {
 	public static final JSONObject CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD = new JSONObject("{\n" +
 			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
 			"    \"RequestorIdUnique\": false,\n" +
-			"    \"CustomerContact\": \"<CUSTOMER_CONTACT>\",\n" +
+			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
 			"    \"Operation\": \"0000/0001\",\n" +
 			"    \"Location\": \"<LOCATION>\",\n" +
 			"    \"Description\": \"Test description for Inbound Shipment Create\",\n" +
 			"    \"Attachments\": [],\n" +
 			"    \"CarrierName\": \"TEST\",\n" +
-			"    \"ShipmentDateTime\": \"2020-12-01T00:00:00.000Z\",\n" +
+			"    \"ShipmentDateTime\": \"2020-12-01T04:05:00.000Z\",\n" +
 			"    \"ServiceDetails\": {\n" +
 			"    \"NoOfBoxes\": 99,\n" +
 			"    \"DeliverToCage\": false\n" +
@@ -125,12 +127,12 @@ public class TestClient {
 			"    \"RequestorIdUnique\": false,\n" +
 			"    \"Operation\": \"0001/0000\",\n" +
 			"    \"Location\": \"<LOCATION>\",\n" +
-			"    \"CustomerContact\": \"<CUSTOMER_CONTACT>\",\n" +
+			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
 			"    \"Description\": \"Test description for Outbound Shipment Create\",\n" +
 			"    \"Attachments\": [],\n" +
 			"    \"CarrierName\": \"TEST\",\n" +
 			"    \"ShipmentIdentifier\": \"12345dse456546456\",\n" +
-			"    \"ShipmentDateTime\": \"2020-12-01T00:00:00.000Z\",\n" +
+			"    \"ShipmentDateTime\": \"2020-12-01T10:05:00.000Z\",\n" +
 			"    \"ShipmentLabel\": [],\n" +
 			"    \"ShipmentLabelInsideBox\": false,\n" +
 			"    \"ServiceDetails\": {\n" +
@@ -155,10 +157,10 @@ public class TestClient {
 			"    \"RequestorIdUnique\": false,\n" +
 			"    \"Operation\": \"0001/0001\",\n" +
 			"    \"Location\": \"<LOCATION>\",\n" +
-			"    \"CustomerContact\": \"<CUSTOMER_CONTACT>\",\n" +
+			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
 			"    \"Description\": \"Test description for Outbound Shipment Create\",\n" +
 			"    \"Attachments\": [],\n" +
-			"    \"ShipmentDateTime\": \"2020-12-01T00:00:00.000Z\",\n" +
+			"    \"ShipmentDateTime\": \"2020-12-01T07:05:00.000Z\",\n" +
 			"    \"ShipmentLabelInsideBox\": false\n" +
 			"}");
 
@@ -180,7 +182,7 @@ public class TestClient {
 			"    \"Attachments\": [],\n" +
 			"    \"Description\": \"Test description for Outbound Shipment Update\",\n" +
 			"    \"ShipmentIdentifier\": \"12345dse456546456\",\n" +
-			"    \"ShipmentDateTime\": \"2020-12-02T00:00:00.000Z\",\n" +
+			"    \"ShipmentDateTime\": \"2020-12-01T07:05:00.000Z\",\n" +
 			"    \"CarrierName\": \"OTHER\",\n" +
 			"    \"ShipmentLabelInsideBox\": true,\n" +
 			"    \"ServiceDetails\": {\n" +
@@ -203,6 +205,59 @@ public class TestClient {
 	public static final JSONObject CANCEL_SHIPMENT_PAYLOAD = new JSONObject("{\n" +
 			"    \"Description\": \"Test description for Shipment Cancel\",\n" +
 			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
+			"    \"ServicerId\": "+ORDER_NUMBER+",\n" +
+			"    \"State\": \"Cancelled\"\n" +
+			"}");
+
+	public static final JSONObject CREATE_SMARTHAND_PAYLOAD = new JSONObject("{\n" +
+			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
+			"    \"Attachments\": [],\n" +
+			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
+			"    \"RequestorIdUnique\": false,\n" +
+			"    \"Operation\": \"0000\",\n" +
+			"    \"Location\": \"<LOCATION>\",\n" +
+			"    \"Description\": \"Test description for SmartHands Create\",\n" +
+			"    \"SchedulingDetails\": {\n" +
+			"        \"RequestedStartDate\": null,\n" +
+			"        \"RequestedCompletionDate\": null\n" +
+			"    }\n" +
+			"}");
+
+	public static final JSONObject UPDATE_SMARTHAND_PAYLOAD = new JSONObject("{\n" +
+			"    \"ServicerId\": "+ORDER_NUMBER+",\n" +
+			"    \"Attachments\": [],\n" +
+			"    \"Description\": \"Test description for SmartHands Update\",\n" +
+			"}");
+
+	public static final JSONObject CANCEL_SMARTHAND_PAYLOAD = new JSONObject("{\n" +
+			"    \"State\": \"Cancelled\",\n" +
+			"    \"ServicerId\": "+ORDER_NUMBER+",\n" +
+			"    \"Description\": \"Test description for SmartHands Cancel\",\n" +
+			"}");
+
+	public static final JSONObject CREATE_TROUBLETICKET_PAYLOAD = new JSONObject("{\n" +
+			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
+			"    \"IncidentDate\": \"2020-09-11T00:00:00+00:00\",\n" +
+			"    \"Description\": \"Test description for TroubleTicket Create\",\n" +
+			"    \"Attachments\": [],\n" +
+			"    \"RequestorIdUnique\": false,\n" +
+			"    \"Operation\": \"0005/0001\",\n" +
+			"    \"Location\": \"<LOCATION>\",\n" +
+			"    \"CallFromCage\": true,\n" +
+			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
+			"    \"Device\": \"6723596 | ASH-S61LE-GSGO-09A-PID10244692 | 00D01F070304\"\n" +
+			"}");
+
+	public static final JSONObject UPDATE_TROUBLETICKET_PAYLOAD = new JSONObject("{\n" +
+			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
+		//	"    \"Description\": \"Test description for TroubleTicket Update\",\n" +
+			"    \"Attachments\": [],\n" +
+			"    \"ServicerId\": "+ORDER_NUMBER+",\n" +
+			"    \"CallFromCage\": false\n" +
+			"}");
+
+	public static final JSONObject CANCEL_TROUBLETICKET_PAYLOAD = new JSONObject("{\n" +
+			"    \"Description\": \"Test description for TroubleTicket Cancel\",\n" +
 			"    \"ServicerId\": "+ORDER_NUMBER+",\n" +
 			"    \"State\": \"Cancelled\"\n" +
 			"}");
@@ -232,7 +287,7 @@ public class TestClient {
 		System.out.println("\n\nSending WorkVisit Notification Request Message  **********\n\n");
 		//(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
 		EquinixWorkVisitTemplate template = new EquinixWorkVisitTemplate();
-		JSONObject result = template.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN);
+		JSONObject result = template.getNotifications(null, ORDER_NUMBER, null,null );
 		System.out.println("\n\nReceiving WorkVisit Notification Response Message  **********\n\n"+result);
 	}
 
@@ -289,12 +344,70 @@ public class TestClient {
 		System.out.println("\n\nSending Shipment Notification Request Message  **********\n\n");
 		//(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
 		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
-		JSONObject result = template.getNotifications(null,ORDER_NUMBER, null, null);
+		JSONObject result = template.getNotifications(null,null, null,null);
 		System.out.println("\n\nReceiving Shipment Notification Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_smarthands() throws Exception {
+		System.out.println("\n\nSending Create SmartHands Request Message  **********\n\n");
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.createSmartHands(TestClient.CREATE_SMARTHAND_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Create SmartHands Response Message  **********\n\n"+result);
+	}
+
+	public static void test_update_smarthands() throws Exception {
+		System.out.println("\n\nSending Update SmartHands Request Message  **********\n\n");
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.updateSmartHands(TestClient.UPDATE_SMARTHAND_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Update SmartHands Response Message  **********\n\n"+result);
+	}
+
+	public static void test_cancel_smarthands() throws Exception {
+		System.out.println("\n\nSending Cancel SmartHands Request Message  **********\n\n");
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.cancelSmartHands(TestClient.CANCEL_SMARTHAND_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Cancel SmartHands Response Message  **********\n\n"+result);
+	}
+
+	public static void test_smarthands_notifications() throws Exception {
+		System.out.println("\n\nSending SmartHands Notification Request Message  **********\n\n");
+		//(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.getNotifications("null",ORDER_NUMBER, null,null);
+		System.out.println("\n\nReceiving SmartHands Notification Response Message  **********\n\n"+result);
+	}
+
+	public static void test_create_troubleticket() throws Exception {
+		System.out.println("\n\nSending Create TroubleTicket Request Message  **********\n\n");
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.createTroubleTicket(TestClient.CREATE_TROUBLETICKET_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Create TroubleTicket Response Message  **********\n\n"+result);
+	}
+
+	public static void test_update_troubleticket() throws Exception {
+		System.out.println("\n\nSending Update TroubleTicket Request Message  **********\n\n");
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.updateTroubleTicket(TestClient.UPDATE_TROUBLETICKET_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Update TroubleTicket Response Message  **********\n\n"+result);
+	}
+
+	public static void test_cancel_troubleticket() throws Exception {
+		System.out.println("\n\nSending Cancel TroubleTicket Request Message  **********\n\n");
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.cancelTroubleTicket(TestClient.CANCEL_TROUBLETICKET_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n"+result);
+	}
+
+	public static void test_troubleticket_notifications() throws Exception {
+		System.out.println("\n\nSending TroubleTicket Notification Request Message  **********\n\n");
+		//(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.getNotifications(null,ORDER_NUMBER, null,NOTIFICATION_INPROGRESS);
+		System.out.println("\n\nReceiving TroubleTicket Notification Response Message  **********\n\n"+result);
+	}
+
 	public static void main(String args[]) throws Exception {
-		test_create_work_visit();
+	//	test_create_work_visit();
 	//	test_update_work_visit();
 	//	test_cancel_work_visit();
 	//	test_workvisit_notifications();
@@ -306,6 +419,14 @@ public class TestClient {
 	//	test_update_outbound_shipment();
 	//	test_cancel_shipment();
 	//	test_shipment_notifications();
+	//	test_create_smarthands();
+	//	test_update_smarthands();
+	//	test_cancel_smarthands();
+	//	test_smarthands_notifications();
+	//	test_create_troubleticket();
+	//	test_update_troubleticket();
+	//	test_cancel_troubleticket();
+	//	test_troubleticket_notifications();
 	}
 }
 

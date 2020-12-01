@@ -39,14 +39,12 @@ import com.azure.messaging.servicebus.models.ReceiveMode;
 import org.json.JSONObject;
 import config.*;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MessageUtil {
@@ -91,7 +89,7 @@ public class MessageUtil {
 			sbb.sendMessageToQueue(messageInput, "IOMA-Message");
 		}
 		catch (Exception e) {
-			processErrorResponse(e.getMessage(),"send", task_obj);
+			return processErrorResponse(e.getMessage(),"send", task_obj);
 		}
 		try {
 			return read_messages_from_queue(messageId,null);
@@ -137,35 +135,37 @@ public class MessageUtil {
 					.queueName(queueName)
 					.buildClient();
 			IterableStream<ServiceBusReceivedMessage> messages = receiver.receiveMessages(5, Duration.ofSeconds(5));
-			for(ServiceBusReceivedMessage message : messages){
-				if (message == null) {
-					return new JSONObject("{ \"Result\" : \"No Messages to Read from Queue\"}");
-				}
-				else if(filters != null){
+			for(ServiceBusReceivedMessage message : messages) {
+				if (message != null && message.getBody() != null) {
 					JSONObject json_temp = new JSONObject(message.getBody().toString());
-					JSONObject json_obj = new JSONObject(json_temp.get("Task").toString());
-					if (json_temp != null) {
-						JSONObject body_json_obj =  new JSONObject(json_obj.get("Body").toString());
-						List<JSONObject> task_list = new ArrayList<JSONObject>();
-						task_list.add(json_obj);
-						List<JSONObject> listcom=task_list.stream()
-								.filter(!filters.get("ResourceType").equals("null")? json -> filters.get("ResourceType").toString().equalsIgnoreCase(json_obj.get("Resource").toString()): json->true)
-								.filter(!filters.get("RequestorId").equals("null")? json -> filters.get("RequestorId").toString().equalsIgnoreCase(body_json_obj.get("RequestorId").toString()): json->true)
-								.filter(!filters.get("ServicerId").equals("null")? json -> filters.get("ServicerId").toString().equalsIgnoreCase(body_json_obj.get("ServicerId").toString()): json->true)
-								.filter(!filters.get("State").equals("null") ? json -> filters.get("State").toString().equalsIgnoreCase(body_json_obj.get("State").toString()) : json-> true)
-								.collect(Collectors.toList());
-						if(listcom.size() > 0)
-						{
-							ret_json_object[0] = json_temp;
-							receiver.complete(message);
-							return ret_json_object[0];
+					if (json_temp.has("Task")) {
+						JSONObject json_obj = new JSONObject(json_temp.get("Task").toString());
+						if (filters != null && json_obj != null && json_obj.has("Body")) {
+							JSONObject body_json_obj = new JSONObject(json_obj.get("Body").toString());
+							if (!body_json_obj.has("RequestorId")) body_json_obj.put("RequestorId", "");
+							if (!body_json_obj.has("ServicerId")) body_json_obj.put("ServicerId", "");
+							if (!body_json_obj.has("State")) body_json_obj.put("State", "");
+							if (!body_json_obj.has("Activity")) body_json_obj.put("Activity", "");
+
+							List<JSONObject> listcom = Arrays.asList(json_obj).stream()
+									.filter(!filters.get("ResourceType").equals(null) ? json -> filters.get("ResourceType").toString().equalsIgnoreCase(json_obj.get("Resource").toString()) : json -> true)
+									.filter(!filters.get("RequestorId").equals(null) ? json -> filters.get("RequestorId").toString().equalsIgnoreCase(body_json_obj.get("RequestorId").toString()) : json -> true)
+									.filter(!filters.get("ServicerId").equals(null) ? json -> filters.get("ServicerId").toString().equalsIgnoreCase(body_json_obj.get("ServicerId").toString()) : json -> true)
+									.filter(!filters.get("State").equals(null) ? json -> filters.get("State").toString().equalsIgnoreCase(body_json_obj.get("State").toString()) : json -> true)
+									.filter(!filters.get("Activity").equals(null) ? json -> filters.get("Activity").toString().equalsIgnoreCase(body_json_obj.get("Activity").toString()) : json -> true)
+									.collect(Collectors.toList());
+							if (listcom.size() > 0) {
+								ret_json_object[0] = json_temp;
+								receiver.complete(message);
+								return ret_json_object[0];
+							}
+						} else {
+							if (json_obj.get("OriginationId").toString().equalsIgnoreCase(messageId)) {
+								ret_json_object[0] = new JSONObject(message.getBody().toString());
+								receiver.complete(message);
+								return ret_json_object[0];
+							}
 						}
-					}
-				} else {
-					if(new JSONObject(new JSONObject(message.getBody().toString()).get("Task").toString()).get("OriginationId").toString().equalsIgnoreCase( messageId )){
-						ret_json_object[0] = new JSONObject(message.getBody().toString());
-						receiver.complete(message);
-						return ret_json_object[0];
 					}
 				}
 			}
@@ -202,7 +202,7 @@ public class MessageUtil {
 		for(int i=0;i< errorpair.length;i++) {
 			String[] errorTemp = errorpair[i].split(":");
 			if(errorTemp.length < 2)
-				errormap.put(errorTemp[0].trim(),errorTemp[1].trim());
+				errormap.put(errorTemp[0].trim(),errorTemp[i].trim());
 			else
 				errormap.put(errorTemp[0].trim(), errorpair[i].substring(errorTemp[0].length()+1).trim());
 		}

@@ -33,26 +33,10 @@ package template;
 import org.json.*;
 import util.*;
 
-public class EquinixWorkVisitTemplate {
+public class EquinixTroubleTicketTemplate {
 
 	/**
-	 * Sends the create WorkVisit message to Equinix Messaging Gateway.
-	 *
-	 * @param requestJSON - Message to send.
-	 * @param clientID - Equinix issued clientID.
-	 * @param clientSecret - Equinix issued clientSecrete
-	 * @returns responseJSON - Received response message
-	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
-	 */
-	public JSONObject createWorkVisit(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
-	{
-		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,clientID, clientSecret );
-		return responseJSON;
-	}
-
-	/**
-	 * Sends the update WorkVisit message to Equinix Messaging Gateway.
+	 * Sends the create Trouble Ticket message to Equinix Messaging Gateway.
 	 *
 	 * @param requestJSON - Message to send.
 	 * @param clientID - Equinix issued clientID.
@@ -60,15 +44,15 @@ public class EquinixWorkVisitTemplate {
 	 * @returns responseJSON - Received response message
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	public JSONObject updateWorkVisit(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	public JSONObject createTroubleTicket(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,clientID, clientSecret );
 		return responseJSON;
 	}
 
 	/**
-	 * Sends the cancel WorkVisit message to Equinix Messaging Gateway.
+	 * Sends the update Trouble Ticket message to Equinix Messaging Gateway.
 	 *
 	 * @param requestJSON - Message to send.
 	 * @param clientID - Equinix issued clientID.
@@ -76,27 +60,43 @@ public class EquinixWorkVisitTemplate {
 	 * @returns responseJSON - Received response message
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	public JSONObject cancelWorkVisit(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	public JSONObject updateTroubleTicket(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the cancel Trouble Ticket message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param clientID - Equinix issued clientID.
+	 * @param clientSecret - Equinix issued clientSecret.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject cancelTroubleTicket(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,clientID, clientSecret );
 		return responseJSON;
 	}
 
 	/**
 	 * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
 	 *
-	 * @param requestorId - Customer Reference Number of the WorkVisit ticket.
-	 * @param servicerId – Ticket Number of the WorkVisit ticket.
-	 * @param activityId - Activity Number of the WorkVisit ticket.
-	 * @param ticketState - State of the WorkVisit ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
+	 * @param requestorId - Customer Reference Number of the Trouble Ticket.
+	 * @param servicerId – Ticket Number of the Trouble Ticket.
+	 * @param activityId - Activity Number of the Trouble Ticket.
+	 * @param ticketState - State of the Trouble Ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
 	 * @returns notificationMsg - Received notification message.
 	 * @throws Error if Equinix Messaging Gateway returns an error while retrieving notification.
 	 */
 	public JSONObject getNotifications(String requestorId, String servicerId, String activityId, String ticketState ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject filterCriteria = new JSONObject("{ResourceType:"+util.TICKET_TYPE_WORKVISIT+",\n" +
+		JSONObject filterCriteria = new JSONObject("{ResourceType:"+util.TICKET_TYPE_BREAKFIX+",\n" +
 				"RequestorId:"+requestorId+",\n" +
 				"ServicerId:"+servicerId+",\n" +
 				"Activity:"+activityId+",\n" +
