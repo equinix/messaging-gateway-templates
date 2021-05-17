@@ -30,7 +30,7 @@
 # ************************************************************************
 
 # from azure.servicebus import Message, ServiceBusClient
-from azure.servicebus import Message, ServiceBusSender, ServiceBusReceiver
+from azure.servicebus import ServiceBusClient, ServiceBusMessage
 
 from config.config import (EQUINIX_INCOMING_QUEUE,
                            EQUINIX_INCOMING_QUEUE_CONNECTION_STRING,
@@ -49,13 +49,14 @@ HTTP_PROXY = {
 }
 
 def send_message_to_queue(payload):
-    queue_sender = ServiceBusSender.from_connection_string(
-        conn_str=EQUINIX_INCOMING_QUEUE_CONNECTION_STRING, queue_name=EQUINIX_INCOMING_QUEUE)
-    with queue_sender:
-        message = Message(payload)
-        queue_sender.send_messages(message)
+    servicebus_client = ServiceBusClient.from_connection_string(conn_str=EQUINIX_INCOMING_QUEUE_CONNECTION_STRING, logging_enable=True)
+    with servicebus_client:
+        sender = servicebus_client.get_topic_sender(topic_name=EQUINIX_INCOMING_QUEUE)
+        with sender:
+            message = ServiceBusMessage(payload)
+            sender.send_messages(message)
 
 
 def read_messages_from_queue():
-    servicebus_receiver = ServiceBusReceiver.from_connection_string(conn_str=EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING)
-    return servicebus_receiver
+    servicebus_receiver = ServiceBusClient.from_connection_string(conn_str=EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING)
+    return servicebus_receiver.get_queue_receiver(queue_name=EQUINIX_OUTGOING_QUEUE)

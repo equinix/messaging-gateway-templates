@@ -202,14 +202,14 @@ async def read_from_queue(message_id, filters):
                         result = filter_notification(json_obj, filters)
                         if len(result) > 0:
                             res.append(json_obj)
-                            message.complete()
+                            receiver.complete_message(message)
                             break
                 else:
                     json_temp = json.loads(str(message))["Task"]
                     json_obj = json.loads(json_temp)
                     if json_obj["OriginationId"] == message_id and json_obj["Verb"] == ACK:
                         res.append(json_obj)
-                        message.complete()
+                        receiver.complete_message(message)
                         break
             if len(res) > 0:
                 receiver.close()
