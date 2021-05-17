@@ -35,6 +35,9 @@ var sbb = require('./ServiceBusBase');
 var uuid = require('uuid/v4');
 const { ReceiveMode} = require("@azure/service-bus");
 const config = require('../config/config');
+const { BlobServiceClient } = require("@azure/storage-blob");
+const fs = require('fs');
+const axios = require('axios')
 
 const EQUINIX_INCOMING_QUEUE = config.EQUINIX_INCOMING_QUEUE;
 const EQUINIX_INCOMING_QUEUE_CONNECTION_STRING = config.EQUINIX_INCOMING_QUEUE_CONNECTION_STRING;
@@ -60,10 +63,16 @@ const TICKET_TYPE_BREAKFIX = "BreakFix"
 
 
 const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret) => {    
-    var messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
-    const messageId = JSON.parse(messageInput.Task).Id;
-    console.log("Message ID:   ", messageId);
+    
+    var messageId;
+
     try {
+        if(JSONObj.Attachments && JSONObj.Attachments.length > 0){
+            JSONObj.Attachments = await uploadAllAttachments(JSONObj.Attachments);
+        }
+        var messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
+        messageId = JSON.parse(messageInput.Task).Id;
+        console.log("Message ID:   ", messageId);
         await sbb.sendMessageToQueue(messageInput, "IOMA-Message");
     } catch (e) {
         return processErrorResponse(e,"send", JSON.parse(messageInput.Task));
@@ -199,9 +208,77 @@ function processErrorResponse(errorObj, mode, messageInput) {
         return formatErrorResponse(500, e.message);
     }
 }
+async function uploadAllAttachments(attachments){
+    try{
+    var newAttachments = [];
+     for(var key in attachments){
+         if(!attachments[key].Data){
+            newAttachments.push(attachments[key]);
+            break;
+        }  
+        var byteArray = Buffer.from(attachments[key].Data,'base64'); 
+        var uploadResponse = await uploadToAzure(byteArray,attachments[key].Name);
+        newAttachments.push(uploadResponse);
+     }
+    return newAttachments;
+    }catch(e){
+        throw Error(
+            safeStringify(formatError(400,e.message))
+        );
+    }
+}
+
+async function uploadToAzure(data, originalFileName) {
+    try{
+        var lastSplitIndex = originalFileName.lastIndexOf('.');
+        var fileName = originalFileName.substr(0, lastSplitIndex);
+        var fileExtension = originalFileName.split('.').pop();
+        var blobName = fileName + new Date().getTime() + '.' + fileExtension;
+
+        var blobServiceClient;
+        var containerClient;
+
+        blobServiceClient = new BlobServiceClient(config.AZURE_UPLOAD_URL);
+        containerClient = blobServiceClient.getContainerClient(config.AZURE_UPLOAD_BLOB_DIRECTORY)
+        var blockBlobClient = containerClient.getBlockBlobClient(blobName);
+        var uploadBlobResponse = await blockBlobClient.upload(data, data.length);
+        var responseURL = new URL(blockBlobClient.url);
+        var blobUrl = `${responseURL.origin}${responseURL.pathname}`;
+        return {"Name": blobName, "Url": blobUrl.toString()}
+    }
+    catch(e){
+        throw Error(
+            safeStringify(formatError(400,e.message))
+        );
+    }
+}
+
+async function downloadAllAttachments(attachments){
+    try{
+        var newAttachments = [];
+        for(var key in attachments){
+            var downloadURL= `${attachments[key].Url}${config.AZURE_DOWNLOAD_SASS_TOKEN}`;
+            const response = await axios.get(downloadURL,{responseType: 'arraybuffer'});
+            const buffer = Buffer.from(response.data, "utf-8").toString("base64");
+            newAttachments.push({"Name": `${attachments[key].Name}`, "Data": buffer});
+        }
+        return newAttachments;
+    }catch(e){
+        throw Error(
+            safeStringify(formatError(400,e.message))
+        );
+    }
+}
+
+function convertFileToBase64(filePath){
+    var base64 =  fs.readFileSync(filePath, {encoding: 'base64'});
+    return base64;
+}
 module.exports = {
     messageProcessor: messageProcessor,
     readFromQueue : readFromQueue,
+    convertFileToBase64: convertFileToBase64,
+    downloadAllAttachments: downloadAllAttachments,
     CREATE_OPERATION,
     UPDATE_OPERATION,
     CANCEL_OPERATION,

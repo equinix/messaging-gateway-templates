@@ -11,6 +11,8 @@
   "dependencies": {
     "@azure/service-bus": "^1.1.8",
     "chai": "^4.2.0",
+    "@azure/storage-blob": "^12.5.0",
+    "axios": "^0.21.1",
     "fast-safe-stringify": "^2.0.6",
     "http-status-codes": "^2.1.2",
     "mocha": "^6.0.2",

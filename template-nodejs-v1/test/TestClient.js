@@ -6,6 +6,9 @@ const smartHandsTemplate = require('../EquinixSmartHandsTemplate')
 const troubleTicketTemplate = require('../EquinixTroubleTicketTemplate')
 const shipmentTemplate = require('../EquinixShipmentTemplate')
 const safeStringify = require('fast-safe-stringify');
+const messageUtil = require('../util/MessageUtil');
+const path = require('path');
+
 
 var ORDER_NUMBER = "<ORDER_NUMBER>";
 var CLIENT_ID = "<CLIENT_ID>"; // Will be supplied by Customer
@@ -133,7 +136,10 @@ const CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
 
 const CREATE_SMARTHAND_PAYLOAD = {
     "CustomerContact": "<CUSTOMER_CONTACT>",
-    "Attachments": [],
+    "Attachments": [
+        {"Name": "equinix_logo.png", "Data": messageUtil.convertFileToBase64(path.resolve(__dirname, "equinix_logo.png"))},
+        {"Name": "TestWordDoc.doc", "Data": messageUtil.convertFileToBase64(path.resolve(__dirname, "TestWordDoc.doc"))}
+    ],
     "RequestorId": "102894102Test1234",
     "RequestorIdUnique": false,
     "Operation": "0000",

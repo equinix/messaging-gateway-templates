@@ -96,6 +96,10 @@ const getNotifications = async (requestorId, servicerId, activityId, ticketState
     };
     
     var notificationMsg = await messageUtil.readFromQueue(null, filterCriteria);
+    if(notificationMsg.Task.Body.Attachments && notificationMsg.Task.Body.Attachments.length > 0){
+      notificationMsg.Task.Body.Attachments = await messageUtil.downloadAllAttachments(notificationMsg.Task.Body.Attachments);
+    }
+
     return notificationMsg;
 }
 
