@@ -220,7 +220,7 @@ def filter_notification(list_obj, filters):
     result = []
     all_filters = []
     if list_obj["Resource"]:
-        f1 = lambda x: x["Resource"] == "WorkVisit"
+        f1 = lambda x: x["Resource"] == filters["ResourceType"]
         all_filters.append(f1)
     
     if filters:
