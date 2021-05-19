@@ -217,7 +217,7 @@ async function uploadAllAttachments(attachments){
             break;
         }  
         var byteArray = Buffer.from(attachments[key].Data,'base64'); 
-        var uploadResponse = await uploadToAzure(byteArray,attachments[key].Name);
+        var uploadResponse = await uploadFile(byteArray,attachments[key].Name);
         newAttachments.push(uploadResponse);
      }
     return newAttachments;
@@ -228,7 +228,7 @@ async function uploadAllAttachments(attachments){
     }
 }
 
-async function uploadToAzure(data, originalFileName) {
+async function uploadFile(data, originalFileName) {
     try{
         var lastSplitIndex = originalFileName.lastIndexOf('.');
         var fileName = originalFileName.substr(0, lastSplitIndex);
@@ -238,8 +238,8 @@ async function uploadToAzure(data, originalFileName) {
         var blobServiceClient;
         var containerClient;
 
-        blobServiceClient = new BlobServiceClient(config.AZURE_UPLOAD_URL);
-        containerClient = blobServiceClient.getContainerClient(config.AZURE_UPLOAD_BLOB_DIRECTORY)
+        blobServiceClient = new BlobServiceClient(config.FILE_STORAGE_URL);
+        containerClient = blobServiceClient.getContainerClient(config.FILE_STORAGE_DIRECTORY)
         var blockBlobClient = containerClient.getBlockBlobClient(blobName);
         var uploadBlobResponse = await blockBlobClient.upload(data, data.length);
         var responseURL = new URL(blockBlobClient.url);
@@ -257,7 +257,7 @@ async function downloadAllAttachments(attachments){
     try{
         var newAttachments = [];
         for(var key in attachments){
-            var downloadURL= `${attachments[key].Url}${config.AZURE_DOWNLOAD_SASS_TOKEN}`;
+            var downloadURL= `${attachments[key].Url}${config.FILE_STORAGE_KEY}`;
             const response = await axios.get(downloadURL,{responseType: 'arraybuffer'});
             const buffer = Buffer.from(response.data, "utf-8").toString("base64");
             newAttachments.push({"Name": `${attachments[key].Name}`, "Data": buffer});

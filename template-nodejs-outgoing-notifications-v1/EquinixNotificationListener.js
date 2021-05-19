@@ -41,7 +41,7 @@ async function downloadAllAttachments(attachments){
     try{
         var newAttachments = [];
         for(var key in attachments){
-            var downloadURL= `${attachments[key].Url}${config.AZURE_DOWNLOAD_SASS_TOKEN}`;
+            var downloadURL= `${attachments[key].Url}${config.FILE_STORAGE_KEY}`;
             const response = await axios.get(downloadURL,{responseType: 'arraybuffer'});
             const buffer = Buffer.from(response.data, "utf-8").toString("base64");
             newAttachments.push({"Name": `${attachments[key].Name}`, "Data": buffer});
