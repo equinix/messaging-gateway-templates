@@ -33,11 +33,14 @@ import asyncio
 import json
 
 import pytest
-
+import base64
 import equinix_shipment_template
 import equinix_smarthands_template
 import equinix_troubleticket_template
 import equinix_workvisit_template
+import equinix_crossconnect_template
+from util.message_util import (encodeFileToBase64)
+
 
 ORDER_NUMBER = "<ORDERNUMBER>"
 
@@ -160,7 +163,7 @@ CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
 
 CREATE_SMARTHAND_PAYLOAD = {
     "CustomerContact": "<CUSTOMER CONTACT>",
-    "Attachments": [],
+    "Attachments": [{"Name":"equinix_logo.png","Data": encodeFileToBase64("test/equinix_logo.png").decode("utf-8")}],
     "RequestorId": "<REQUESTOR ID>",
     "RequestorIdUnique": False,
     "Operation": "0000",
@@ -330,6 +333,64 @@ CANCEL_SHIPMENT_PAYLOAD = {
     "State": "Cancelled"
 }
 
+CREATE_CROSSCONNECT_PAYLOAD = {
+    "CustomerContact": "<CUSTOMER_CONTACT>",
+    "RequestorId": "<REQUESTOR ID>",
+    "RequestorIdUnique": False,
+    "Attachments": [],
+    "Operation": "0000",
+    "Description": "Test description for CrossConnect Create",
+    "SchedulingDetails": {
+        "RequestedCompletionDate": None
+    },
+    "AdditionalContacts": [
+        {
+            "ContactType": "TECHNICAL",
+            "FirstName": "Test FirstName",
+            "LastName": "Test LastName",
+            "Email": "<test@test.com>",
+            "WorkPhoneCountryCode": "+1",
+            "WorkPhone": "866-205-4244",
+            "WorkPhonePrefToCall": "ANYTIME",
+            "WorkPhoneTimeZone": "Atlantic/Canary",
+            "MobilePhoneCountryCode": "+1",
+            "MobilePhone": "346-205-4244",
+            "MobilePhonePrefToCall": "ANYTIME",
+            "MobilePhoneTimeZone": "Atlantic/Canary"
+        }
+    ],
+    "ConnectionDetails": [
+        {
+            "ASide": {
+                "ConnectionService": "<Connection_Service>",
+                "MediaType": "<MediaType>",
+                "ProtocolType": "<ProtocolType>",
+                "ConnectorType": "<ConnectorType>",
+                "PatchPanel": {
+                    "Id": "<PatchPanel_Id>",
+                    "PortA": None,
+                    "PortB": None
+                }
+            },
+            "ZSide": {
+                ## Existing Provider 
+                "ConnectorType": "<ConnectorType>",
+                "PatchPanel": {
+                    "Id": "<PatchPanel_Id>",
+                    "PortA": None,
+                    "PortB": None
+                },
+                "CircuitId": "12345",
+                ## New Provider 
+                # "LOAAttachment": { "Name": "<LOAAttachment_Name>", "Url": "<LOAAttachment_Url>" },
+                # "IBX": "<IBX>",
+                # "ProviderName": "<Provider_Name>",
+            },
+            "ServiceDetails": None
+        }
+    ]
+}
+
 NOTIFICATION_PENDING_CUSTOMER_INPUT = "Pending Customer Input"
 NOTIFICATION_OPEN = "Open"
 NOTIFICATION_INPROGRESS = "InProgress"
@@ -395,10 +456,10 @@ async def test_cancel_work_visit_extension():
         assert result["statusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
-async def test_get_notifications_for_work_visit_open():   
+async def test_get_notifications_for_work_visit():   
     print ("\n\nSending WorkVisit Notification Request Message  **********\n\n")
     # (customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
-    result = await equinix_workvisit_template.get_notifications(None, ORDER_NUMBER, None, NOTIFICATION_OPEN)
+    result = await equinix_workvisit_template.get_notifications(None, ORDER_NUMBER, None, None)
     if result:
         print("\n\nReceiving WorkVisit Notification Response Message  **********\n\n", result)
 
@@ -431,10 +492,10 @@ async def test_cancel_smarthands():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
-async def test_get_notifications_for_smarthands_open():   
+async def test_get_notifications_for_smarthands():   
     print ("\n\nSending SmartHands Notification Request Message  **********\n\n")
     # (customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
-    result = await equinix_smarthands_template.get_notifications(None, ORDER_NUMBER, None, NOTIFICATION_OPEN)
+    result = await equinix_smarthands_template.get_notifications(None, ORDER_NUMBER, None, None)
     if result:
         print("\n\nReceiving SmartHands Notification Response Message  **********\n\n", result)
 
@@ -466,10 +527,10 @@ async def test_cancel_troubleticket():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
-async def test_get_notifications_for_troubleticket_open():   
+async def test_get_notifications_for_troubleticket():   
     print ("\n\nSending TroubleTicket Notification Request Message  **********\n\n")
     # (customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
-    result = await equinix_troubleticket_template.get_notifications(None, ORDER_NUMBER, None, NOTIFICATION_OPEN)
+    result = await equinix_troubleticket_template.get_notifications(None, ORDER_NUMBER, None, None)
     if result:
         print("\n\nReceiving TroubleTicket Notification Response Message  **********\n\n", result)
 
@@ -538,9 +599,26 @@ async def test_cancel_shipment():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
-async def test_get_notifications_for_shipment_open():   
+async def test_get_notifications_for_shipment():   
     print ("\n\nSending Shipment Notification Request Message  **********\n\n")
     # (customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
-    result = await equinix_shipment_template.get_notifications(None, ORDER_NUMBER, None, NOTIFICATION_OPEN)
+    result = await equinix_shipment_template.get_notifications(None, ORDER_NUMBER, None, None)
     if result:
         print("\n\nReceiving Shipment Notification Response Message  **********\n\n", result)
+
+@pytest.mark.asyncio
+async def test_create_crossconnect():
+    print ("\n\nSending Create CrossConnect Request Message  **********\n\n")
+    result = await equinix_crossconnect_template.create_crossconnect(json.dumps(CREATE_CROSSCONNECT_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Create CrossConnect Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
+async def test_get_notifications_for_crossconnect():   
+    print ("\n\nSending CrossConnect Notification Request Message  **********\n\n")
+    # (customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
+    result = await equinix_crossconnect_template.get_notifications(None, ORDER_NUMBER, None, NOTIFICATION_PENDING_CUSTOMER_INPUT)
+    if result:
+        print("\n\nReceiving CrossConnect Notification Response Message  **********\n\n", result) 

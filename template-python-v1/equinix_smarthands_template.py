@@ -35,8 +35,9 @@ import json
 import time
 import uuid
 
+
 from util.message_util import (CANCEL_OPERATION, CREATE_OPERATION,
-                               TICKET_TYPE_SMARTHANDS, UPDATE_OPERATION,
+                               TICKET_TYPE_SMARTHANDS, UPDATE_OPERATION, downloadAllAttachments,
                                message_processor, read_from_queue)
 
 
@@ -122,4 +123,9 @@ async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state
     if ticket_state:
         all_filters.update({"State": ticket_state})
     notification_msg = await read_from_queue( None, all_filters)
+    if 'Attachments' in notification_msg['Body'] and len(notification_msg['Body']['Attachments'])>0:
+        newAttachments = await downloadAllAttachments(notification_msg['Body']['Attachments'])
+        notification_msg['Body']['Attachments'] = newAttachments
+
+
     return notification_msg

@@ -1,4 +1,4 @@
-/** EQUINIX MESSAGING GATEWAY WORKVISIT TEMPLATE **/
+/** EQUINIX MESSAGING GATEWAY CROSSCONNECT TEMPLATE **/
 
 /*************************************************************************
  *
@@ -28,31 +28,31 @@
  * Terms of Use: https://www.equinix.com/company/legal/terms/
  *
  *************************************************************************/
-package template;
 
+package template;
 import org.json.*;
 import util.*;
 
-public class EquinixShipmentTemplate {
+public class EquinixCrossConnectTemplate {
 
 	/**
-	 * Sends the create WorkVisit message to Equinix Messaging Gateway.
+	 * Sends the create Crossconnect message to Equinix Messaging Gateway.
 	 *
 	 * @param requestJSON - Message to send.
 	 * @param clientID - Equinix issued clientID.
-	 * @param clientSecret - Equinix issued clientSecrete
-	 * @returns responseJSON - Received response message
+	 * @param clientSecret - Equinix issued clientSecret.
+	 * @returns responseJSON - Received response message.
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	public JSONObject createShipment(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	public JSONObject createCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,clientID, clientSecret );
 		return responseJSON;
 	}
 
 	/**
-	 * Sends the update Shipment message to Equinix Messaging Gateway.
+	 * Sends the update Crossconnect message to Equinix Messaging Gateway.
 	 *
 	 * @param requestJSON - Message to send.
 	 * @param clientID - Equinix issued clientID.
@@ -60,15 +60,15 @@ public class EquinixShipmentTemplate {
 	 * @returns responseJSON - Received response message
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	public JSONObject updateShipment(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
-	{
-		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret );
-		return responseJSON;
-	}
+	// public JSONObject updateCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	// {
+	// 	MessageUtil util = new MessageUtil();
+	// 	JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT, clientID, clientSecret );
+	// 	return responseJSON;
+	// }
 
 	/**
-	 * Sends the cancel Shipment message to Equinix Messaging Gateway.
+	 * Sends the cancel Crossconnect message to Equinix Messaging Gateway.
 	 *
 	 * @param requestJSON - Message to send.
 	 * @param clientID - Equinix issued clientID.
@@ -76,40 +76,39 @@ public class EquinixShipmentTemplate {
 	 * @returns responseJSON - Received response message
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	public JSONObject cancelShipment(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
-	{
-		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,clientID, clientSecret );
-		return responseJSON;
-	}
+	// public JSONObject cancelCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	// {
+	// 	MessageUtil util = new MessageUtil();
+	// 	JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,clientID, clientSecret );
+	// 	return responseJSON;
+	// }
 
 	/**
 	 * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
 	 *
-	 * @param requestorId - Customer Reference Number of the Shipment ticket.
-	 * @param servicerId – Ticket Number of the Shipment ticket.
-	 * @param activityId - Activity Number of the Shipment ticket.
-	 * @param ticketState - State of the Shipment ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
+	 * @param requestorId - Customer Reference Number of the Crossconnect ticket.
+	 * @param servicerId – Ticket Number of the Crossconnect ticket.
+	 * @param activityId - Activity Number of the Crossconnect ticket.
+	 * @param ticketState - State of the Crossconnect ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
 	 * @returns notificationMsg - Received notification message.
 	 * @throws Error if Equinix Messaging Gateway returns an error while retrieving notification.
 	 */
 	public JSONObject getNotifications(String requestorId, String servicerId, String activityId, String ticketState ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject filterCriteria = new JSONObject("{ResourceType:"+util.TICKET_TYPE_SHIPPING+",\n" +
+		JSONObject filterCriteria = new JSONObject("{ResourceType:"+util.TICKET_TYPE_CROSSCONNECT+",\n" +
 				"RequestorId:"+requestorId+",\n" +
 				"ServicerId:"+servicerId+",\n" +
 				"Activity:"+activityId+",\n" +
 				"State:"+ticketState+"\n" +
 				"}");
 		JSONObject notificationMsg = util.read_messages_from_queue(null ,filterCriteria);
-		JSONObject taskObject = new JSONObject(notificationMsg.getString("Task"));
-		JSONObject bodyObject = taskObject.getJSONObject("Body");
-		notificationMsg.put("Task", taskObject);
+		JSONObject bodyObject = notificationMsg.getJSONObject("Body");
 		if(!bodyObject.isNull("Attachments") && !bodyObject.getJSONArray("Attachments").isEmpty()){
 			JSONArray newAttachments = MessageUtil.downloadAllAttachments(bodyObject.getJSONArray("Attachments"));
-			notificationMsg.getJSONObject("Task").getJSONObject("Body").put("Attachments", newAttachments);
+			notificationMsg.getJSONObject("Body").put("Attachments", newAttachments);
 		}
+
 		return notificationMsg;
 	}
 

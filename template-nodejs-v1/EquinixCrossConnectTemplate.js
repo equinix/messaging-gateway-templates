@@ -1,4 +1,4 @@
-/** EQUINIX MESSAGING GATEWAY SMARTHANDS TEMPLATE **/
+/** EQUINIX MESSAGING GATEWAY CROSSCONNECT TEMPLATE **/
 
 /*************************************************************************
 * 
@@ -32,7 +32,7 @@
 const messageUtil = require('./util/MessageUtil');
 
 /**
-  * Sends the create SmartHands message to Equinix Messaging Gateway.
+  * Sends the create CrossConnect message to Equinix Messaging Gateway.
   *
   * @param requestJSON - Message to send.
   * @param clientID - Equinix issued clientID.
@@ -40,55 +40,55 @@ const messageUtil = require('./util/MessageUtil');
   * @returns responseJSON - Received response message.
   * @throws error if Equinix Messaging Gateway returns an error while processing the message.
   */
-const createSmartHands = async (requestJSON, clientID, clientSecret) => {
+const createCrossConnect = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_CROSSCONNECT, clientID, clientSecret);
     return responseJSON;
 }
 
-/**
-  * Sends the update SmartHands message to Equinix Messaging Gateway.
-  *
-  * @param requestJSON - Message to send.
-  * @param clientID - Equinix issued clientID.
-  * @param clientSecret - Equinix issued clientSecret.
-  * @returns responseJSON - Received response message
-  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
-  */
-const updateSmartHands = async (requestJSON, clientID, clientSecret) => {
-    var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
-    return responseJSON;
-}
+// /**
+//   * Sends the update CrossConnect message to Equinix Messaging Gateway.
+//   *
+//   * @param requestJSON - Message to send.
+//   * @param clientID - Equinix issued clientID.
+//   * @param clientSecret - Equinix issued clientSecret.
+//   * @returns responseJSON - Received response message
+//   * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+//   */
+// const updateCrossConnect = async (requestJSON, clientID, clientSecret) => {
+//     var JSONObj = JSON.parse(requestJSON);
+//     var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_CrossConnect, clientID, clientSecret);
+//     return responseJSON;
+// }
 
-/**
-  * Sends the cancel SmartHands message to Equinix Messaging Gateway.
-  *
-  * @param requestJSON - Message to send.
-  * @param clientID - Equinix issued clientID.
-  * @param clientSecret - Equinix issued clientSecret.
-  * @returns responseJSON - Received response message
-  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
-  */
-const cancelSmartHands = async (requestJSON, clientID, clientSecret) => {
-    var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
-    return responseJSON;
-}
+// /**
+//   * Sends the cancel CrossConnect message to Equinix Messaging Gateway.
+//   *
+//   * @param requestJSON - Message to send.
+//   * @param clientID - Equinix issued clientID.
+//   * @param clientSecret - Equinix issued clientSecret.
+//   * @returns responseJSON - Received response message
+//   * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+//   */
+// const cancelCrossConnect = async (requestJSON, clientID, clientSecret) => {
+//     var JSONObj = JSON.parse(requestJSON);
+//     var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_CrossConnect, clientID, clientSecret);
+//     return responseJSON;
+// }
 
 /**
   * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
   *
-  * @param requestorId - Customer Reference Number of the SmartHands ticket.
-  * @param servicerId – Ticket Number of the SmartHands ticket.
-  * @param activityId - Activity Number of the SmartHands ticket.
-  * @param ticketState - State of the SmartHands ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
+  * @param requestorId - Customer Reference Number of the CrossConnect ticket.
+  * @param servicerId – Ticket Number of the CrossConnect ticket.
+  * @param activityId - Activity Number of the CrossConnect ticket.
+  * @param ticketState - State of the CrossConnect ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed).
   * @returns notificationMsg - Received notification message.
   * @throws error if Equinix Messaging Gateway returns an error while retrieving notification.
   */
 const getNotifications = async (requestorId, servicerId, activityId, ticketState) => {
     var filterCriteria = {
-        ResourceType: messageUtil.TICKET_TYPE_SMARTHANDS,
+        ResourceType: messageUtil.TICKET_TYPE_CROSSCONNECT,
         RequestorId: requestorId,
         ServicerId: servicerId,
         Activity: activityId,
@@ -104,8 +104,8 @@ const getNotifications = async (requestorId, servicerId, activityId, ticketState
 
 
 module.exports = {
-    createSmartHands: createSmartHands,
-    updateSmartHands: updateSmartHands,
-    cancelSmartHands: cancelSmartHands,
+    createCrossConnect: createCrossConnect,
+   // updateCrossConnect: updateCrossConnect,
+   // cancelCrossConnect: cancelCrossConnect,
     getNotifications: getNotifications
 }

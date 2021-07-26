@@ -33,7 +33,7 @@
 const safeStringify = require('fast-safe-stringify');
 var sbb = require('./ServiceBusBase');
 var uuid = require('uuid/v4');
-const { ReceiveMode} = require("@azure/service-bus");
+const { ReceiveMode } = require("@azure/service-bus");
 const config = require('../config/config');
 const { BlobServiceClient } = require("@azure/storage-blob");
 const fs = require('fs');
@@ -60,32 +60,45 @@ const TICKET_TYPE_SHIPPING = "Shipping"
 const TICKET_TYPE_SMARTHANDS = "SmartHands"
 const TICKET_TYPE_WORKVISIT = "WorkVisit"
 const TICKET_TYPE_BREAKFIX = "BreakFix"
+const TICKET_TYPE_CROSSCONNECT = "CrossConnect"
 
 
-const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret) => {    
-    
+const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret) => {
+
     var messageId;
 
     try {
-        if(JSONObj.Attachments && JSONObj.Attachments.length > 0){
+        if (JSONObj.Attachments && JSONObj.Attachments.length > 0) {
             JSONObj.Attachments = await uploadAllAttachments(JSONObj.Attachments);
         }
+
+        if (ResourceType == TICKET_TYPE_CROSSCONNECT) {
+            if (JSONObj.ConnectionDetails && JSONObj.ConnectionDetails.length > 0) {
+                for (var i = 0; i < JSONObj.ConnectionDetails.length; i++) {
+                    if (JSONObj.ConnectionDetails[i].ZSide && JSONObj.ConnectionDetails[i].ZSide.hasOwnProperty('LOAAttachment') && JSONObj.ConnectionDetails[i].ZSide.LOAAttachment != null) {
+                        var LOAAttachment = await uploadAllAttachments([JSONObj.ConnectionDetails[i].ZSide.LOAAttachment]);
+                        JSONObj.ConnectionDetails[i].ZSide.LOAAttachment = Object.assign({}, LOAAttachment[0])
+                    }
+                }
+            }
+        }
+
         var messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
         messageId = JSON.parse(messageInput.Task).Id;
         console.log("Message ID:   ", messageId);
         await sbb.sendMessageToQueue(messageInput, "IOMA-Message");
     } catch (e) {
-        return processErrorResponse(e,"send", JSON.parse(messageInput.Task));
+        return processErrorResponse(e, "send", JSON.parse(messageInput.Task));
     }
     try {
         var queueMsg = await readFromQueue(messageId, null);
         return queueMsg;
     } catch (e) {
-        return processErrorResponse(e,"receive", JSON.parse(messageInput.Task));
+        return processErrorResponse(e, "receive", JSON.parse(messageInput.Task));
     }
 }
 
-function createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, ClientId, ClientSecret){
+function createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, ClientId, ClientSecret) {
     var messageInput = {
         Task: {
             Id: uuid(),
@@ -123,11 +136,11 @@ async function readFromQueue(messageId, filterCriteria) {
                 var JSONObj = JSON.parse(message.body.Task);
                 var obj = [JSONObj];
                 var result = obj
-                .filter(a => filterCriteria.ResourceType!=null ?a.Resource == filterCriteria.ResourceType :a )
-                .filter(a => filterCriteria.RequestorId!=null ?a.Body.RequestorId == filterCriteria.RequestorId: a)
-                .filter(a => filterCriteria.ServicerId!=null ?a.Body.ServicerId == filterCriteria.ServicerId: a)
-                .filter(a => filterCriteria.Activity!=null ? a.Body.Activity == filterCriteria.Activity: a)
-                .filter(a => filterCriteria.State!=null ? a.Body.State == filterCriteria.State: a);
+                    .filter(a => filterCriteria.ResourceType != null ? a.Resource == filterCriteria.ResourceType : a)
+                    .filter(a => filterCriteria.RequestorId != null ? a.Body.RequestorId == filterCriteria.RequestorId : a)
+                    .filter(a => filterCriteria.ServicerId != null ? a.Body.ServicerId == filterCriteria.ServicerId : a)
+                    .filter(a => filterCriteria.Activity != null ? a.Body.Activity == filterCriteria.Activity : a)
+                    .filter(a => filterCriteria.State != null ? a.Body.State == filterCriteria.State : a);
 
                 if (result.length > 0) {
                     res = JSONObj;
@@ -149,20 +162,20 @@ async function readFromQueue(messageId, filterCriteria) {
     }
     catch (e) {
         throw Error(
-            safeStringify(formatError(400,e.message))
+            safeStringify(formatError(400, e.message))
         );
     }
 }
 
-function formatError(StatusCode, Description){
+function formatError(StatusCode, Description) {
     return {
-        Body:{
+        Body: {
             StatusCode: StatusCode,
             Description: Description
         }
     };
 }
-function formatErrorResponse (StatusCode, Description, messageInput){
+function formatErrorResponse(StatusCode, Description, messageInput) {
     return safeStringify({
         "Id": uuid(),
         "Body": {
@@ -208,28 +221,28 @@ function processErrorResponse(errorObj, mode, messageInput) {
         return formatErrorResponse(500, e.message);
     }
 }
-async function uploadAllAttachments(attachments){
-    try{
-    var newAttachments = [];
-     for(var key in attachments){
-         if(!attachments[key].Data){
-            newAttachments.push(attachments[key]);
-            break;
-        }  
-        var byteArray = Buffer.from(attachments[key].Data,'base64'); 
-        var uploadResponse = await uploadFile(byteArray,attachments[key].Name);
-        newAttachments.push(uploadResponse);
-     }
-    return newAttachments;
-    }catch(e){
+async function uploadAllAttachments(attachments) {
+    try {
+        var newAttachments = [];
+        for (var key in attachments) {
+            if (!attachments[key].Data) {
+                newAttachments.push(attachments[key]);
+                break;
+            }
+            var byteArray = Buffer.from(attachments[key].Data, 'base64');
+            var uploadResponse = await uploadFile(byteArray, attachments[key].Name);
+            newAttachments.push(uploadResponse);
+        }
+        return newAttachments;
+    } catch (e) {
         throw Error(
-            safeStringify(formatError(400,e.message))
+            safeStringify(formatError(400, e.message))
         );
     }
 }
 
 async function uploadFile(data, originalFileName) {
-    try{
+    try {
         var lastSplitIndex = originalFileName.lastIndexOf('.');
         var fileName = originalFileName.substr(0, lastSplitIndex);
         var fileExtension = originalFileName.split('.').pop();
@@ -238,52 +251,59 @@ async function uploadFile(data, originalFileName) {
         var blobServiceClient;
         var containerClient;
 
-        blobServiceClient = new BlobServiceClient(config.FILE_STORAGE_URL);
+        blobServiceClient = new BlobServiceClient(`${config.FILE_STORAGE_URL}?${config.FILE_STORAGE_UPLOAD_KEY}`);
         containerClient = blobServiceClient.getContainerClient(config.FILE_STORAGE_DIRECTORY)
         var blockBlobClient = containerClient.getBlockBlobClient(blobName);
         var uploadBlobResponse = await blockBlobClient.upload(data, data.length);
         var responseURL = new URL(blockBlobClient.url);
         var blobUrl = `${responseURL.origin}${responseURL.pathname}`;
-        return {"Name": blobName, "Url": blobUrl.toString()}
+        return { "Name": blobName, "Url": blobUrl.toString() }
     }
-    catch(e){
+    catch (e) {
         throw Error(
-            safeStringify(formatError(400,e.message))
+            safeStringify(formatError(400, e.message))
         );
     }
 }
 
-async function downloadAllAttachments(attachments){
-    try{
+async function downloadAllAttachments(attachments) {
+    try {
         var newAttachments = [];
-        for(var key in attachments){
-            var downloadURL= `${attachments[key].Url}${config.FILE_STORAGE_KEY}`;
-            const response = await axios.get(downloadURL,{responseType: 'arraybuffer'});
+        for (var key in attachments) {
+            if(!attachments[key]['Url']){
+                newAttachments.push(attachments[key]);
+                continue;
+            }
+            var downloadURL = `${attachments[key].Url}?${config.FILE_STORAGE_DOWNLOAD_KEY}`;
+            console.log("downloadURL", downloadURL);
+            const response = await axios.get(downloadURL, { responseType: 'arraybuffer' });
             const buffer = Buffer.from(response.data, "utf-8").toString("base64");
-            newAttachments.push({"Name": `${attachments[key].Name}`, "Data": buffer});
+            newAttachments.push({ "Name": `${attachments[key].Name}`, "Data": buffer });
         }
         return newAttachments;
-    }catch(e){
+    } catch (e) {
         throw Error(
-            safeStringify(formatError(400,e.message))
+            safeStringify(formatError(400, e.message))
         );
     }
 }
 
-function convertFileToBase64(filePath){
-    var base64 =  fs.readFileSync(filePath, {encoding: 'base64'});
+function convertFileToBase64(filePath) {
+    var base64 = fs.readFileSync(filePath, { encoding: 'base64' });
     return base64;
 }
 module.exports = {
     messageProcessor: messageProcessor,
-    readFromQueue : readFromQueue,
+    readFromQueue: readFromQueue,
     convertFileToBase64: convertFileToBase64,
     downloadAllAttachments: downloadAllAttachments,
+    uploadFile: uploadFile,
     CREATE_OPERATION,
     UPDATE_OPERATION,
     CANCEL_OPERATION,
     TICKET_TYPE_BREAKFIX,
     TICKET_TYPE_SHIPPING,
     TICKET_TYPE_SMARTHANDS,
-    TICKET_TYPE_WORKVISIT
+    TICKET_TYPE_WORKVISIT,
+    TICKET_TYPE_CROSSCONNECT
 };

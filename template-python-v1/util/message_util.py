@@ -29,16 +29,21 @@
 #
 # ************************************************************************
 
+import base64
 import datetime
 import json
 import time
 import uuid
 from datetime import timezone
 from http import HTTPStatus
+import urllib.request
+import os
+from urllib.parse import urlparse
 
 from config.config import (EQUINIX_INCOMING_QUEUE, EQUINIX_OUTGOING_QUEUE,
-                           EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING, SOURCE_ID)
+                           EQUINIX_OUTGOING_QUEUE_CONNECTION_STRING, SOURCE_ID,FILE_STORAGE_DIRECTORY,FILE_STORAGE_URL,FILE_STORAGE_UPLOAD_KEY,FILE_STORAGE_DOWNLOAD_KEY)
 from util.service_bus_base import read_messages_from_queue, send_message_to_queue
+from azure.storage.blob import BlobServiceClient, upload_blob_to_url
 
 
 FAILED_ESTABLISH_CONNECTION = "Please confirm target hostname exists"
@@ -56,6 +61,7 @@ TICKET_TYPE_SHIPPING = "Shipping"
 TICKET_TYPE_SMARTHANDS = "SmartHands"
 TICKET_TYPE_WORKVISIT = "WorkVisit"
 TICKET_TYPE_BREAKFIX = "BreakFix"
+TICKET_TYPE_CROSSCONNECT = "CrossConnect"
 
 
 def datetime_iso_format(date):
@@ -66,13 +72,26 @@ async def message_processor(json_obj, action_verb, resource_type, client_id, cli
 
     if action_verb == "Cancelled":
         verb = "Update"
+    
+    if 'Attachments' in json_obj and len(json_obj['Attachments'])>0:
+        json_obj['Attachments'] = await uploadAllAttachments(json_obj['Attachments'])
+
+    if resource_type == TICKET_TYPE_CROSSCONNECT:
+        try:
+            if json_obj['ConnectionDetails'] and len(json_obj['ConnectionDetails']) > 0 :
+                for details in json_obj["ConnectionDetails"]:
+                    if details['ZSide'] and details['ZSide']['LOAAttachment'] and len(details['ZSide']['LOAAttachment']) > 0 :
+                        LOAAttachment = await uploadAllAttachments([details['ZSide']['LOAAttachment']])
+                        details['ZSide']['LOAAttachment'] = LOAAttachment[0]
+        except:
+            pass
 
     message_input = create_payload(
         json_obj, verb, resource_type, client_id, client_secret)
     message_input["Task"] = json.dumps(message_input["Task"])
     message_id = json.loads(message_input["Task"])["Id"]
     try:
-        send_message_to_queue(json.dumps(message_input))
+       send_message_to_queue(json.dumps(message_input))
     except Exception as err:
         return process_error_response(err, "send", json.loads(message_input["Task"]))
     try:
@@ -80,7 +99,7 @@ async def message_processor(json_obj, action_verb, resource_type, client_id, cli
         if queue_msg == None:
             return json.loads(json.dumps(format_error_response(HTTPStatus.NOT_FOUND, "Order is still Processing", message_input)))
         else:
-            return json.loads(queue_msg)
+            return queue_msg
     except Exception as err:
         return process_error_response(err, "receive", json.loads(message_input["Task"]))
 
@@ -213,7 +232,7 @@ async def read_from_queue(message_id, filters):
                         break
             if len(res) > 0:
                 receiver.close()
-                return json.dumps(res[0])        
+                return res[0]   
 
 
 def filter_notification(list_obj, filters):
@@ -251,3 +270,57 @@ def filter_notification(list_obj, filters):
     
     result = list(filter(lambda x : all([f(x) for f in all_filters]), [list_obj]))
     return result
+
+async def uploadAllAttachments(attachments):
+    newAttachments = []
+    for attachment in attachments:
+        if "Data" not in attachment:
+            newAttachments.append(attachment)
+            break
+        data = base64.b64decode(attachment["Data"])
+        newAttachment = await uploadFile(data,attachment["Name"])
+        newAttachments.append(newAttachment)
+    return newAttachments
+
+async def uploadFile(data, originalFileName: str):
+    try:
+        lastSplitIndex = originalFileName.rindex(".")
+        fileName = originalFileName[0: lastSplitIndex]
+        fileExtension = originalFileName.split(".").pop()
+        blobName = fileName+str(int(round(time.time() * 1000)))+'.'+fileExtension
+        
+        blobServiceClient =  BlobServiceClient(account_url=FILE_STORAGE_URL, credential=FILE_STORAGE_UPLOAD_KEY)
+        containerClient = blobServiceClient.get_container_client(FILE_STORAGE_DIRECTORY)
+        blockBlobClient = containerClient.get_blob_client(blobName)
+        blockBlobClient.upload_blob(data)
+        url = urlparse(blockBlobClient.url)
+        return {"Name": blobName, "Url":url.scheme+"://"+url.netloc+url.path}
+    except Exception as e:
+        print(e)
+
+
+async def downloadFile(url):
+    try:
+        response = urllib.request.urlopen(url+'?'+FILE_STORAGE_DOWNLOAD_KEY)
+        data = response.read()
+        return base64.encodebytes(data)
+    except Exception as e:
+        print(e)
+
+async def downloadAllAttachments(attachments):
+    newAttachments = []
+    for attachment in attachments:
+        if('Url' not in attachment):
+            newAttachments.append(attachment)
+            continue
+        base64 = await downloadFile(attachment['Url'])
+        newAttachment = {"Name": attachment['Name'], "Data": base64}
+        newAttachments.append(newAttachment)
+    return newAttachments
+
+def encodeFileToBase64(path):
+    data = ""
+    with open(path, "rb") as file:
+        data =  base64.b64encode(file.read())
+    print("encode")
+    return data

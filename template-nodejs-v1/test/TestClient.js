@@ -5,6 +5,7 @@ const workVisitTemplate = require('../EquinixWorkVisitTemplate')
 const smartHandsTemplate = require('../EquinixSmartHandsTemplate')
 const troubleTicketTemplate = require('../EquinixTroubleTicketTemplate')
 const shipmentTemplate = require('../EquinixShipmentTemplate')
+const crossConnectTemplate = require('../EquinixCrossConnectTemplate')
 const safeStringify = require('fast-safe-stringify');
 const messageUtil = require('../util/MessageUtil');
 const path = require('path');
@@ -69,7 +70,7 @@ const CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
         "cages": [
             {
                 "cage": "<LOCATION>",
-                "accountNumber":"1"
+                "accountNumber": "1"
 
             }
         ],
@@ -137,8 +138,8 @@ const CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA = {
 const CREATE_SMARTHAND_PAYLOAD = {
     "CustomerContact": "<CUSTOMER_CONTACT>",
     "Attachments": [
-        {"Name": "equinix_logo.png", "Data": messageUtil.convertFileToBase64(path.resolve(__dirname, "equinix_logo.png"))},
-        {"Name": "TestWordDoc.doc", "Data": messageUtil.convertFileToBase64(path.resolve(__dirname, "TestWordDoc.doc"))}
+        { "Name": "equinix_logo.png", "Data": messageUtil.convertFileToBase64(path.resolve(__dirname, "equinix_logo.png")) },
+        { "Name": "TestWordDoc.doc", "Data": messageUtil.convertFileToBase64(path.resolve(__dirname, "TestWordDoc.doc")) }
     ],
     "RequestorId": "102894102Test1234",
     "RequestorIdUnique": false,
@@ -200,8 +201,8 @@ const CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD = {
     "ShipmentDateTime": "2020-09-20T07:05:00.000Z",
     "ShipmentIdentifier": "TRACK123456",
     "ServiceDetails": {
-      "NoOfBoxes": 99,
-      "DeliverToCage": false
+        "NoOfBoxes": 99,
+        "DeliverToCage": false
     }
 }
 
@@ -216,8 +217,8 @@ const CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD = {
     "CarrierName": "TEST",
     "ShipmentDateTime": "2020-09-20T04:05:00.000Z",
     "ServiceDetails": {
-      "NoOfBoxes": 99,
-      "DeliverToCage": false
+        "NoOfBoxes": 99,
+        "DeliverToCage": false
     }
 }
 
@@ -235,20 +236,20 @@ const CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD = {
     "ShipmentLabel": [{ "Name": "atta1.jpeg", "Url": "https://eqixazurestorage.blob.core.windows.net/emg-download-blob/atta1.jpeg" }],
     "ShipmentLabelInsideBox": false,
     "ServiceDetails": {
-          "NoOfBoxes": 3,
-          "DeclaredValue": "3",
-          "ShipmentDescription": "Test ShipmentDescription",
-          "ShipToName": "test",
-          "ShipToAddress": "1188 test address",
-          "ShipToCity": "Sunnyvale",
-          "ShipToCountry": "US",
-          "ShipToState": "CALIFORNIA",
-          "ShipToZipCode": "94085",
-          "ShipToPhoneNumber": "+1 1331313",
-          "ShipToCarrierAccountNumber": "111",
-          "InsureShipment": false,
-          "PickUpFromCageSuite": false,
-        }
+        "NoOfBoxes": 3,
+        "DeclaredValue": "3",
+        "ShipmentDescription": "Test ShipmentDescription",
+        "ShipToName": "test",
+        "ShipToAddress": "1188 test address",
+        "ShipToCity": "Sunnyvale",
+        "ShipToCountry": "US",
+        "ShipToState": "CALIFORNIA",
+        "ShipToZipCode": "94085",
+        "ShipToPhoneNumber": "+1 1331313",
+        "ShipToCarrierAccountNumber": "111",
+        "InsureShipment": false,
+        "PickUpFromCageSuite": false,
+    }
 }
 
 const CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD = {
@@ -285,19 +286,19 @@ const UPDATE_OUTBOUNDSHIPMENT_PAYLOAD = {
     "CarrierName": "OTHER",
     "ShipmentLabelInsideBox": true,
     "ServiceDetails": {
-      "NoOfBoxes": 3,
-      "DeclaredValue": "3",
-      "ShipmentDescription": "Test ShipmentDescription",
-      "ShipToName": "test",
-      "ShipToAddress": "1188 test address",
-      "ShipToCity": "Sunnyvale",
-      "ShipToCountry": "US",
-      "ShipToState": "CALIFORNIA",
-      "ShipToZipCode": "94085",
-      "ShipToPhoneNumber": "+1 1331313",
-      "ShipToCarrierAccountNumber": "111",
-      "InsureShipment": false,
-      "PickUpFromCageSuite": false,
+        "NoOfBoxes": 3,
+        "DeclaredValue": "3",
+        "ShipmentDescription": "Test ShipmentDescription",
+        "ShipToName": "test",
+        "ShipToAddress": "1188 test address",
+        "ShipToCity": "Sunnyvale",
+        "ShipToCountry": "US",
+        "ShipToState": "CALIFORNIA",
+        "ShipToZipCode": "94085",
+        "ShipToPhoneNumber": "+1 1331313",
+        "ShipToCarrierAccountNumber": "111",
+        "InsureShipment": false,
+        "PickUpFromCageSuite": false,
     }
 }
 
@@ -306,6 +307,64 @@ const CANCEL_SHIPMENT_PAYLOAD = {
     "RequestorId": "102894102Test1234",
     "ServicerId": ORDER_NUMBER,
     "State": "Cancelled"
+}
+
+const CREATE_CROSSCONNECT_PAYLOAD = {
+    "CustomerContact": "<CUSTOMER_CONTACT>",
+    "RequestorId": "102894102Test1234",
+    "RequestorIdUnique": false,
+    "Attachments": [],
+    "Operation": "0000",
+    "Description": "Test description for CrossConnect Create",
+    "SchedulingDetails": {
+        "RequestedCompletionDate": null
+    },
+    "AdditionalContacts": [
+        {
+            "ContactType": "TECHNICAL",
+            "FirstName": "Test FirstName",
+            "LastName": "Test LastName",
+            "Email": "<test@test.com>",
+            "WorkPhoneCountryCode": "+1",
+            "WorkPhone": "866-205-4244",
+            "WorkPhonePrefToCall": "ANYTIME",
+            "WorkPhoneTimeZone": "Atlantic/Canary",
+            "MobilePhoneCountryCode": "+1",
+            "MobilePhone": "346-205-4244",
+            "MobilePhonePrefToCall": "ANYTIME",
+            "MobilePhoneTimeZone": "Atlantic/Canary"
+        }
+    ],
+    "ConnectionDetails": [
+        {
+            "ASide": {
+                "ConnectionService": "COAX",
+                "MediaType": "COAX",
+                "ProtocolType": "ANTENNA",
+                "ConnectorType": "BNC",
+                "PatchPanel": {
+                    "Id": "<PATCH_PANEL_ID>",
+                    "PortA": null,
+                    "PortB": null
+                }
+            },
+            "ZSide": {
+                /** Existing Provider **/
+                "ConnectorType": "BNC",
+                "PatchPanel": {
+                    "Id": "<PATCH_PANEL_ID>",
+                    "PortA": null,
+                    "PortB": null
+                },
+                "CircuitId": "12345",
+                /** New Provider **/
+                // "LOAAttachment": { "Name": "<LOAATTACHMENT_NAME>", "Url": "<>LOAATTACHMENT_URL" },
+                // "IBX": "<IBX>",
+                // "ProviderName": "New Telco. Corp.",
+            },
+            "ServiceDetails": null
+        }
+    ]
 }
 
 describe('EMG Template Test Suite', function () {
@@ -528,4 +587,22 @@ describe('EMG Template Test Suite', function () {
         const result = await shipmentTemplate.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN)
         console.log("\n\nReceiving Shipment Notification Response Message  **********\n\n", safeStringify(result))
     })
+
+    it('test_create_crossConnect', async function () {
+        console.log("\n\nSending Create crossConnect Request Message  **********\n\n")
+        const result = await crossConnectTemplate.createCrossConnect(
+            JSON.stringify(CREATE_CROSSCONNECT_PAYLOAD),
+            CLIENT_ID,
+            CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create crossConnect Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_crossConnect_notifications_open', async function () {
+        console.log("\n\nSending crossConnect Notification Request Message  **********\n\n")
+        //(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Pending Customer Input, Cancelled, Closed)
+        const result = await crossConnectTemplate.getNotifications(null, ORDER_NUMBER, null, NOTIFICATION_OPEN)
+        console.log("\n\nReceiving crossConnect Notification Response Message  **********\n\n", safeStringify(result))
+    })
+
 })

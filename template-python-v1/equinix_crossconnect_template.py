@@ -1,4 +1,4 @@
-# EQUINIX MESSAGING GATEWAY TROUBLE TICKET TEMPLATE
+# EQUINIX MESSAGING GATEWAY CROSSCONNECT TEMPLATE
 
 # ************************************************************************
 # 
@@ -35,13 +35,14 @@ import json
 import time
 import uuid
 
+
 from util.message_util import (CANCEL_OPERATION, CREATE_OPERATION,
-                               TICKET_TYPE_BREAKFIX, UPDATE_OPERATION,downloadAllAttachments,
+                               TICKET_TYPE_CROSSCONNECT, UPDATE_OPERATION, downloadAllAttachments,
                                message_processor, read_from_queue)
 
 
-async def create_troubleticket(request_json, client_id, client_secret):
-    """Sends the create Trouble Ticket message to Equinix Messaging Gateway.
+async def create_crossconnect(request_json, client_id, client_secret):
+    """Sends the create CrossConnect message to Equinix Messaging Gateway.
 
         Args:
             request_json (str): Message to send.
@@ -54,60 +55,57 @@ async def create_troubleticket(request_json, client_id, client_secret):
         Returns:
             str: Received response message
         """
-    request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CREATE_OPERATION, TICKET_TYPE_BREAKFIX, client_id, client_secret)
-    return response_json
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret)
+    return response_json    
+               
 
+# async def update_crossconnect(request_json, client_id, client_secret):
+#     """Sends the update CrossConnect message to Equinix Messaging Gateway.
 
+#         Args:
+#             request_json (str): Message to send.
+#             client_id (str): Equinix issued client_id.
+#             client_secret (str): Equinix issued client_secret.
 
-async def update_troubleticket(request_json, client_id, client_secret):
-    """Sends the update Trouble Ticket message to Equinix Messaging Gateway.
+#         Raises:
+#             obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
-        Args:
-            request_json (str): Message to send.
-            client_id (str): Equinix issued client_id.
-            client_secret (str): Equinix issued client_secret.
+#         Returns:
+#             str: Received response message
+#         """
+#     json_obj = json.loads(request_json)
+#     response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret)
+#     return response_json
+   
 
-        Raises:
-            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+# async def cancel_crossconnect(request_json, client_id, client_secret):
+#     """Sends the cancel CrossConnect message to Equinix Messaging Gateway.
 
-        Returns:
-            str: Received response message
-        """
-    request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, UPDATE_OPERATION, TICKET_TYPE_BREAKFIX, client_id, client_secret)
-    return response_json
+#         Args:
+#             request_json (str): Message to send.
+#             client_id (str): Equinix issued client_id.
+#             client_secret (str): Equinix issued client_secret.
 
+#         Raises:
+#             obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
+#         Returns:
+#             str: Received response message
+#         """
+#     request_json_obj = json.loads(request_json)
+#     response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret)
+#     return response_json
 
-async def cancel_troubleticket(request_json, client_id, client_secret):
-    """Sends the cancel Trouble Ticket message to Equinix Messaging Gateway.
-
-        Args:
-            request_json (str): Message to send.
-            client_id (str): Equinix issued client_id.
-            client_secret (str): Equinix issued client_secret.
-
-        Raises:
-            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
-
-        Returns:
-            str: Received response message
-        """
-    request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_BREAKFIX, client_id, client_secret)
-    return response_json
-
-
-
+  
 async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state):
     """Receive ticket notification from Equinix Messaging Gateway that matches the provided filter criteria.
 
         Args:
-            requestor_id (str): Customer Reference Number of the Trouble Ticket.
-            servicer_id (str): Ticket Number of the Trouble Ticket.
-            activity_id (str): Activity Number of the Trouble Ticket.
-            ticket_state (str): State of the Trouble Ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed). 
+            requestor_id (str): Customer Reference Number of the Crossconnect ticket.
+            servicer_id (str): Ticket Number of the CrossConnect ticket.
+            activity_id (str): Activity Number of the CrossConnect ticket.
+            ticket_state (str): State of the CrossConnect ticket (ex: Open, InProgress, Pending Customer Input, Cancelled, Closed). 
 
         Raises:
             obj: returns an error if Equinix Messaging Gateway returns an error while retrieving notification.
@@ -115,7 +113,7 @@ async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state
         Returns:
             str: Received notification message
         """
-    all_filters = {"ResourceType": TICKET_TYPE_BREAKFIX}
+    all_filters = {"ResourceType": TICKET_TYPE_CROSSCONNECT}
     if requestor_id:
         all_filters.update({"RequestorId": requestor_id})
     if servicer_id:

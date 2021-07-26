@@ -103,6 +103,13 @@ public class EquinixWorkVisitTemplate {
 				"State:"+ticketState+"\n" +
 				"}");
 		JSONObject notificationMsg = util.read_messages_from_queue(null ,filterCriteria);
+		JSONObject taskObject = new JSONObject(notificationMsg.getString("Task"));
+		JSONObject bodyObject = taskObject.getJSONObject("Body");
+		notificationMsg.put("Task", taskObject);
+		if(!bodyObject.isNull("Attachments") && !bodyObject.getJSONArray("Attachments").isEmpty()){
+			JSONArray newAttachments = MessageUtil.downloadAllAttachments(bodyObject.getJSONArray("Attachments"));
+			notificationMsg.getJSONObject("Task").getJSONObject("Body").put("Attachments", newAttachments);
+		}
 		return notificationMsg;
 	}
 

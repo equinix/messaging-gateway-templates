@@ -36,6 +36,11 @@ import template.EquinixShipmentTemplate;
 import template.EquinixWorkVisitTemplate;
 import template.EquinixSmartHandsTemplate;
 import template.EquinixTroubleTicketTemplate;
+import template.EquinixCrossconnectTemplate;
+import util.MessageUtil;
+
+import java.io.File;
+import java.net.URL;
 
 public class TestClient {
 
@@ -190,7 +195,7 @@ public class TestClient {
 			"      \"DeclaredValue\": \"3\",\n" +
 			"      \"ShipmentDescription\": \"Test ShipmentDescription\",\n" +
 			"      \"ShipToName\": \"test\",\n" +
-			"      \"ShipToAddress\": \"1188 test address\",\n" +
+	  		"      \"ShipToAddress\": \"1188 test address\",\n" +
 			"      \"ShipToCity\": \"Sunnyvale\",\n" +
 			"      \"ShipToCountry\": \"US\",\n" +
 			"      \"ShipToState\": \"CALIFORNIA\",\n" +
@@ -211,7 +216,7 @@ public class TestClient {
 
 	public static final JSONObject CREATE_SMARTHAND_PAYLOAD = new JSONObject("{\n" +
 			"    \"CustomerContact\": \"<CUSTOMER CONTACT>\",\n" +
-			"    \"Attachments\": [],\n" +
+			"    \"Attachments\": [{\"Name\": \"equinix_logo.png\", \"Data\":\""+MessageUtil.encodeFileToBase64("src/main/resources/equinix_logo.png") +"\" }],\n" +
 			"    \"RequestorId\": \"<REQUESTOR ID>\",\n" +
 			"    \"RequestorIdUnique\": false,\n" +
 			"    \"Operation\": \"0000\",\n" +
@@ -260,6 +265,62 @@ public class TestClient {
 			"    \"Description\": \"Test description for TroubleTicket Cancel\",\n" +
 			"    \"ServicerId\": "+ORDER_NUMBER+",\n" +
 			"    \"State\": \"Cancelled\"\n" +
+			"}");
+
+	public static final JSONObject CREATE_CROSSCONNECT_PAYLOAD = new JSONObject("{\n" +
+			"    \"CustomerContact\": \"<CUSTOMER_CONTACT>\",\n" +
+			"    \"RequestorId\": \"102894102Test1234\",\n" +
+			"    \"RequestorIdUnique\": false,\n" +
+			"    \"Attachments\": [],\n" +
+			"    \"Operation\": \"0000\",\n" +
+			"    \"Description\": \"Test description for CrossConnect Create\",\n" +
+			"    \"SchedulingDetails\": {\n" +
+			"        \"RequestedCompletionDate\": null\n" +
+			"    },\n" +
+			"    \"AdditionalContacts\": [\n" +
+			"        {\n" +
+			"            \"ContactType\": \"TECHNICAL\",\n" +
+			"            \"FirstName\": \"Test FirstName\",\n" +
+			"            \"LastName\": \"Test LastName\",\n" +
+			"            \"Email\": \"<test@test.com>\",\n" +
+			"            \"WorkPhoneCountryCode\": \"+1\",\n" +
+			"            \"WorkPhone\": \"866-205-4244\",\n" +
+			"            \"WorkPhonePrefToCall\": \"ANYTIME\",\n" +
+			"            \"WorkPhoneTimeZone\": \"Atlantic/Canary\",\n" +
+			"            \"MobilePhoneCountryCode\": \"+1\",\n" +
+			"            \"MobilePhone\": \"346-205-4244\",\n" +
+			"            \"MobilePhonePrefToCall\": \"ANYTIME\",\n" +
+			"            \"MobilePhoneTimeZone\": \"Atlantic/Canary\"\n" +
+			"        },\n" +
+			"    ],\n" +
+			"    \"ConnectionDetails\": [\n" +
+			"        {\n" +
+			"            \"ASide\": {\n" +
+			"                \"ConnectionService\": \"<ConnectionService>\",\n" +
+			"                \"MediaType\": \"<MediaType>\",\n" +
+			"                \"ProtocolType\": \"<ProtocolType>\",\n" +
+			"                \"ConnectorType\": \"<ConnectorType>\",\n" +
+			"                \"PatchPanel\": {\n" +
+			"                    \"Id\": \"<PATCH_PANEL_ID>\",\n" +
+			"                    \"PortA\": null,\n" +
+			"                    \"PortB\": null\n" +
+			"                }\n" +
+			"            },\n" +
+			"            \"ZSide\": {\n" +
+			"                 \"ConnectorType\": \"<ConnectorType>\",\n" +
+			"                \"PatchPanel\": {\n" +
+			"                    \"Id\": \"<PATCH_PANEL_ID>\",\n" +
+			"                    \"PortA\": null,\n" +
+			"                    \"PortB\": null\n" +
+			"                },\n" +
+			"                \"CircuitId\": \"12345\"\n" +
+//			"				 \"LOAAttachment\": {\"Name\": \"equinix_logo.png\", \"Data\":\""+MessageUtil.encodeFileToBase64("src/main/										resources/equinix_logo.png") +"\" },\n" +
+//			"				\"IBX\": \"AT2\",\n" +
+//			"				\"ProviderName\": \"New Telco. Corp.\"\n" +
+			"            },\n" +
+			"            \"ServiceDetails\": null\n" +
+			"        }\n" +
+			"    ]\n" +
 			"}");
 
 	public static void test_create_work_visit() throws Exception {
@@ -406,6 +467,29 @@ public class TestClient {
 		System.out.println("\n\nReceiving TroubleTicket Notification Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_Crossconnect() throws Exception {
+		System.out.println("\n\nSending Create CrossConnect Request Message  **********\n\n");
+		EquinixCrossConnectTemplate template = new EquinixCrossConnectTemplate();
+		JSONObject result = template.createCrossconnect(TestClient.CREATE_CROSSCONNECT_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Create CrossConnect Response Message  **********\n\n"+result);
+	}
+
+	public static void test_Crossconnect_notifications() throws Exception {
+		System.out.println("\n\nSending CrossConnect Notification Request Message  **********\n\n");
+		//(customerReferenceNumber, orderNumber, activityID, state - Open, InProgress, Cancelled, Closed)
+		EquinixCrossConnectTemplate template = new EquinixCrossConnectTemplate();
+		JSONObject result = template.getNotifications(null,ORDER_NUMBER, null,NOTIFICATION_INPROGRESS);
+		System.out.println("\n\nReceiving CrossConnect Notification Response Message  **********\n\n"+result);
+	}
+
+//	public static void test_upload_file() throws Exception {
+//		String logoUrl = TestClient.class.getClassLoader().getResource("equinix_logo.png").getPath();
+//		File equinixLogo = new File(logoUrl);
+//		String base64 = MessageUtil.encodeFileToBase64(equinixLogo);
+//		JSONObject object = MessageUtil.uploadFile(base64,"equinix_logo.png");
+//		System.out.println(object);
+//	}
+
 	public static void main(String args[]) throws Exception {
 	//	test_create_work_visit();
 	//	test_update_work_visit();
@@ -422,11 +506,13 @@ public class TestClient {
 	//	test_create_smarthands();
 	//	test_update_smarthands();
 	//	test_cancel_smarthands();
-	//	test_smarthands_notifications();
+	    test_smarthands_notifications();
 	//	test_create_troubleticket();
 	//	test_update_troubleticket();
 	//	test_cancel_troubleticket();
 	//	test_troubleticket_notifications();
+		test_create_Crossconnect();
+	//	test_Crossconnect_notifications();
 	}
 }
 
