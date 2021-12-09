@@ -60,8 +60,6 @@ const TICKET_TYPE_SHIPPING = "Shipping"
 const TICKET_TYPE_SMARTHANDS = "SmartHands"
 const TICKET_TYPE_WORKVISIT = "WorkVisit"
 const TICKET_TYPE_BREAKFIX = "BreakFix"
-const TICKET_TYPE_CROSSCONNECT = "CrossConnect"
-
 
 const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret) => {
 
@@ -70,17 +68,6 @@ const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, cli
     try {
         if (JSONObj.Attachments && JSONObj.Attachments.length > 0) {
             JSONObj.Attachments = await uploadAllAttachments(JSONObj.Attachments);
-        }
-
-        if (ResourceType == TICKET_TYPE_CROSSCONNECT) {
-            if (JSONObj.ConnectionDetails && JSONObj.ConnectionDetails.length > 0) {
-                for (var i = 0; i < JSONObj.ConnectionDetails.length; i++) {
-                    if (JSONObj.ConnectionDetails[i].ZSide && JSONObj.ConnectionDetails[i].ZSide.hasOwnProperty('LOAAttachment') && JSONObj.ConnectionDetails[i].ZSide.LOAAttachment != null) {
-                        var LOAAttachment = await uploadAllAttachments([JSONObj.ConnectionDetails[i].ZSide.LOAAttachment]);
-                        JSONObj.ConnectionDetails[i].ZSide.LOAAttachment = Object.assign({}, LOAAttachment[0])
-                    }
-                }
-            }
         }
 
         var messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
@@ -298,12 +285,12 @@ module.exports = {
     convertFileToBase64: convertFileToBase64,
     downloadAllAttachments: downloadAllAttachments,
     uploadFile: uploadFile,
+    uploadAllAttachments: uploadAllAttachments,
     CREATE_OPERATION,
     UPDATE_OPERATION,
     CANCEL_OPERATION,
     TICKET_TYPE_BREAKFIX,
     TICKET_TYPE_SHIPPING,
     TICKET_TYPE_SMARTHANDS,
-    TICKET_TYPE_WORKVISIT,
-    TICKET_TYPE_CROSSCONNECT
+    TICKET_TYPE_WORKVISIT
 };
