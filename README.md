@@ -1,5 +1,5 @@
 # Templates for Equinix Messaging Gateway
-Equinix Messaging Gateway (EMG) is an event-based communication channel for Platform Equinix. EMG automates the creation, update, and closure or cancellation of SmartHands, Trouble Ticket, Work Visit and Shipments tickets along with notification of statuses such as 2-Way Communications, technician notes and status advancement. The Templates provide sample code for customers to integrate with EMG. These Templates are available in two versions – node.js and python. 
+Equinix Messaging Gateway (EMG) is an event-based communication channel for Platform Equinix. EMG automates the creation, update, and closure or cancellation of SmartHands, Trouble Ticket, Work Visit and Shipments tickets along with notification of statuses such as 2-Way Communications, technician notes and status advancement. The Templates provide sample code for customers to integrate with EMG. These Templates are available in three versions – node.js, python and Java. 
 
 ---
 
