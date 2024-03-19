@@ -9,7 +9,7 @@ Learn more about Equinix Messaging Gateway by visiting this [link](https://devel
 
 To subscribe to EMG, visit the [Subscriptions](https://developer.equinix.com/subscriptions) page in the Equinix Developer Platform to get started. Watch this [video](https://youtu.be/jGYTi3Bn5YM) for the step-by-step guide on how to subscribe. Alternatively, you can also reach out to your Equinix Customer Success Manager.
 
-Equinix Messaging Gateway (EMG) Templates provide reference code to seamlessly integrate with EMG. These Templates are available in three versions – Node.js, Python and Java. You can refer, use, modify & extend EMG Templates based on your architecture & security policies.  
+Equinix Messaging Gateway (EMG) Templates provide reference code to seamlessly integrate with EMG. These Templates are available in three versions – Node.js, Python and Java. You can refer, use, modify & extend EMG Templates based on your architecture & security policies.   
 
 ---
 
