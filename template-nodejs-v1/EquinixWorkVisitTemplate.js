@@ -42,7 +42,21 @@ const HttpStatus = require('http-status-codes');
   */
 const createWorkVisit = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = JSON.parse(requestJSON);
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
+  return responseJSON;
+}
+
+/**
+  * Sends the create WorkVisit message to Equinix Messaging Gateway
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const createWorkVisitUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
   return responseJSON;
 }
 
@@ -57,8 +71,22 @@ const createWorkVisit = async (requestJSON, clientID, clientSecret) => {
 */
 const updateWorkVisit = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = JSON.parse(requestJSON);
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
-  return responseJSON
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
+  return responseJSON;
+}
+
+/**
+* Sends the update WorkVisit message to Equinix Messaging Gateway.
+*
+* @param requestJSON - Message to send.
+* @param oauthToken - OAuth token used for authentication.
+* @returns responseJSON - Received response message
+* @throws error if Equinix Messaging Gateway returns an error while processing the message.
+*/
+const updateWorkVisitUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -72,7 +100,21 @@ const updateWorkVisit = async (requestJSON, clientID, clientSecret) => {
 */
 const cancelWorkVisit = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = JSON.parse(requestJSON);
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
+  return responseJSON;
+}
+
+/**
+* Sends the cancel WorkVisit message to Equinix Messaging Gateway.
+*
+* @param requestJSON - Message to send.
+* @param oauthToken - OAuth token used for authentication.
+* @returns responseJSON - Received response message
+* @throws error if Equinix Messaging Gateway returns an error while processing the message.
+*/
+const cancelWorkVisitUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
   return responseJSON;
 }
 
@@ -89,8 +131,23 @@ const cancelWorkVisit = async (requestJSON, clientID, clientSecret) => {
 const createWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
   var jsonObj = JSON.parse(requestJSON);
   var JSONObj = createWorkVisitHelper(JSON.parse(requestJSON));
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
   return processCreateResponse(responseJSON, jsonObj);
+}
+
+/**
+  * Sends the create WorkVisit message to Equinix Messaging Gateway as per API Schema.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const createWorkVisitExtnUsingOAuth = async (requestJSON, oauthToken) => {
+  var jsonObj = JSON.parse(requestJSON);
+  var JSONObj = createWorkVisitHelper(JSON.parse(requestJSON));
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
+  return processCreateResponse(JSON.parse(JSON.stringify(responseJSON)), jsonObj);
 }
 
 /**
@@ -104,8 +161,23 @@ const createWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
   */
 const updateWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = updateWorkVisitHelper(JSON.parse(requestJSON));
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
   return processReponse(responseJSON)
+}
+
+/**
+  * Sends the update WorkVisit message to Equinix Messaging Gateway as per API Schema.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const updateWorkVisitExtnUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = updateWorkVisitHelper(JSON.parse(requestJSON));
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
+  var test = processReponse(responseJSON)
+  return test//processReponse(responseJSON)
 }
 
 /**
@@ -119,10 +191,23 @@ const updateWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
   */
 const cancelWorkVisitExtn = async (requestJSON, clientID, clientSecret) => {
   var JSONObj = cancelWorkVisitHelper(JSON.parse(requestJSON));
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
   return processReponse(responseJSON);
 }
 
+/**
+  * Sends the cancel WorkVisit message to Equinix Messaging Gateway as per API Schema.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const cancelWorkVisitExtnUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = cancelWorkVisitHelper(JSON.parse(requestJSON));
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
+  return processReponse(responseJSON);
+}
 /**
   * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.
   *
@@ -211,67 +296,76 @@ const map_create_workvisit= (params, vistorArray) =>{
 }
 
 function processCreateResponse(responseJSON, jsonObj) {
-  if (responseJSON.Body.StatusCode == HttpStatus.CREATED) {
-    var res = {
-      "successes": [
-        {
-          "ibxLocation": {
-            "ibxTime": null,
-            "timezone": null,
-            "ibx": null,
-            "region": null,
-            "address1": null,
-            "city": null,
-            "state": null,
-            "country": null,
-            "zipCode": null,
-            "cageDetails": [
-              {
-                "cage": jsonObj.ibxLocation.cages[0].cage,
-                "cageUSID": null,
-                "systemName": null,
-                "accountNumber": null,
-                "cabinets": [
-                  {
-                    "cabinet": null
-                  }
-                ],
-                "notes": [
-                  {
-                    "noteDescription": null,
-                    "noteType": ""
-                  }
-                ],
-                "multiCabinet": false
-              }
-            ]
-          },
-          "response": {
-            "OrderNumber": responseJSON.Body.ServicerId
-          }
-        }
-      ]
-    };
-    res.statusCode = responseJSON.Body.StatusCode;
-    return res;
-  } else {
-    if (responseJSON.Body.Description.includes("Processing failed with following error: ")) {
-
-      var res = JSON.parse(responseJSON.Body.Description.replace("Processing failed with following error: ", ""));
-      res.statusCode = responseJSON.Body.StatusCode;
-      return res;
-
-
-    } else {
+  if(responseJSON.hasOwnProperty('Body') && responseJSON.Body.hasOwnProperty('Description') && responseJSON.Body.hasOwnProperty('StatusCode')) {
+    if (responseJSON.Body.StatusCode == HttpStatus.CREATED) {
       var res = {
-        "errors": [{
-          "code": responseJSON.Body.StatusCode,
-          "message": responseJSON.Body.Description
-        }]
+        "successes": [
+          {
+            "ibxLocation": {
+              "ibxTime": null,
+              "timezone": null,
+              "ibx": null,
+              "region": null,
+              "address1": null,
+              "city": null,
+              "state": null,
+              "country": null,
+              "zipCode": null,
+              "cageDetails": [
+                {
+                  "cage": jsonObj.ibxLocation.cages[0].cage,
+                  "cageUSID": null,
+                  "systemName": null,
+                  "accountNumber": null,
+                  "cabinets": [
+                    {
+                      "cabinet": null
+                    }
+                  ],
+                  "notes": [
+                    {
+                      "noteDescription": null,
+                      "noteType": ""
+                    }
+                  ],
+                  "multiCabinet": false
+                }
+              ]
+            },
+            "response": {
+              "OrderNumber": responseJSON.Body.ServicerId
+            }
+          }
+        ]
       };
       res.statusCode = responseJSON.Body.StatusCode;
       return res;
+    } else {
+      if (responseJSON.Body.Description.includes("Processing failed with following error: ")) {
 
+        var res = JSON.parse(responseJSON.Body.Description.replace("Processing failed with following error: ", ""));
+        res.statusCode = responseJSON.Body.StatusCode;
+        return res;
+
+
+      } else {
+        var res = {
+          "errors": [{
+            "code": responseJSON.Body.StatusCode,
+            "message": responseJSON.Body.Description
+          }]
+        };
+        res.statusCode = responseJSON.Body.StatusCode;
+        return res;
+
+      }
+    }
+  }else{
+    return {
+      "errors": [{
+        "code": HttpStatus.BAD_REQUEST,
+        "message": "Null Exception"
+      }]
     }
   }
 }
@@ -302,7 +396,7 @@ function processReponse(responseJSON) {
   }else{
     return {
       "errors": [{
-        "code": StatusCodes.BAD_REQUEST,
+        "code": HttpStatus.BAD_REQUEST,
         "message": "Null Exception"
       }]
     }
@@ -311,10 +405,16 @@ function processReponse(responseJSON) {
 
 module.exports = {
   createWorkVisit: createWorkVisit,
+  createWorkVisitUsingOAuth: createWorkVisitUsingOAuth,
   updateWorkVisit: updateWorkVisit,
+  updateWorkVisitUsingOAuth: updateWorkVisitUsingOAuth,
   cancelWorkVisit: cancelWorkVisit,
+  cancelWorkVisitUsingOAuth: cancelWorkVisitUsingOAuth,
   createWorkVisitExtn: createWorkVisitExtn,
+  createWorkVisitExtnUsingOAuth:createWorkVisitExtnUsingOAuth,
   updateWorkVisitExtn: updateWorkVisitExtn,
+  updateWorkVisitExtnUsingOAuth:updateWorkVisitExtnUsingOAuth,
   cancelWorkVisitExtn: cancelWorkVisitExtn,
+  cancelWorkVisitExtnUsingOAuth:cancelWorkVisitExtnUsingOAuth,
   getNotifications: getNotifications
 }

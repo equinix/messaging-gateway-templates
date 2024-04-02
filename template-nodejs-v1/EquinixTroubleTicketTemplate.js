@@ -41,8 +41,22 @@ const messageUtil = require('./util/MessageUtil');
   */
 const createTroubleTicket = async (requestJSON, clientID, clientSecret) =>{
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the create Trouble Ticket message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const createTroubleTicketUsingOAuth = async (requestJSON, oauthToken) =>{
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -56,8 +70,22 @@ const createTroubleTicket = async (requestJSON, clientID, clientSecret) =>{
   */
 const updateTroubleTicket = async (requestJSON, clientID, clientSecret) =>{
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the update Trouble Ticket message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const updateTroubleTicketUsingOAuth = async (requestJSON, oauthToken) =>{
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -71,8 +99,22 @@ const updateTroubleTicket = async (requestJSON, clientID, clientSecret) =>{
   */
 const cancelTroubleTicket = async (requestJSON, clientID, clientSecret) =>{
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the cancel Trouble Ticket message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const cancelTroubleTicketUsingOAuth = async (requestJSON, oauthToken) =>{
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_BREAKFIX, null, oauthToken, true);
+  return responseJSON;
 }
 
 
@@ -105,7 +147,10 @@ const getNotifications = async (requestorId, servicerId, activityId, ticketState
 
 module.exports = {
     createTroubleTicket: createTroubleTicket,
+    createTroubleTicketUsingOAuth: createTroubleTicketUsingOAuth,
     updateTroubleTicket: updateTroubleTicket,
+    updateTroubleTicketUsingOAuth: updateTroubleTicketUsingOAuth,
     cancelTroubleTicket: cancelTroubleTicket,
+    cancelTroubleTicketUsingOAuth: cancelTroubleTicketUsingOAuth,
     getNotifications: getNotifications
 }

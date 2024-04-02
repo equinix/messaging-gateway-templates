@@ -61,16 +61,19 @@ const TICKET_TYPE_SMARTHANDS = "SmartHands"
 const TICKET_TYPE_WORKVISIT = "WorkVisit"
 const TICKET_TYPE_BREAKFIX = "BreakFix"
 
-const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret) => {
+const messageProcessor = async (JSONObj, actionVerb, ResourceType, clientID, clientSecret, isOAuthType) => {
 
     var messageId;
-
+    var messageInput;
     try {
         if (JSONObj.Attachments && JSONObj.Attachments.length > 0) {
             JSONObj.Attachments = await uploadAllAttachments(JSONObj.Attachments);
         }
-
-        var messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
+        if(isOAuthType){
+            messageInput = createPayloadUsingOAuth(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientSecret);
+        }else{
+            messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
+        }
         messageId = JSON.parse(messageInput.Task).Id;
         console.log("Message ID:   ", messageId);
         await sbb.sendMessageToQueue(messageInput, "IOMA-Message");
@@ -108,6 +111,28 @@ function createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, ClientId, C
     return messageInput;
 }
 
+function createPayloadUsingOAuth(JSONObj, actionVerb, ResourceType, SOURCE_ID, OAuthToken) {
+    var messageInput = {
+        Task: {
+            Id: uuid(),
+            Verb: (actionVerb == CANCEL_OPERATION) ? UPDATE_OPERATION : actionVerb,
+            Source: SOURCE_ID,
+            Version: "1.0",
+            Resource: ResourceType,
+            ContentType: "application/json",
+            CreateTimeUTC: (new Date()).toISOString(),
+            OriginationId: null,
+            OriginationVerb: null,
+            Body: JSONObj
+        },
+        Authentication: {
+            "AccessToken": OAuthToken
+        }
+    };
+    messageInput.Task = safeStringify(messageInput.Task);
+    return messageInput;
+}
+
 
 async function readFromQueue(messageId, filterCriteria) {
     var res;
@@ -117,7 +142,7 @@ async function readFromQueue(messageId, filterCriteria) {
         const receiver = queueClient.createReceiver(ReceiveMode.peekLock);
         for await (let message of receiver.getMessageIterator()) {
             if (message == undefined) {
-                res = "No msgs to read";
+                res = formatError(400, "No msgs to read");
                 break;
             } else if (filterCriteria != null) {
                 var JSONObj = JSON.parse(message.body.Task);
@@ -163,21 +188,21 @@ function formatError(StatusCode, Description) {
     };
 }
 function formatErrorResponse(StatusCode, Description, messageInput) {
-    return safeStringify({
-        "Id": uuid(),
-        "Body": {
-            "StatusCode": StatusCode,
-            "Description": Description,
-        },
-        "Verb": "Ack",
-        "Source": SOURCE_ID,
-        "Version": "1.0",
-        "Resource": messageInput.Resource,
-        "ContentType": messageInput.ContentType,
-        "CreateTimeUTC": messageInput.CreateTimeUTC,
-        "OriginationId": (messageInput.Verb == "Create") ? null : messageInput.Id,
-        "OriginationVerb": messageInput.Verb
-    });
+    return {
+      Id: uuid(),
+      Body: {
+        StatusCode: StatusCode,
+        Description: Description,
+      },
+      Verb: "Ack",
+      Source: SOURCE_ID,
+      Version: "1.0",
+      Resource: messageInput.Resource,
+      ContentType: messageInput.ContentType,
+      CreateTimeUTC: messageInput.CreateTimeUTC,
+      OriginationId: messageInput.Verb == "Create" ? null : messageInput.Id,
+      OriginationVerb: messageInput.Verb,
+    };
 }
 
 function processErrorResponse(errorObj, mode, messageInput) {
@@ -189,7 +214,7 @@ function processErrorResponse(errorObj, mode, messageInput) {
                 (error.Body.Description).includes(FAILED_ESTABLISH_CONNECTION)) {
                 return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using connection string : ${EQUINIX_INCOMING_QUEUE_CONNECTION_STRING}`, messageInput);
             } else if ((error.Body.Description).includes(INVALID_ENTITY)) {
-                return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using queue name : ${EQUINIX_INCOMING_QUEUE}`);
+                return formatErrorResponse(error.Body.StatusCode, `Error occured while sending message using queue name : ${EQUINIX_INCOMING_QUEUE}`, messageInput);
             } else {
                 return formatErrorResponse(500, INTERNAL_SERVER_ERROR, messageInput);
             }
@@ -201,7 +226,7 @@ function processErrorResponse(errorObj, mode, messageInput) {
             } else if ((error.Body.Description).includes(INVALID_ENTITY)) {
                 return formatErrorResponse(error.Body.StatusCode, `Error occured while reading message using queue name : ${EQUINIX_OUTGOING_QUEUE}`, messageInput);
             } else {
-                return formatErrorResponse(500, INTERNAL_SERVER_ERROR);
+                return formatErrorResponse(500, INTERNAL_SERVER_ERROR, messageInput);
             }
         }
     } else {

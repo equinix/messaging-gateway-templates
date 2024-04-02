@@ -42,8 +42,22 @@ const messageUtil = require('./util/MessageUtil');
   */
 const createShipment = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the create Shipment message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const createShipmentUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -57,7 +71,21 @@ const createShipment = async (requestJSON, clientID, clientSecret) => {
   */
 const updateShipment = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret, false);
+    return responseJSON;
+}
+
+/**
+  * Sends the update Shipment message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const updateShipmentUsingOAuth = async (requestJSON, oauthToken) => {
+    var JSONObj = JSON.parse(requestJSON);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, null, oauthToken, true);
     return responseJSON;
 }
 
@@ -73,8 +101,22 @@ const updateShipment = async (requestJSON, clientID, clientSecret) => {
   */
 const cancelShipment = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the cancel Shipment message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const cancelShipmentUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SHIPPING, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -107,7 +149,10 @@ const getNotifications = async (requestorId, servicerId, activityId, ticketState
 
 module.exports = {
   createShipment: createShipment,
+  createShipmentUsingOAuth: createShipmentUsingOAuth,
   updateShipment: updateShipment,
+  updateShipmentUsingOAuth: updateShipmentUsingOAuth,
   cancelShipment: cancelShipment,
+  cancelShipmentUsingOAuth: cancelShipmentUsingOAuth,
   getNotifications: getNotifications
 }

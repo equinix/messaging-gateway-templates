@@ -42,8 +42,22 @@ const messageUtil = require('./util/MessageUtil');
   */
 const createSmartHands = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the create SmartHands message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message.
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const createSmartHandsUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -57,8 +71,22 @@ const createSmartHands = async (requestJSON, clientID, clientSecret) => {
   */
 const updateSmartHands = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the update SmartHands message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const updateSmartHandsUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.UPDATE_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -72,8 +100,22 @@ const updateSmartHands = async (requestJSON, clientID, clientSecret) => {
   */
 const cancelSmartHands = async (requestJSON, clientID, clientSecret) => {
     var JSONObj = JSON.parse(requestJSON);
-    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret);
+    var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret, false);
     return responseJSON;
+}
+
+/**
+  * Sends the cancel SmartHands message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const cancelSmartHandsUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CANCEL_OPERATION, messageUtil.TICKET_TYPE_SMARTHANDS, null, oauthToken, true);
+  return responseJSON;
 }
 
 /**
@@ -105,7 +147,10 @@ const getNotifications = async (requestorId, servicerId, activityId, ticketState
 
 module.exports = {
     createSmartHands: createSmartHands,
+    createSmartHandsUsingOAuth: createSmartHandsUsingOAuth,
     updateSmartHands: updateSmartHands,
+    updateSmartHandsUsingOAuth: updateSmartHandsUsingOAuth,
     cancelSmartHands: cancelSmartHands,
+    cancelSmartHandsUsingOAuth: cancelSmartHandsUsingOAuth,
     getNotifications: getNotifications
 }

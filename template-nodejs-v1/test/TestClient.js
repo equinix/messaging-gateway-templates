@@ -14,6 +14,7 @@ const path = require('path');
 var ORDER_NUMBER = "<ORDER_NUMBER>";
 var CLIENT_ID = "<CLIENT_ID>"; // Will be supplied by Customer
 var CLIENT_SECRET = "<CLIENT_SECRET>"; // Will be supplied by Customer
+var OAUTH_TOKEN = "<OAUTH_TOKEN>"; // Will be supplied by Customer
 
 const NOTIFICATION_PENDING_CUSTOMER_INPUT = "Pending Customer Input";
 const NOTIFICATION_OPEN = "Open";
@@ -379,12 +380,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_create_work_visit, using OAuth Token', async function () {
+        console.log("\n\nSending Create WorkVisit Request Message  **********\n\n")
+        const result = await workVisitTemplate.createWorkVisitUsingOAuth(
+            JSON.stringify(CREATE_WORKVISIT_PAYLOAD),
+            OAUTH_TOKEN
+        );
+        console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_update_work_visit', async function () {
         console.log("\n\nSending Update WorkVisit Request Message  **********\n\n")
         const result = await workVisitTemplate.updateWorkVisit(
             JSON.stringify(UPDATE_WORKVISIT_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_update_work_visit, using OAuth Token', async function () {
+        console.log("\n\nSending Update WorkVisit Request Message  **********\n\n")
+        const result = await workVisitTemplate.updateWorkVisitUsingOAuth(
+            JSON.stringify(UPDATE_WORKVISIT_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
@@ -399,12 +418,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_cancel_work_visit, using OAuth Token', async function () {
+        console.log("\n\nSending Cancel WorkVisit Request Message  **********\n\n")
+        const result = await workVisitTemplate.cancelWorkVisitUsingOAuth(
+            JSON.stringify(CANCEL_WORKVISIT_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_create_work_visit_extension', async function () {
         console.log("\n\nSending Create WorkVisit Request Message as per API Schema  **********\n\n")
         const result = await workVisitTemplate.createWorkVisitExtn(
             JSON.stringify(CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
             CLIENT_ID,
             CLIENT_SECRET
+        );
+        console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_create_work_visit_extension, using OAuth Token', async function () {
+        console.log("\n\nSending Create WorkVisit Request Message as per API Schema  **********\n\n")
+        const result = await workVisitTemplate.createWorkVisitExtnUsingOAuth(
+            JSON.stringify(CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
+            OAUTH_TOKEN
         );
         console.log("\n\nReceiving Create WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
@@ -419,12 +456,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_update_work_visit_extension, using OAuth Token', async function () {
+        console.log("\n\nSending Update WorkVisit Request Message as per API Schema **********\n\n")
+        const result = await workVisitTemplate.updateWorkVisitExtnUsingOAuth(
+            JSON.stringify(UPDATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Update WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_cancel_work_visit_extension', async function () {
         console.log("\n\nSending Cancel WorkVisit Request Message as per API Schema **********\n\n")
         const result = await workVisitTemplate.cancelWorkVisitExtn(
             JSON.stringify(CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_cancel_work_visit_extension, using OAuth Token', async function () {
+        console.log("\n\nSending Cancel WorkVisit Request Message as per API Schema **********\n\n")
+        const result = await workVisitTemplate.cancelWorkVisitExtnUsingOAuth(
+            JSON.stringify(CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n", safeStringify(result))
     })
@@ -447,6 +502,14 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create SmartHands Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_create_smarthands, using OAuth Token', async function () {
+        console.log("\n\nSending Create SmartHands Request Message  **********\n\n")
+        const result = await smartHandsTemplate.createSmartHandsUsingOAuth(
+            JSON.stringify(CREATE_SMARTHAND_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Create SmartHands Response Message  **********\n\n", safeStringify(result))
+    })
     it('test_update_smarthands', async function () {
         console.log("\n\nSending Update SmartHands Request Message  **********\n\n")
         const result = await smartHandsTemplate.updateSmartHands(
@@ -457,12 +520,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update SmartHands Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_update_smarthands, using OAuth Token', async function () {
+        console.log("\n\nSending Update SmartHands Request Message  **********\n\n")
+        const result = await smartHandsTemplate.updateSmartHandsUsingOAuth(
+            JSON.stringify(UPDATE_SMARTHAND_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Update SmartHands Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_cancel_smarthands', async function () {
         console.log("\n\nSending Cancel SmartHands Request Message  **********\n\n")
         const result = await smartHandsTemplate.cancelSmartHands(
             JSON.stringify(CANCEL_SMARTHAND_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Cancel SmartHands Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_cancel_smarthands, using OAuth Token', async function () {
+        console.log("\n\nSending Cancel SmartHands Request Message  **********\n\n")
+        const result = await smartHandsTemplate.cancelSmartHandsUsingOAuth(
+            JSON.stringify(CANCEL_SMARTHAND_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Cancel SmartHands Response Message  **********\n\n", safeStringify(result))
     })
@@ -484,6 +565,15 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create TroubleTicket Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_create_troubleticket, using OAuth Token', async function () {
+        console.log("\n\nSending Create TroubleTicket Request Message  **********\n\n")
+        const result = await troubleTicketTemplate.createTroubleTicketUsingOAuth(
+            JSON.stringify(CREATE_TROUBLETICKET_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Create TroubleTicket Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_update_troubleticket', async function () {
         console.log("\n\nSending Update TroubleTicket Request Message  **********\n\n")
         const result = await troubleTicketTemplate.updateTroubleTicket(
@@ -494,12 +584,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update TroubleTicket Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_update_troubleticket, using OAuth Token', async function () {
+        console.log("\n\nSending Update TroubleTicket Request Message  **********\n\n")
+        const result = await troubleTicketTemplate.updateTroubleTicketUsingOAuth(
+            JSON.stringify(UPDATE_TROUBLETICKET_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Update TroubleTicket Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_cancel_troubleticket', async function () {
         console.log("\n\nSending Cancel TroubleTicket Request Message  **********\n\n")
         const result = await troubleTicketTemplate.cancelTroubleTicket(
             JSON.stringify(CANCEL_TROUBLETICKET_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_cancel_troubleticket, using OAuth Token', async function () {
+        console.log("\n\nSending Cancel TroubleTicket Request Message  **********\n\n")
+        const result = await troubleTicketTemplate.cancelTroubleTicketUsingOAuth(
+            JSON.stringify(CANCEL_TROUBLETICKET_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n", safeStringify(result))
     })
@@ -521,12 +629,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_create_inbound_shipment_carriertype, using OAuth Token', async function () {
+        console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipmentUsingOAuth(
+            JSON.stringify(CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_create_inbound_shipment_customercarrytype', async function () {
         console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.createShipment(
             JSON.stringify(CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_create_inbound_shipment_customercarrytype, using OAuth Token', async function () {
+        console.log("\n\nSending Create Inbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipmentUsingOAuth(
+            JSON.stringify(CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
@@ -541,12 +667,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_create_outbound_shipment_carriertype, using OAuth Token', async function () {
+        console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipmentUsingOAuth(
+            JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_create_outbound_shipment_customercarrytype', async function () {
         console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.createShipment(
             JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_create_outbound_shipment_customercarrytype, using OAuth Token', async function () {
+        console.log("\n\nSending Create Outbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.createShipmentUsingOAuth(
+            JSON.stringify(CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
@@ -561,6 +705,15 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update Inbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_update_inbound_shipment, using OAuth Token', async function () {
+        console.log("\n\nSending Update Inbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.updateShipmentUsingOAuth(
+            JSON.stringify(UPDATE_INBOUNDSHIPMENT_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Update Inbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_update_outbound_shipment', async function () {
         console.log("\n\nSending Update Outbound Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.updateShipment(
@@ -571,12 +724,30 @@ describe('EMG Template Test Suite', function () {
         console.log("\n\nReceiving Update Outbound Shipment Response Message  **********\n\n", safeStringify(result))
     })
 
+    it('test_update_outbound_shipment, using OAuth Token', async function () {
+        console.log("\n\nSending Update Outbound Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.updateShipmentUsingOAuth(
+            JSON.stringify(UPDATE_OUTBOUNDSHIPMENT_PAYLOAD),
+            OAUTH_TOKEN
+        )
+        console.log("\n\nReceiving Update Outbound Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
     it('test_cancel_shipment', async function () {
         console.log("\n\nSending Cancel Shipment Request Message  **********\n\n")
         const result = await shipmentTemplate.cancelShipment(
             JSON.stringify(CANCEL_SHIPMENT_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Cancel Shipment Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_cancel_shipment, using OAuth Token', async function () {
+        console.log("\n\nSending Cancel Shipment Request Message  **********\n\n")
+        const result = await shipmentTemplate.cancelShipmentUsingOAuth(
+            JSON.stringify(CANCEL_SHIPMENT_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Cancel Shipment Response Message  **********\n\n", safeStringify(result))
     })
@@ -594,6 +765,15 @@ describe('EMG Template Test Suite', function () {
             JSON.stringify(CREATE_CROSSCONNECT_PAYLOAD),
             CLIENT_ID,
             CLIENT_SECRET
+        )
+        console.log("\n\nReceiving Create crossConnect Response Message  **********\n\n", safeStringify(result))
+    })
+
+    it('test_create_crossConnect, using OAuth Token', async function () {
+        console.log("\n\nSending Create crossConnect Request Message  **********\n\n")
+        const result = await crossConnectTemplate.createCrossConnectUsingOAuth(
+            JSON.stringify(CREATE_CROSSCONNECT_PAYLOAD),
+            OAUTH_TOKEN
         )
         console.log("\n\nReceiving Create crossConnect Response Message  **********\n\n", safeStringify(result))
     })

@@ -69,6 +69,15 @@ function serializeBody(msg) {
     }
 }
 
+function formatError(StatusCode, Description) {
+    return {
+        Body: {
+            StatusCode: StatusCode,
+            Description: Description
+        }
+    };
+}
+
 async function sendMessageToQueue(payload, label) {
     try {
         var sbns = createServiceBusClient(config.EQUINIX_INCOMING_QUEUE_CONNECTION_STRING);

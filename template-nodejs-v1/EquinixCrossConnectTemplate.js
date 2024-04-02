@@ -53,7 +53,31 @@ const createCrossConnect = async (requestJSON, clientID, clientSecret) => {
     }
   }
 
-  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, clientID, clientSecret);
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, clientID, clientSecret, false);
+  return responseJSON;
+}
+
+/**
+  * Sends the create CrossConnect message to Equinix Messaging Gateway.
+  *
+  * @param requestJSON - Message to send.
+  * @param oauthToken - OAuth token used for authentication.
+  * @returns responseJSON - Received response message.
+  * @throws error if Equinix Messaging Gateway returns an error while processing the message.
+  */
+ const createCrossConnectUsingOAuth = async (requestJSON, oauthToken) => {
+  var JSONObj = JSON.parse(requestJSON);
+
+  if (JSONObj.ConnectionDetails && JSONObj.ConnectionDetails.length > 0) {
+    for (var i = 0; i < JSONObj.ConnectionDetails.length; i++) {
+      if (JSONObj.ConnectionDetails[i].ZSide && JSONObj.ConnectionDetails[i].ZSide.hasOwnProperty('LOAAttachment') && JSONObj.ConnectionDetails[i].ZSide.LOAAttachment != null) {
+        var LOAAttachment = await messageUtil.uploadAllAttachments([JSONObj.ConnectionDetails[i].ZSide.LOAAttachment]);
+        JSONObj.ConnectionDetails[i].ZSide.LOAAttachment = Object.assign({}, LOAAttachment[0])
+      }
+    }
+  }
+
+  var responseJSON = await messageUtil.messageProcessor(JSONObj, messageUtil.CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, null, oauthToken, false);
   return responseJSON;
 }
 
@@ -86,5 +110,6 @@ const getNotifications = async (requestorId, servicerId, activityId, ticketState
 
 module.exports = {
   createCrossConnect: createCrossConnect,
+  createCrossConnectUsingOAuth: createCrossConnectUsingOAuth,
   getNotifications: getNotifications
 }
