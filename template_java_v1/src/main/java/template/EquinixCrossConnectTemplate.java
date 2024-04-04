@@ -47,7 +47,22 @@ public class EquinixCrossConnectTemplate {
 	public JSONObject createCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,clientID, clientSecret,false );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the create Crossconnect message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message.
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject createCrossconnectUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,null, oauthToken,true );
 		return responseJSON;
 	}
 
@@ -60,12 +75,27 @@ public class EquinixCrossConnectTemplate {
 	 * @returns responseJSON - Received response message
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	// public JSONObject updateCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
-	// {
-	// 	MessageUtil util = new MessageUtil();
-	// 	JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT, clientID, clientSecret );
-	// 	return responseJSON;
-	// }
+	public JSONObject updateCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT, clientID, clientSecret, false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the update Crossconnect message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject updateCrossconnectUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT, null, oauthToken, true);
+		return responseJSON;
+	}
 
 	/**
 	 * Sends the cancel Crossconnect message to Equinix Messaging Gateway.
@@ -76,12 +106,27 @@ public class EquinixCrossConnectTemplate {
 	 * @returns responseJSON - Received response message
 	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
 	 */
-	// public JSONObject cancelCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
-	// {
-	// 	MessageUtil util = new MessageUtil();
-	// 	JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,clientID, clientSecret );
-	// 	return responseJSON;
-	// }
+	public JSONObject cancelCrossconnect(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,clientID, clientSecret,false );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the cancel Crossconnect message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject cancelCrossconnectUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_CROSSCONNECT,null, oauthToken,true );
+		return responseJSON;
+	}
 
 	/**
 	 * Receive ticket notifications from Equinix Messaging Gateway that matches the provided filter criteria.

@@ -47,7 +47,22 @@ public class EquinixShipmentTemplate {
 	public JSONObject createShipment(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,clientID, clientSecret, false );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the create WorkVisit message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject createShipmentUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,null, oauthToken,true );
 		return responseJSON;
 	}
 
@@ -63,7 +78,22 @@ public class EquinixShipmentTemplate {
 	public JSONObject updateShipment(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING, clientID, clientSecret, false);
+		return responseJSON;
+	}
+	
+	/**
+	 * Sends the update Shipment message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject updateShipmentUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING, null, oauthToken, true );
 		return responseJSON;
 	}
 
@@ -79,7 +109,22 @@ public class EquinixShipmentTemplate {
 	public JSONObject cancelShipment(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,clientID, clientSecret, false );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the cancel Shipment message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject cancelShipmentUsingOAuth(JSONObject requestJSON, String oauthToken) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SHIPPING,null, oauthToken, true );
 		return responseJSON;
 	}
 

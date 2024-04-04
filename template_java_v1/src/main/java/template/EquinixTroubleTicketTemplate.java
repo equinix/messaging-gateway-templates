@@ -47,7 +47,22 @@ public class EquinixTroubleTicketTemplate {
 	public JSONObject createTroubleTicket(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,clientID, clientSecret,false );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the create Trouble Ticket message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject createTroubleTicketUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,null, oauthToken,true );
 		return responseJSON;
 	}
 
@@ -63,7 +78,22 @@ public class EquinixTroubleTicketTemplate {
 	public JSONObject updateTroubleTicket(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX, clientID, clientSecret, false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the update Trouble Ticket message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject updateTroubleTicketUsingOAuth(JSONObject requestJSON, String oauthToken) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX, null, oauthToken, true);
 		return responseJSON;
 	}
 
@@ -79,7 +109,22 @@ public class EquinixTroubleTicketTemplate {
 	public JSONObject cancelTroubleTicket(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,clientID, clientSecret,false );
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the cancel Trouble Ticket message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject cancelTroubleTicketUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_BREAKFIX,null, oauthToken,true );
 		return responseJSON;
 	}
 

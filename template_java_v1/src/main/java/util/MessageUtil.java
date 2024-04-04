@@ -36,10 +36,10 @@ import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
 import com.azure.messaging.servicebus.ServiceBusReceiverClient;
 import com.azure.messaging.servicebus.models.ReceiveMode;
-import com.azure.storage.blob.BlobClient;
-import com.azure.storage.blob.BlobContainerClient;
-import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
+// import com.azure.storage.blob.BlobClient;
+// import com.azure.storage.blob.BlobContainerClient;
+// import com.azure.storage.blob.BlobServiceClient;
+// import com.azure.storage.blob.BlobServiceClientBuilder;
 import config.config;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -84,7 +84,7 @@ public class MessageUtil {
     public static final String TICKET_TYPE_CROSSCONNECT = "CrossConnect";
     public static JSONObject task_obj;
 
-    public JSONObject messageProcessor(JSONObject JSONObj, String actionVerb, String ResourceType, String clientID, String clientSecret) throws Exception {
+    public JSONObject messageProcessor(JSONObject JSONObj, String actionVerb, String ResourceType, String clientID, String clientSecret, Boolean isOAuthType) throws Exception {
         if (actionVerb.equals("Cancelled")) {
             actionVerb = "Update";
         }
@@ -112,8 +112,12 @@ public class MessageUtil {
             }
             JSONObj.put("ConnectionDetails",ConnectionDetailsJSONArray);
         }
-
-        JSONObject messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
+        JSONObject messageInput = null;
+        if(isOAuthType){
+            messageInput = createPayloadUsingOAuth(JSONObj, actionVerb, ResourceType, SOURCE_ID,clientSecret);
+        }else{
+            messageInput = createPayload(JSONObj, actionVerb, ResourceType, SOURCE_ID, clientID, clientSecret);
+        }
         task_obj = new JSONObject(messageInput.get("Task").toString());
         String messageId = messageInput.getJSONObject("Task").get("Id").toString();
         System.out.println("\n\nMessage ID:   " + messageId + "\n\n");
@@ -150,6 +154,29 @@ public class MessageUtil {
                 "    \"Authentication\": {\n" +
                 "    \"ClientId\": \"" + ClientId + "\",\n" +
                 "    \"ClientSecret\": \"" + ClientSecret + "\",\n" +
+                "}\n" +
+                "}");
+        return parentObject;
+    }
+
+    public JSONObject createPayloadUsingOAuth(JSONObject JSONObj, String actionVerb, String ResourceType, String SOURCE_ID, String OAuthToken) {
+        String nowAsISO = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        UUID uuid = UUID.randomUUID();
+        JSONObject parentObject = new JSONObject("{\n" +
+                "    \"Task\": {\n" +
+                "    \"Id\": \"" + uuid + "\",\n" +
+                "    \"Body\": " + JSONObj + ",\n" +
+                "    \"Verb\": \"" + actionVerb + "\",\n" +
+                "    \"Source\": \"" + SOURCE_ID + "\",\n" +
+                "    \"Version\": \"1.0\",\n" +
+                "    \"Resource\": \"" + ResourceType + "\",\n" +
+                "    \"ContentType\": \"application/json\",\n" +
+                "    \"CreateTimeUTC\": \"" + nowAsISO + "\",\n" +
+                "    \"OriginationId\": \"\",\n" +
+                "    \"OriginationVerb\": \"\"\n" +
+                "},\n" +
+                "    \"Authentication\": {\n" +
+                "    \"ClientId\": \"" + OAuthToken + "\",\n" +
                 "}\n" +
                 "}");
         return parentObject;
@@ -280,22 +307,22 @@ public class MessageUtil {
     }
 
     public static JSONObject uploadFile(byte[] bytes, String originalFilename) throws IOException {
-        int lastSplitIndex = originalFilename.lastIndexOf('.');
-        String fileName = originalFilename.substring(0, lastSplitIndex);
-        String[] fileSplit = originalFilename.split("\\.");
-        String fileExtension = fileSplit[fileSplit.length - 1];
+        // int lastSplitIndex = originalFilename.lastIndexOf('.');
+        // String fileName = originalFilename.substring(0, lastSplitIndex);
+        // String[] fileSplit = originalFilename.split("\\.");
+        // String fileExtension = fileSplit[fileSplit.length - 1];
 
-        String blobName = fileName + System.currentTimeMillis() + "." + fileExtension;
+        // String blobName = fileName + System.currentTimeMillis() + "." + fileExtension;
 
-        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().endpoint(config.FILE_STORAGE_URL).sasToken(config.FILE_STORAGE_UPLOAD_KEY).buildClient();
-        BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(config.FILE_STORAGE_DIRECTORY);
-        BlobClient blobClient = blobContainerClient.getBlobClient(blobName);
+        // BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().endpoint(config.FILE_STORAGE_URL).sasToken(config.FILE_STORAGE_UPLOAD_KEY).buildClient();
+        // BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(config.FILE_STORAGE_DIRECTORY);
+        // BlobClient blobClient = blobContainerClient.getBlobClient(blobName);
 
-        InputStream fileStream = new ByteArrayInputStream(bytes);
-        blobClient.upload(fileStream, bytes.length);
+        // InputStream fileStream = new ByteArrayInputStream(bytes);
+        // blobClient.upload(fileStream, bytes.length);
         JSONObject json = new JSONObject();
-        json.put("Name", blobName);
-        json.put("Url", blobClient.getBlobUrl());
+        // json.put("Name", blobName);
+        // json.put("Url", blobClient.getBlobUrl());
         return json;
     }
 

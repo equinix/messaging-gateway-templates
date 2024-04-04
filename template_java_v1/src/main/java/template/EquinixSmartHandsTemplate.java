@@ -47,7 +47,22 @@ public class EquinixSmartHandsTemplate {
 	public JSONObject createSmartHands(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS,clientID, clientSecret, false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the create SmartHands message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message.
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject createSmartHandsUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS,null, oauthToken, true );
 		return responseJSON;
 	}
 
@@ -63,7 +78,22 @@ public class EquinixSmartHandsTemplate {
 	public JSONObject updateSmartHands(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS, clientID, clientSecret,false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the update SmartHands message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject updateSmartHandsUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS, null, oauthToken, true );
 		return responseJSON;
 	}
 
@@ -79,7 +109,22 @@ public class EquinixSmartHandsTemplate {
 	public JSONObject cancelSmartHands(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS,clientID, clientSecret ,false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the cancel SmartHands message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject cancelSmartHandsUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_SMARTHANDS,null, oauthToken, true);
 		return responseJSON;
 	}
 

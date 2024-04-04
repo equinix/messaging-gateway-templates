@@ -36,7 +36,7 @@ import template.EquinixShipmentTemplate;
 import template.EquinixWorkVisitTemplate;
 import template.EquinixSmartHandsTemplate;
 import template.EquinixTroubleTicketTemplate;
-import template.EquinixCrossconnectTemplate;
+import template.EquinixCrossConnectTemplate;
 import util.MessageUtil;
 
 import java.io.File;
@@ -46,6 +46,7 @@ public class TestClient {
 
 	public static final String CLIENT_ID = "<CLIENTID>";
 	public static final String CLIENT_SECRET = "<CLIENTSECRET>";
+	public static final String OAUTH_TOKEN = "<OAUTHTOKEN>";
 	public static final String ORDER_NUMBER = "<ORDERNUMBER>";
 
 	public static final String NOTIFICATION_OPEN = "Open";
@@ -330,6 +331,13 @@ public class TestClient {
 		System.out.println("\n\nReceiving Create WorkVisit Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_work_visit_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create WorkVisit Request Message  **********\n\n");
+		EquinixWorkVisitTemplate template = new EquinixWorkVisitTemplate();
+		JSONObject result = template.createWorkVisitUsingOAuth(TestClient.CREATE_WORKVISIT_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Create WorkVisit Response Message  **********\n\n"+result);
+	}
+
 	public static void test_update_work_visit() throws Exception {
 		System.out.println("\n\nSending Update WorkVisit Request Message  **********\n\n");
 		EquinixWorkVisitTemplate template = new EquinixWorkVisitTemplate();
@@ -337,10 +345,24 @@ public class TestClient {
 		System.out.println("\n\nReceiving Update WorkVisit Response Message  **********\n\n"+result);
 	}
 
+	public static void test_update_work_visit_using_oauth() throws Exception {
+		System.out.println("\n\nSending Update WorkVisit Request Message  **********\n\n");
+		EquinixWorkVisitTemplate template = new EquinixWorkVisitTemplate();
+		JSONObject result = template.updateWorkVisitUsingOAuth(TestClient.UPDATE_WORKVISIT_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Update WorkVisit Response Message  **********\n\n"+result);
+	}
+
 	public static void test_cancel_work_visit() throws Exception {
 		System.out.println("\n\nSending Cancel WorkVisit Request Message  **********\n\n");
 		EquinixWorkVisitTemplate template = new EquinixWorkVisitTemplate();
 		JSONObject result = template.cancelWorkVisit(TestClient.CANCEL_WORKVISIT_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n"+result);
+	}
+
+	public static void test_cancel_work_visit_using_oauth() throws Exception {
+		System.out.println("\n\nSending Cancel WorkVisit Request Message  **********\n\n");
+		EquinixWorkVisitTemplate template = new EquinixWorkVisitTemplate();
+		JSONObject result = template.cancelWorkVisitUsingOAuth(TestClient.CANCEL_WORKVISIT_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n"+result);
 	}
 
@@ -359,10 +381,24 @@ public class TestClient {
 		System.out.println("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_inbound_shipment_carriertype_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create Inbound Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.createShipmentUsingOAuth(TestClient.CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n"+result);
+	}
+
 	public static void test_create_inbound_shipment_customercarrytype() throws Exception {
 		System.out.println("\n\nSending Create Inbound Shipment Request Message  **********\n\n");
 		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
 		JSONObject result = template.createShipment(TestClient.CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n"+result);
+	}
+
+	public static void test_create_inbound_shipment_customercarrytype_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create Inbound Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.createShipmentUsingOAuth(TestClient.CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Create Inbound Shipment Response Message  **********\n\n"+result);
 	}
 
@@ -373,10 +409,24 @@ public class TestClient {
 		System.out.println("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_outbound_shipment_carriertype_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create Outbound Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.createShipmentUsingOAuth(TestClient.CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n"+result);
+	}
+
 	public static void test_create_outbound_shipment_customercarrytype() throws Exception {
 		System.out.println("\n\nSending Create Outbound Shipment Request Message  **********\n\n");
 		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
 		JSONObject result = template.createShipment(TestClient.CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n"+result);
+	}
+
+	public static void test_create_outbound_shipment_customercarrytype_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create Outbound Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.createShipmentUsingOAuth(TestClient.CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Create Outbound Shipment Response Message  **********\n\n"+result);
 	}
 
@@ -387,6 +437,13 @@ public class TestClient {
 		System.out.println("\n\nReceiving Update Inbound Shipment Response Message  **********\n\n"+result);
 	}
 
+	public static void test_update_inbound_shipment_using_oauth() throws Exception {
+		System.out.println("\n\nSending Update Inbound Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.updateShipmentUsingOAuth(TestClient.UPDATE_INBOUNDSHIPMENT_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Update Inbound Shipment Response Message  **********\n\n"+result);
+	}
+
 	public static void test_update_outbound_shipment() throws Exception {
 		System.out.println("\n\nSending Update Outbound Shipment Request Message  **********\n\n");
 		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
@@ -394,10 +451,24 @@ public class TestClient {
 		System.out.println("\n\nReceiving Update Outbound Shipment Response Message  **********\n\n"+result);
 	}
 
+	public static void test_update_outbound_shipment_using_oauth() throws Exception {
+		System.out.println("\n\nSending Update Outbound Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.updateShipmentUsingOAuth(TestClient.UPDATE_OUTBOUNDSHIPMENT_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Update Outbound Shipment Response Message  **********\n\n"+result);
+	}
+
 	public static void test_cancel_shipment() throws Exception {
 		System.out.println("\n\nSending Cancel Shipment Request Message  **********\n\n");
 		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
 		JSONObject result = template.cancelShipment(TestClient.CANCEL_SHIPMENT_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Cancel Shipment Response Message  **********\n\n"+result);
+	}
+
+	public static void test_cancel_shipment_using_oauth() throws Exception {
+		System.out.println("\n\nSending Cancel Shipment Request Message  **********\n\n");
+		EquinixShipmentTemplate template = new EquinixShipmentTemplate();
+		JSONObject result = template.cancelShipmentUsingOAuth(TestClient.CANCEL_SHIPMENT_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Cancel Shipment Response Message  **********\n\n"+result);
 	}
 
@@ -416,6 +487,13 @@ public class TestClient {
 		System.out.println("\n\nReceiving Create SmartHands Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_smarthands_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create SmartHands Request Message  **********\n\n");
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.createSmartHandsUsingOAuth(TestClient.CREATE_SMARTHAND_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Create SmartHands Response Message  **********\n\n"+result);
+	}
+
 	public static void test_update_smarthands() throws Exception {
 		System.out.println("\n\nSending Update SmartHands Request Message  **********\n\n");
 		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
@@ -423,10 +501,24 @@ public class TestClient {
 		System.out.println("\n\nReceiving Update SmartHands Response Message  **********\n\n"+result);
 	}
 
+	public static void test_update_smarthands_using_oauth() throws Exception {
+		System.out.println("\n\nSending Update SmartHands Request Message  **********\n\n");
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.updateSmartHandsUsingOAuth(TestClient.UPDATE_SMARTHAND_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Update SmartHands Response Message  **********\n\n"+result);
+	}
+
 	public static void test_cancel_smarthands() throws Exception {
 		System.out.println("\n\nSending Cancel SmartHands Request Message  **********\n\n");
 		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
 		JSONObject result = template.cancelSmartHands(TestClient.CANCEL_SMARTHAND_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Cancel SmartHands Response Message  **********\n\n"+result);
+	}
+
+	public static void test_cancel_smarthands_using_oauth() throws Exception {
+		System.out.println("\n\nSending Cancel SmartHands Request Message  **********\n\n");
+		EquinixSmartHandsTemplate template = new EquinixSmartHandsTemplate();
+		JSONObject result = template.cancelSmartHandsUsingOAuth(TestClient.CANCEL_SMARTHAND_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Cancel SmartHands Response Message  **********\n\n"+result);
 	}
 
@@ -445,6 +537,13 @@ public class TestClient {
 		System.out.println("\n\nReceiving Create TroubleTicket Response Message  **********\n\n"+result);
 	}
 
+	public static void test_create_troubleticket_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create TroubleTicket Request Message  **********\n\n");
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.createTroubleTicketUsingOAuth(TestClient.CREATE_TROUBLETICKET_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Create TroubleTicket Response Message  **********\n\n"+result);
+	}
+
 	public static void test_update_troubleticket() throws Exception {
 		System.out.println("\n\nSending Update TroubleTicket Request Message  **********\n\n");
 		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
@@ -452,10 +551,24 @@ public class TestClient {
 		System.out.println("\n\nReceiving Update TroubleTicket Response Message  **********\n\n"+result);
 	}
 
+	public static void test_update_troubleticket_using_oauth() throws Exception {
+		System.out.println("\n\nSending Update TroubleTicket Request Message  **********\n\n");
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.updateTroubleTicketUsingOAuth(TestClient.UPDATE_TROUBLETICKET_PAYLOAD,OAUTH_TOKEN);
+		System.out.println("\n\nReceiving Update TroubleTicket Response Message  **********\n\n"+result);
+	}
+
 	public static void test_cancel_troubleticket() throws Exception {
 		System.out.println("\n\nSending Cancel TroubleTicket Request Message  **********\n\n");
 		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
 		JSONObject result = template.cancelTroubleTicket(TestClient.CANCEL_TROUBLETICKET_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n"+result);
+	}
+
+	public static void test_cancel_troubleticket_using_oauth() throws Exception {
+		System.out.println("\n\nSending Cancel TroubleTicket Request Message  **********\n\n");
+		EquinixTroubleTicketTemplate template = new EquinixTroubleTicketTemplate();
+		JSONObject result = template.cancelTroubleTicketUsingOAuth(TestClient.CANCEL_TROUBLETICKET_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n"+result);
 	}
 
@@ -471,6 +584,13 @@ public class TestClient {
 		System.out.println("\n\nSending Create CrossConnect Request Message  **********\n\n");
 		EquinixCrossConnectTemplate template = new EquinixCrossConnectTemplate();
 		JSONObject result = template.createCrossconnect(TestClient.CREATE_CROSSCONNECT_PAYLOAD,CLIENT_ID,CLIENT_SECRET);
+		System.out.println("\n\nReceiving Create CrossConnect Response Message  **********\n\n"+result);
+	}
+
+	public static void test_create_Crossconnect_using_oauth() throws Exception {
+		System.out.println("\n\nSending Create CrossConnect Request Message  **********\n\n");
+		EquinixCrossConnectTemplate template = new EquinixCrossConnectTemplate();
+		JSONObject result = template.createCrossconnectUsingOAuth(TestClient.CREATE_CROSSCONNECT_PAYLOAD,OAUTH_TOKEN);
 		System.out.println("\n\nReceiving Create CrossConnect Response Message  **********\n\n"+result);
 	}
 
@@ -511,7 +631,7 @@ public class TestClient {
 	//	test_update_troubleticket();
 	//	test_cancel_troubleticket();
 	//	test_troubleticket_notifications();
-		test_create_Crossconnect();
+		// test_create_Crossconnect();
 	//	test_Crossconnect_notifications();
 	}
 }

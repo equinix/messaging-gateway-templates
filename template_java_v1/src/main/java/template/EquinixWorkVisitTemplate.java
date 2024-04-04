@@ -47,7 +47,22 @@ public class EquinixWorkVisitTemplate {
 	public JSONObject createWorkVisit(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,clientID, clientSecret, false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the create WorkVisit message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject createWorkVisitUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CREATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,null, oauthToken, true);
 		return responseJSON;
 	}
 
@@ -63,7 +78,22 @@ public class EquinixWorkVisitTemplate {
 	public JSONObject updateWorkVisit(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT, clientID, clientSecret, false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the update WorkVisit message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject updateWorkVisitUsingOAuth(JSONObject requestJSON, String oauthToken) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.UPDATE_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT, null, oauthToken, true);
 		return responseJSON;
 	}
 
@@ -79,7 +109,22 @@ public class EquinixWorkVisitTemplate {
 	public JSONObject cancelWorkVisit(JSONObject requestJSON, String clientID, String clientSecret ) throws Exception
 	{
 		MessageUtil util = new MessageUtil();
-		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,clientID, clientSecret );
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,clientID, clientSecret, false);
+		return responseJSON;
+	}
+
+	/**
+	 * Sends the cancel WorkVisit message to Equinix Messaging Gateway.
+	 *
+	 * @param requestJSON - Message to send.
+	 * @param oauthToken - OAuth token used for authentication.
+	 * @returns responseJSON - Received response message
+	 * @throws Error if Equinix Messaging Gateway returns an error while processing the message.
+	 */
+	public JSONObject cancelWorkVisitUsingOAuth(JSONObject requestJSON, String oauthToken ) throws Exception
+	{
+		MessageUtil util = new MessageUtil();
+		JSONObject responseJSON = util.messageProcessor(requestJSON,MessageUtil.CANCEL_OPERATION,MessageUtil.TICKET_TYPE_WORKVISIT,null, oauthToken, true);
 		return responseJSON;
 	}
 
