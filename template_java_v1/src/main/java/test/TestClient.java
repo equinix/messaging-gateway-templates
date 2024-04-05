@@ -611,28 +611,45 @@ public class TestClient {
 //	}
 
 	public static void main(String args[]) throws Exception {
-	//	test_create_work_visit();
-	//	test_update_work_visit();
-	//	test_cancel_work_visit();
-	//	test_workvisit_notifications();
-	//	test_create_inbound_shipment_carriertype();
-	//	test_create_inbound_shipment_customercarrytype();
-	//	test_update_inbound_shipment();
-	//	test_create_outbound_shipment_carriertype();
-	//	test_create_outbound_shipment_customercarrytype();
-	//	test_update_outbound_shipment();
-	//	test_cancel_shipment();
-	//	test_shipment_notifications();
-	//	test_create_smarthands();
-	//	test_update_smarthands();
-	//	test_cancel_smarthands();
-	    test_smarthands_notifications();
-	//	test_create_troubleticket();
-	//	test_update_troubleticket();
-	//	test_cancel_troubleticket();
-	//	test_troubleticket_notifications();
+		// test_create_work_visit();
+		// test_create_work_visit_using_oauth();
+		// test_update_work_visit();
+		// test_update_work_visit_using_oauth();
+		// test_cancel_work_visit();
+		// test_cancel_shipment_using_oauth();
+		// test_workvisit_notifications();
+		// test_create_inbound_shipment_carriertype();
+		// test_create_inbound_shipment_carriertype_using_oauth();
+		// test_create_inbound_shipment_customercarrytype();
+		// test_create_inbound_shipment_customercarrytype_using_oauth();
+		// test_update_inbound_shipment();
+		// test_update_inbound_shipment_using_oauth();
+		// test_create_outbound_shipment_carriertype();
+		// test_create_outbound_shipment_carriertype_using_oauth();
+		// test_create_outbound_shipment_customercarrytype();
+		// test_create_outbound_shipment_customercarrytype_using_oauth();
+		// test_update_outbound_shipment();
+		// test_update_outbound_shipment_using_oauth();
+		// test_cancel_shipment();
+		// test_cancel_shipment_using_oauth();
+		// test_shipment_notifications();
+		test_create_smarthands();
+		// test_create_smarthands_using_oauth();
+		// test_update_smarthands();
+		// test_update_smarthands_using_oauth();
+		// test_cancel_smarthands();
+		// test_cancel_smarthands_using_oauth();
+	    // test_smarthands_notifications();
+		// test_create_troubleticket();
+		// test_create_troubleticket_using_oauth();
+		// test_update_troubleticket();
+		// test_update_troubleticket_using_oauth();
+		// test_cancel_troubleticket();
+		// test_cancel_troubleticket_using_oauth();
+		// test_troubleticket_notifications();
 		// test_create_Crossconnect();
-	//	test_Crossconnect_notifications();
+		// test_create_Crossconnect_using_oauth();
+		// test_Crossconnect_notifications();
 	}
 }
 
