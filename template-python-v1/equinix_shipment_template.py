@@ -55,7 +55,24 @@ async def create_shipment(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CREATE_OPERATION, TICKET_TYPE_SHIPPING,client_id, client_secret)
+    response_json = await message_processor(request_json_obj, CREATE_OPERATION, TICKET_TYPE_SHIPPING,client_id, client_secret, False)
+    return response_json
+
+async def create_shipment_oauth(request_json, oauth_token):
+    """Sends the create Shipment message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    request_json_obj = json.loads(request_json)
+    response_json = await message_processor(request_json_obj, CREATE_OPERATION, TICKET_TYPE_SHIPPING,None, oauth_token, True)
     return response_json
 
 async def update_shipment(request_json, client_id, client_secret):
@@ -73,7 +90,24 @@ async def update_shipment(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, UPDATE_OPERATION, TICKET_TYPE_SHIPPING, client_id, client_secret)
+    response_json = await message_processor(request_json_obj, UPDATE_OPERATION, TICKET_TYPE_SHIPPING, client_id, client_secret, False)
+    return response_json
+
+async def update_shipment_oauth(request_json, oauth_token):
+    """Sends the update Shipment message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    request_json_obj = json.loads(request_json)
+    response_json = await message_processor(request_json_obj, UPDATE_OPERATION, TICKET_TYPE_SHIPPING, None, oauth_token, True)
     return response_json
 
 async def cancel_shipment(request_json, client_id, client_secret):
@@ -91,7 +125,24 @@ async def cancel_shipment(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SHIPPING, client_id, client_secret)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SHIPPING, client_id, client_secret,False)
+    return response_json
+
+async def cancel_shipment_oauth(request_json, oauth_token):
+    """Sends the cancel Shipment message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    request_json_obj = json.loads(request_json)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SHIPPING, None, oauth_token,True)
     return response_json
 
 async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state):

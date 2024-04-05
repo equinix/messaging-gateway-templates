@@ -46,6 +46,7 @@ ORDER_NUMBER = "<ORDERNUMBER>"
 
 CLIENT_ID = "<CLIENTID>" # Will be supplied by Customer
 CLIENT_SECRET = "<CLIENTSECRET>" # Will be supplied by Customer
+OAUTH_TOKEN = "<OAUTHTOKEN>" # Will be supplied by Customer
 
 CREATE_WORKVISIT_PAYLOAD = {
     "CustomerContact": "<CUSTOMER CONTACT>",
@@ -406,9 +407,28 @@ async def test_create_work_visit():
         assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
 
 @pytest.mark.asyncio
+async def test_create_work_visit_using_oauth():
+    print ("\n\nSending Create WorkVisit Request Message  **********\n\n")
+    result = await equinix_workvisit_template.create_workvisit_oauth(json.dumps(CREATE_WORKVISIT_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Create WorkVisit Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
 async def test_update_work_visit():
     print ("\n\nSending Update WorkVisit Request Message  **********\n\n")
     result = await equinix_workvisit_template.update_work_visit(json.dumps(UPDATE_WORKVISIT_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Update WorkVisit Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 406, "expect 406 error"
+        assert "In view of the evolving COVID-19 pandemic" in result["Body"]["Description"], "Test fail"
+
+@pytest.mark.asyncio
+async def test_update_work_visit_using_oauth():
+    print ("\n\nSending Update WorkVisit Request Message  **********\n\n")
+    result = await equinix_workvisit_template.update_work_visit_oauth(json.dumps(UPDATE_WORKVISIT_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Update WorkVisit Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -424,6 +444,15 @@ async def test_cancel_work_visit():
         assert result, "Test Fail"
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
+@pytest.mark.asyncio
+async def test_cancel_work_visit_using_oauth():
+    print ("\n\nSending Cancel WorkVisit Request Message  **********\n\n")
+    result = await equinix_workvisit_template.cancel_work_visit_oauth(json.dumps(CANCEL_WORKVISIT_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
 
 @pytest.mark.asyncio
 async def test_create_work_visit_extension():
@@ -434,6 +463,14 @@ async def test_create_work_visit_extension():
         assert result, "Test Fail"
         assert result["statusCode"] == 201, "Should pass test with status code as 201"
 
+@pytest.mark.asyncio
+async def test_create_work_visit_extension_using_oauth():
+    print ("\n\nSending Create WorkVisit Request Message as per API Schema  **********\n\n")
+    result = await equinix_workvisit_template.create_workvisit_extn_oauth(json.dumps(CREATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Create WorkVisit Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["statusCode"] == 201, "Should pass test with status code as 201"
 
 @pytest.mark.asyncio
 async def test_update_work_visit_extension():
@@ -445,11 +482,29 @@ async def test_update_work_visit_extension():
         assert result["errors"][0]['code'] == 406, "expect 406 error"
         assert "In view of the evolving COVID-19 pandemic" in result["errors"][0]['message'], "Test fail"
 
-    
+@pytest.mark.asyncio
+async def test_update_work_visit_extension_using_oauth():
+    print ("\n\nSending Update WorkVisit Request Message as per API Schema **********\n\n")
+    result = await equinix_workvisit_template.update_work_visit_extn_oauth(json.dumps(UPDATE_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Update WorkVisit Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["errors"][0]['code'] == 406, "expect 406 error"
+        assert "In view of the evolving COVID-19 pandemic" in result["errors"][0]['message'], "Test fail"
+
 @pytest.mark.asyncio
 async def test_cancel_work_visit_extension():
     print ("\n\nSending Cancel WorkVisit Request Message as per API Schema **********\n\n")
     result = await equinix_workvisit_template.cancel_work_visit_extn(json.dumps(CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["statusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
+async def test_cancel_work_visit_extension_using_oauth():
+    print ("\n\nSending Cancel WorkVisit Request Message as per API Schema **********\n\n")
+    result = await equinix_workvisit_template.cancel_work_visit_extn_oauth(json.dumps(CANCEL_WORKVISIT_PAYLOAD_AS_PER_API_SCHEMA), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Cancel WorkVisit Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -474,6 +529,15 @@ async def test_create_smarthands():
         assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
 
 @pytest.mark.asyncio
+async def test_create_smarthands_using_oauth():
+    print ("\n\nSending Create SmartHands Request Message  **********\n\n")
+    result = await equinix_smarthands_template.create_smarthands_oauth(json.dumps(CREATE_SMARTHAND_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Create SmartHands Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
 async def test_update_smarthands():
     print ("\n\nSending Update SmartHands Request Message  **********\n\n")
     result = await equinix_smarthands_template.update_smarthands(json.dumps(UPDATE_SMARTHAND_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
@@ -483,9 +547,27 @@ async def test_update_smarthands():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
+async def test_update_smarthands_using_oauth():
+    print ("\n\nSending Update SmartHands Request Message  **********\n\n")
+    result = await equinix_smarthands_template.update_smarthands_oauth(json.dumps(UPDATE_SMARTHAND_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Update SmartHands Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
 async def test_cancel_smarthands():
     print ("\n\nSending Cancel SmartHands Request Message  **********\n\n")
     result = await equinix_smarthands_template.cancel_smarthands(json.dumps(CANCEL_SMARTHAND_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Cancel SmartHands Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
+async def test_cancel_smarthands_using_oauth():
+    print ("\n\nSending Cancel SmartHands Request Message  **********\n\n")
+    result = await equinix_smarthands_template.cancel_smarthands_oauth(json.dumps(CANCEL_SMARTHAND_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Cancel SmartHands Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -509,6 +591,15 @@ async def test_create_troubleticket():
         assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
 
 @pytest.mark.asyncio
+async def test_create_troubleticket_using_oauth():
+    print ("\n\nSending Create TroubleTicket Request Message  **********\n\n")
+    result = await equinix_troubleticket_template.create_troubleticket_oauth(json.dumps(CREATE_TROUBLETICKET_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Create TroubleTicket Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
 async def test_update_troubleticket():
     print ("\n\nSending Update TroubleTicket Request Message  **********\n\n")
     result = await equinix_troubleticket_template.update_troubleticket(json.dumps(UPDATE_TROUBLETICKET_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
@@ -518,9 +609,27 @@ async def test_update_troubleticket():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
+async def test_update_troubleticket_using_oauth():
+    print ("\n\nSending Update TroubleTicket Request Message  **********\n\n")
+    result = await equinix_troubleticket_template.update_troubleticket_oauth(json.dumps(UPDATE_TROUBLETICKET_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Update TroubleTicket Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
 async def test_cancel_troubleticket():
     print ("\n\nSending Cancel TroubleTicket Request Message  **********\n\n")
     result = await equinix_troubleticket_template.cancel_troubleticket(json.dumps(CANCEL_TROUBLETICKET_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
+async def test_cancel_troubleticket_using_oauth():
+    print ("\n\nSending Cancel TroubleTicket Request Message  **********\n\n")
+    result = await equinix_troubleticket_template.cancel_troubleticket_oauth(json.dumps(CANCEL_TROUBLETICKET_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Cancel TroubleTicket Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -545,9 +654,27 @@ async def test_create_inbound_shipment_carriertype():
         assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
 
 @pytest.mark.asyncio
+async def test_create_inbound_shipment_carriertype_using_oauth():
+    print ("\n\nSending Create inbound shipment carrier type Request Message  **********\n\n")
+    result = await equinix_shipment_template.create_shipment_oauth(json.dumps(CREATE_INBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Create Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
 async def test_create_inbound_shipment_customercarrytype():
     print ("\n\nSending Create inbound shipment customer carry type Request Message  **********\n\n")
     result = await equinix_shipment_template.create_shipment(json.dumps(CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Create Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
+async def test_create_inbound_shipment_customercarrytype_using_oauth():
+    print ("\n\nSending Create inbound shipment customer carry type Request Message  **********\n\n")
+    result = await equinix_shipment_template.create_shipment_oauth(json.dumps(CREATE_INBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Create Shipment Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -563,9 +690,27 @@ async def test_create_outbound_shipment_carriertype():
         assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
 
 @pytest.mark.asyncio
+async def test_create_outbound_shipment_carriertype_using_oauth():
+    print ("\n\nSending Create outbound shipment carrier type Request Message  **********\n\n")
+    result = await equinix_shipment_template.create_shipment_oauth(json.dumps(CREATE_OUTBOUNDSHIPMENT_CARRIERTYPE_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Create Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
 async def test_create_outbound_shipment_customercarrytype():
     print ("\n\nSending Create outbound shipment customer carry type Request Message  **********\n\n")
     result = await equinix_shipment_template.create_shipment(json.dumps(CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Create Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
+async def test_create_outbound_shipment_customercarrytype_using_oauth():
+    print ("\n\nSending Create outbound shipment customer carry type Request Message  **********\n\n")
+    result = await equinix_shipment_template.create_shipment_oauth(json.dumps(CREATE_OUTBOUNDSHIPMENT_CUSTOMERCARRYTYPE_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Create Shipment Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -581,6 +726,15 @@ async def test_update_inbound_shipment():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
+async def test_update_inbound_shipment_using_oauth():
+    print ("\n\nSending Update inbound shipment Request Message  **********\n\n")
+    result = await equinix_shipment_template.update_shipment_oauth(json.dumps(UPDATE_INBOUNDSHIPMENT_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Update Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
 async def test_update_outbound_shipment():
     print ("\n\nSending Update outbound shipment Request Message  **********\n\n")
     result = await equinix_shipment_template.update_shipment(json.dumps(UPDATE_OUTBOUNDSHIPMENT_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
@@ -590,9 +744,27 @@ async def test_update_outbound_shipment():
         assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
 
 @pytest.mark.asyncio
+async def test_update_outbound_shipment_using_oauth():
+    print ("\n\nSending Update outbound shipment Request Message  **********\n\n")
+    result = await equinix_shipment_template.update_shipment_oauth(json.dumps(UPDATE_OUTBOUNDSHIPMENT_PAYLOAD), OAUTH_TOKEN)
+    if result:
+        print ("\n\nReceiving Update Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
 async def test_cancel_shipment():
     print ("\n\nSending Cancel Shipment Request Message  **********\n\n")
     result = await equinix_shipment_template.cancel_shipment(json.dumps(CANCEL_SHIPMENT_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Cancel Shipment Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 202, "Should pass test with status code as 202"
+
+@pytest.mark.asyncio
+async def test_cancel_shipment_using_oauth():
+    print ("\n\nSending Cancel Shipment Request Message  **********\n\n")
+    result = await equinix_shipment_template.cancel_shipment_oauth(json.dumps(CANCEL_SHIPMENT_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Cancel Shipment Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"
@@ -610,6 +782,15 @@ async def test_get_notifications_for_shipment():
 async def test_create_crossconnect():
     print ("\n\nSending Create CrossConnect Request Message  **********\n\n")
     result = await equinix_crossconnect_template.create_crossconnect(json.dumps(CREATE_CROSSCONNECT_PAYLOAD), CLIENT_ID, CLIENT_SECRET)
+    if result:
+        print ("\n\nReceiving Create CrossConnect Response Message  **********\n\n {0}".format(result))
+        assert result, "Test Fail"
+        assert result["Body"]["StatusCode"] == 201, "Should pass test with status code as 201"
+
+@pytest.mark.asyncio
+async def test_create_crossconnect_using_oauth():
+    print ("\n\nSending Create CrossConnect Request Message  **********\n\n")
+    result = await equinix_crossconnect_template.create_crossconnect_oauth(json.dumps(CREATE_CROSSCONNECT_PAYLOAD), OAUTH_TOKEN)
     if result:
         print ("\n\nReceiving Create CrossConnect Response Message  **********\n\n {0}".format(result))
         assert result, "Test Fail"

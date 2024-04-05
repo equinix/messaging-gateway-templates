@@ -56,48 +56,96 @@ async def create_crossconnect(request_json, client_id, client_secret):
             str: Received response message
         """
     json_obj = json.loads(request_json)
-    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret, False)
     return response_json    
                
+async def create_crossconnect_oauth(request_json, oauth_token):
+    """Sends the create CrossConnect message to Equinix Messaging Gateway.
 
-# async def update_crossconnect(request_json, client_id, client_secret):
-#     """Sends the update CrossConnect message to Equinix Messaging Gateway.
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
 
-#         Args:
-#             request_json (str): Message to send.
-#             client_id (str): Equinix issued client_id.
-#             client_secret (str): Equinix issued client_secret.
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
-#         Raises:
-#             obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_CROSSCONNECT, None, oauth_token, True)
+    return response_json
 
-#         Returns:
-#             str: Received response message
-#         """
-#     json_obj = json.loads(request_json)
-#     response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret)
-#     return response_json
+async def update_crossconnect(request_json, client_id, client_secret):
+    """Sends the update CrossConnect message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            client_id (str): Equinix issued client_id.
+            client_secret (str): Equinix issued client_secret.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret, False)
+    return response_json
    
+async def update_crossconnect_oauth(request_json, oauth_token):
+    """Sends the update CrossConnect message to Equinix Messaging Gateway.
 
-# async def cancel_crossconnect(request_json, client_id, client_secret):
-#     """Sends the cancel CrossConnect message to Equinix Messaging Gateway.
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
 
-#         Args:
-#             request_json (str): Message to send.
-#             client_id (str): Equinix issued client_id.
-#             client_secret (str): Equinix issued client_secret.
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
 
-#         Raises:
-#             obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_CROSSCONNECT, None, oauth_token, True)
+    return response_json
 
-#         Returns:
-#             str: Received response message
-#         """
-#     request_json_obj = json.loads(request_json)
-#     response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret)
-#     return response_json
+async def cancel_crossconnect(request_json, client_id, client_secret):
+    """Sends the cancel CrossConnect message to Equinix Messaging Gateway.
 
-  
+        Args:
+            request_json (str): Message to send.
+            client_id (str): Equinix issued client_id.
+            client_secret (str): Equinix issued client_secret.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    request_json_obj = json.loads(request_json)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_CROSSCONNECT, client_id, client_secret, False)
+    return response_json
+
+async def cancel_crossconnect_oauth(request_json, oauth_token):
+    """Sends the cancel CrossConnect message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    request_json_obj = json.loads(request_json)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_CROSSCONNECT, None, oauth_token, True)
+    return response_json
+
 async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state):
     """Receive ticket notification from Equinix Messaging Gateway that matches the provided filter criteria.
 

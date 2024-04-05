@@ -56,7 +56,24 @@ async def create_workvisit (request_json,client_id, client_secret):
             str: Received response message
         """
     json_obj = json.loads(request_json)
-    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret, False)
+    return response_json
+
+async def create_workvisit_oauth (request_json,oauth_token):
+    """Sends the create WorkVisit message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_WORKVISIT, None, oauth_token, True)
     return response_json
 
 
@@ -75,7 +92,24 @@ async def update_work_visit(request_json,client_id, client_secret):
             str: Received response message
         """
     json_obj = json.loads(request_json)
-    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret,False)
+    return response_json
+
+async def update_work_visit_oauth(request_json,oauth_token):
+    """Sends the update WorkVisit message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj:  returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_WORKVISIT, None, oauth_token,True)
     return response_json
 
 
@@ -94,7 +128,24 @@ async def cancel_work_visit(request_json,client_id, client_secret):
             str: Received response message
         """
     json_obj = json.loads(request_json)
-    response_json = await message_processor(json_obj, CANCEL_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret)
+    response_json = await message_processor(json_obj, CANCEL_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret, False)
+    return response_json
+
+async def cancel_work_visit_oauth(request_json,oauth_token):
+    """Sends the cancel WorkVisit message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, CANCEL_OPERATION, TICKET_TYPE_WORKVISIT, None, oauth_token, True)
     return response_json
    
 
@@ -114,7 +165,25 @@ async def create_workvisit_extn (request_json,client_id, client_secret):
         """
     json_obj = json.loads(request_json)
     json_obj = await create_workvisit_request_wrapper(json_obj)
-    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret, False)
+    return create_workvisit_response_wrapper(response_json, json.loads(request_json))
+
+async def create_workvisit_extn_oauth (request_json,oauth_token):
+    """Sends the create WorkVisit message to Equinix Messaging Gateway as per API Schema.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    json_obj = await create_workvisit_request_wrapper(json_obj)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_WORKVISIT, None, oauth_token,True)
     return create_workvisit_response_wrapper(response_json, json.loads(request_json))
 
 
@@ -134,9 +203,26 @@ async def update_work_visit_extn (request_json,client_id, client_secret):
         """
     json_obj = json.loads(request_json)
     json_obj = await update_workvisit_request_wrapper(json_obj)
-    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret, False)
     return workvisit_response_wrapper(response_json)
 
+async def update_work_visit_extn_oauth (request_json,oauth_token):
+    """Sends the update WorkVisit message to Equinix Messaging Gateway as per API Schema.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    json_obj = await update_workvisit_request_wrapper(json_obj)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_WORKVISIT, None, oauth_token, True)
+    return workvisit_response_wrapper(response_json)
 
 async def cancel_work_visit_extn(request_json,client_id, client_secret):
     """Sends the cancel WorkVisit message to Equinix Messaging Gateway as per API Schema.
@@ -154,9 +240,26 @@ async def cancel_work_visit_extn(request_json,client_id, client_secret):
         """
     json_obj = json.loads(request_json)
     json_obj = await cancel_workvisit_request_wrapper(json_obj)
-    response_json = await message_processor(json_obj, CANCEL_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret)
+    response_json = await message_processor(json_obj, CANCEL_OPERATION, TICKET_TYPE_WORKVISIT, client_id, client_secret, False)
     return workvisit_response_wrapper(response_json)
 
+async def cancel_work_visit_extn_oauth(request_json,oauth_token):
+    """Sends the cancel WorkVisit message to Equinix Messaging Gateway as per API Schema.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    json_obj = await cancel_workvisit_request_wrapper(json_obj)
+    response_json = await message_processor(json_obj, CANCEL_OPERATION, TICKET_TYPE_WORKVISIT, None, oauth_token, True)
+    return workvisit_response_wrapper(response_json)
 
 async def get_notifications(requestor_id, servicer_id, activity_id, ticket_state):
     """Receive ticket notification from Equinix Messaging Gateway that matches the provided filter criteria.

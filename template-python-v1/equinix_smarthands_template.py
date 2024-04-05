@@ -56,10 +56,26 @@ async def create_smarthands(request_json, client_id, client_secret):
             str: Received response message
         """
     json_obj = json.loads(request_json)
-    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret, False)
+    return response_json
+
+async def create_smarthands_oauth(request_json, oauth_token):
+    """Sends the create SmartHands message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, CREATE_OPERATION, TICKET_TYPE_SMARTHANDS, None, oauth_token, True)
     return response_json
                
-
 async def update_smarthands(request_json, client_id, client_secret):
     """Sends the update SmartHands message to Equinix Messaging Gateway.
 
@@ -75,9 +91,25 @@ async def update_smarthands(request_json, client_id, client_secret):
             str: Received response message
         """
     json_obj = json.loads(request_json)
-    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret, False)
     return response_json
    
+async def update_smarthands_oauth(request_json, oauth_token):
+    """Sends the update SmartHands message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    json_obj = json.loads(request_json)
+    response_json = await message_processor(json_obj, UPDATE_OPERATION, TICKET_TYPE_SMARTHANDS, None, oauth_token, True)
+    return response_json
 
 async def cancel_smarthands(request_json, client_id, client_secret):
     """Sends the cancel SmartHands message to Equinix Messaging Gateway.
@@ -94,7 +126,24 @@ async def cancel_smarthands(request_json, client_id, client_secret):
             str: Received response message
         """
     request_json_obj = json.loads(request_json)
-    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SMARTHANDS, client_id, client_secret,False)
+    return response_json
+
+async def cancel_smarthands_oauth(request_json, oauth_token):
+    """Sends the cancel SmartHands message to Equinix Messaging Gateway.
+
+        Args:
+            request_json (str): Message to send.
+            oauthToken (str): OAuth token used for authentication.
+
+        Raises:
+            obj: returns an error if Equinix Messaging Gateway returns an error while processing the message.
+
+        Returns:
+            str: Received response message
+        """
+    request_json_obj = json.loads(request_json)
+    response_json = await message_processor(request_json_obj, CANCEL_OPERATION, TICKET_TYPE_SMARTHANDS, None, oauth_token, True)
     return response_json
 
   

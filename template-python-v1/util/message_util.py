@@ -67,9 +67,9 @@ TICKET_TYPE_CROSSCONNECT = "CrossConnect"
 def datetime_iso_format(date):
     return date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
-async def message_processor(json_obj, action_verb, resource_type, client_id, client_secret):
+async def message_processor(json_obj, action_verb, resource_type, client_id, client_secret, isOAuthType):
     verb = action_verb
-
+    message_input = None
     if action_verb == "Cancelled":
         verb = "Update"
     
@@ -85,9 +85,11 @@ async def message_processor(json_obj, action_verb, resource_type, client_id, cli
                         details['ZSide']['LOAAttachment'] = LOAAttachment[0]
         except:
             pass
-
-    message_input = create_payload(
-        json_obj, verb, resource_type, client_id, client_secret)
+    if(isOAuthType):
+        message_input = create_payload_using_oauth(json_obj, verb, resource_type, client_secret)
+    else:
+        message_input = create_payload(json_obj, verb, resource_type, client_id, client_secret)
+         
     message_input["Task"] = json.dumps(message_input["Task"])
     message_id = json.loads(message_input["Task"])["Id"]
     try:
@@ -124,6 +126,31 @@ def create_payload(json_obj, verb, resource_type, client_id, client_secret):
     authentication["Authentication"] = {
         "ClientId": client_id,
         "ClientSecret": client_secret
+    }
+    if client_id and client_secret:
+        message_input.update(authentication)
+
+    return message_input
+
+def create_payload_using_oauth(json_obj, verb, resource_type, oauth_token):
+    authentication = {}
+    message_input = {
+        "Task": {
+            "Id": str(uuid.uuid4()),
+            "Verb": verb,
+            "Source": SOURCE_ID,
+            "Version": "1.0",
+            "Resource": resource_type,
+            "ContentType": "application/json",
+            "CreateTimeUTC": str(datetime_iso_format(datetime.datetime.now(tz=timezone.utc))),
+            "OriginationId": None,
+            "OriginationVerb": None,
+            "Body": json_obj
+        }
+    }
+
+    authentication["Authentication"] = {
+        "AccessToken": oauth_token
     }
     if client_id and client_secret:
         message_input.update(authentication)
