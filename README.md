@@ -1,3 +1,19 @@
+Effective 1 October 2025, the EMG Order Management feature will be discontinued. After 1 October 2025, orders placed via EMG will not process.
+
+If you’re not integrating with EMG Order Management, you can ignore this announcement.
+
+End of Support: Effective 1 April 2025, we will end support for EMG Order Management. After 1 April 2025, Order Management will continue to work, but we will no longer offer help with issues.
+
+EMG outbound Notifications are not impacted by this change and will continue to deliver near real-time notifications to you.
+
+Action Required: We strongly recommend that you migrate to available alternatives using our migration [guide] (<insert-link>) and REST APIs.
+
+We understand the impact of this change and are committed to assisting you during the transition phase.
+
+If you have any questions or feedback, please raise an API Support Case or reach out to our support team at support@equinix.com.
+
+---
+
 # Templates for Equinix Messaging Gateway
 Equinix offers an event-driven system called **_Equinix Messaging Gateway (EMG)_**. The EMG system enables system-to-system integration from your in-house application to Platform Equinix. Use EMG to:
 -	Create/update/cancel orders & receive order status notifications for subscribed Equinix Products & Services - Cross Connect, Shipments, SmartHands, Trouble Tickets, Work Visit.
