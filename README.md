@@ -1,3 +1,4 @@
+# Order Management Deprecation Notice
 Effective 1 October 2025, the EMG Order Management feature will be discontinued. After 1 October 2025, orders placed via EMG will not process.
 
 If you’re not integrating with EMG Order Management, you can ignore this announcement.
