@@ -6,7 +6,7 @@ End of Support: Effective 1 April 2025, we will end support for EMG Order Manage
 
 EMG outbound Notifications are not impacted by this change and will continue to deliver near real-time notifications to you.
 
-Action Required: We strongly recommend that you migrate to available alternatives using our migration [guide] (<insert-link>) and REST APIs.
+Action Required: We strongly recommend that you migrate to available alternatives using our migration [guide] (https://developer.equinix.com/dev-docs/emg/order-management/migration-guide) and REST APIs.
 
 We understand the impact of this change and are committed to assisting you during the transition phase.
 
