@@ -34,78 +34,66 @@ Equinix Messaging Gateway (EMG) Templates provide reference code to seamlessly i
 
 ---
 
-## Template Details 
+## Template Details
 
 The Templates includes:
 
 1.  Order Templates with sample code for order management - create, update & cancel orders with Equinix:
-    -  /template-nodejs-v1
+    - `/template-nodejs-v1`
+    - `/template-python-v1`
+    - `/template_java_v1`
 
-    -  /template-python-v1
+2.  Notification Templates with sample code to receive notifications from Equinix:
+    - `/template-nodejs-outgoing-notifications-v1`
+    - `/template-python-outgoing-notifications-v1`
+    - `/template-java-outgoing-notifications-v1`
 
-    -  /template_java_v1
+3.  Order Templates includes individual templates with sample code to create/update/cancel Equinix orders for supported Equinix Orders & Services:
+    - `/EquinixCrossConnectTemplate`
+    - `/EquinixSmartHandsTemplate`
+    - `/EquinixTroubleTicketTemplate`
+    - `/EquinixWorkVisitTemplate`
+    - `/EquinixShipmentsTemplate`
 
-2. Notification Templates with sample code to receive notifications from Equinix:
-    - /template-nodejs-outgoing-notifications-v1
+4.  Order Templates also includes TestClient with sample code on how to send request & receive response from EMG Templates using EMG message schemas. Visit How To Guide to know about EMG request & response schemas for supported Equinix Products & Services
+    - `/test/TestClient`
 
-    - /template-python-outgoing-notifications-v1
-
-    - /template-java-outgoing-notifications-v1
-
-3. Order Templates includes individual templates with sample code to create/update/cancel Equinix orders for supported Equinix Orders & Services:
-    - /EquinixCrossConnectTemplate
-
-    - /EquinixSmartHandsTemplate
-
-    - /EquinixTroubleTicketTemplate
-
-    - /EquinixWorkVisitTemplate
-
-    - /EquinixShipmentsTemplate
-
-4. Order Templates also includes TestClient with sample code on how to send request & receive response from EMG Templates using EMG message schemas. Visit How To Guide to know about EMG request & response schemas for supported Equinix Products & Services
-    - /test/TestClient
-
-5. Configurations for EMG queues. These configurations will be provided by Equinix when you subscribe to EMG. Copy the YAML from your EMG subscription details on Equinix Developer Platform & override the place holders provide in config file at below location:
-    - /config/config
+5.  Configurations for EMG queues. These configurations will be provided by Equinix when you subscribe to EMG. Copy the YAML from your EMG subscription details on Equinix Developer Platform & override the place holders provide in config file at below location:
+    - `/config/config`
 
 ## Requirements
 
-1. Node.js Templates 
+1.  Node.js Templates
     - [Node.js](https://nodejs.org/en/download/) v10.16.2+
+    - [Visual Studio Code](https://code.visualstudio.com/)
 
-    - Visual Code (https://code.visualstudio.com/)
-
-2. Python Templates:
-      - [Python](https://www.python.org/downloads/) - v3.8.5+
-
-      - [Azure SDK for Python](https://azuresdkdocs.blob.core.windows.net/%24web/python/azure-servicebus/0.50.3/index.html) - v0.50.3+
-
+2.  Python Templates:
+    - [Python](https://www.python.org/downloads/) - v3.8.5+
+    - [Azure SDK for Python](https://azuresdkdocs.blob.core.windows.net/%24web/python/azure-servicebus/0.50.3/index.html) - v0.50.3+
     - [pytest](https://docs.pytest.org/en/stable/getting-started.html) - v6.0.1+
-
     - [pytest-asyncio](https://pypi.org/project/pytest-asyncio/) - v0.14.0+
 
-
-3. Java Templates
+3.  Java Templates
     - Java 8 & above
-
     - IntelliJ IDEA or Eclipse IDE
 
-
 ## Prerequisites
+
 1. An existing subscription with EMG is required in order to use our Templates. Visit the [Subscriptions](https://developer.equinix.com/subscriptions) page in the Equinix Developer Platform to get started. Alternatively, you can also reach out to your Equinix Customer Success Manager.
 2. Visit [Equinix Developer Platform](https://developer.equinix.com/) & follow the [steps](https://developer.equinix.com/dev-docs/ecp/getting-started/getting-access-token#generating-client-id-and-client-secret) to generate Equinix Client ID and Client Secret keys.
-3. You must have authorized permissions by your Master Administrator to order and receive notifications for Equinix Products & Services. 
+3. You must have authorized permissions by your Master Administrator to order and receive notifications for Equinix Products & Services.
 
-## How to Run EMG Templates 
-1. Node.js Templates:
-    1. SDK Setup:
+## How to Run EMG Templates
+
+1.  Node.js Templates:
+    1.  SDK Setup:
         - Download & import the Node.JS EMG Template project to Visual Code.
         - Run `npm install` from the root directory to install azure-bus package and other dependent libraries as per “_package.json_”.
         - Search & Install “_Mocha Test Explorer_” plugin from Visual Code Marketplace.
         - Select the EMG template project in Visual Code & click on Debug icon.
         - When promoted, click on “_create a launch.json file_” and select “_Node.js_”. This will create “_.vscode_” folder.
         - Right click on “_.vscode_” folder, create a new file call “_settings.json_” & insert below lines into the newly created file.
+
             ```sh
             {
               "mochaExplorer.files": [
@@ -131,8 +119,8 @@ The Templates includes:
             - `node EquinixNotificationListener.js`
         -	Above command would spin an indefinite listener on customer’s queue where messages would be received instantly whenever any new notification message pushed to the queue from Equinix. 
 
-2. Python Templates:
-    1. SDK Setup:
+2.  Python Templates:
+    1.  SDK Setup:
         - Download & import the Python EMG Template project to Visual Code.
         - Setting up environment
         - Execute below command on the terminal to create a new virtual environment. 
@@ -171,8 +159,8 @@ The Templates includes:
             - `python equinix_notification_listener.py`
         - Above command would spin an indefinite listener on customer’s queue where messages would be received instantly whenever any new notification message pushed to the queue from Equinix
 
-3. Java Templates
-    1. SDK Setup:
+3.  Java Templates
+    1.  SDK Setup:
         - Download and import the Java Template project into the Java IDE of your choice - Intellij IDEA or Eclipse IDE
         - Run the below script from with the parent folder _\template_java_v1_
             - `mvn install`
@@ -202,170 +190,147 @@ See the links below for the tutorials on how to use our EMG Templates for differ
 ### Migration Guide
 #### Introduction
 This guide helps you migrate from EMG Order Management to REST APIs. It provides instructions on transitioning your order management workflows and explains the APIs you can use in the migration process.
-Deprecation
+
+##### Deprecation
 We deprecated the API services related to the Order Management feature. While the feature may still work, it is no longer recommended for use and will not receive updates or bug fixes. Users are encouraged to migrate to REST API alternatives during this transition period.
+
 Timelines:
-    • Deprecation Start Date: October 1, 2024
-    • End of Support Date: April 1, 2025
-    • End of Life: October 1, 2025
-Alternatives
+ * Deprecation Start Date: October 1, 2024
+ * End of Support Date: April 1, 2025
+ * End of Life: October 1, 2025
+
+### Alternatives
+
 Due to decommissioning the Order Management, we recommend migrating to available REST API alternatives for the following EMG features: General (Orders, Lookup, and Attachments), Shipments, Work Visit, Smart Hands, Cross Connect, and Managed Services.
 
-
-
-
-
 #### Mapping EMG to REST APIs
-The table below shows how to map the EMG Order Management features to REST APIs.
+The sections below show how to map the EMG Order Management features to REST APIs.
+
 EMG Feature	Migration to REST APIs	API Reference Details
-Supporting Functionalities	Orders API
+Supporting Functionalities
+
+##### Orders API
+
 With the Orders API, you can:
-    • Retrieve information on specific orders, such as order status and associated order notes	Visit Orders Beta API documentation
-	Lookup API
+ * Retrieve information on specific orders, such as order status and associated order notes	
+ 
+ Visit Orders Beta API documentation
+
+#####	Lookup API
+
 With the Lookup API, you can:
-    • Retrieve the location of specific service, for example, Work Visit/Shipment
-    • Retrieve Patch Panel details and associated port data	Visit Lookup API documentation
-	Attachments API
+ * Retrieve the location of specific service, for example, Work Visit/Shipment
+ * Retrieve Patch Panel details and associated port data	Visit Lookup API documentation
+
+#####	Attachments API
+
 With the Attachments API, you can:
-    • Upload required documents for your orders	Attachments APIs use v1
+ * Upload required documents for your orders	Attachments APIs use v1
 
 Visit Attachments API documentation
-Inbound/Outbound Shipments	With the Shipments API, you can:
 
-    • Create inbound/outbound shipments
-    • Modify your shipment order
+##### Inbound/Outbound Shipments	
+
+With the Shipments API, you can:
+
+ * Create inbound/outbound shipments
+ * Modify your shipment order
 The Orders API allows you to:
-    • Cancel your shipment order
-    • Add additional notes to your shipment order	Visit Shipments API documentation
+ * Cancel your shipment order
+ * Add additional notes to your shipment order	Visit Shipments API documentation
 Work Visit	With the Work Visit API, you can:
 
-    • Schedule onsite visit
-    • Modify your work visit schedule
+ * Schedule onsite visit
+ * Modify your work visit schedule
 The Orders API allows you to:
-    • Cancel your work visit
-    • Add additional notes to your work visit	See Work Visit API documentation
+ * Cancel your work visit
+ * Add additional notes to your work visit	See Work Visit API documentation
 Smart Hands	With the Smart Hands API, you can:
 
-    • Create Smart Hands order
+ * Create Smart Hands order
 The Orders API allows you to:
-    • Cancel your smart hands order
-    • Add additional notes to your smart hands order
-    • View and respond to order negotiations	Smart Hands APIs use v1
+ * Cancel your smart hands order
+ * Add additional notes to your smart hands order
+ * View and respond to order negotiations	Smart Hands APIs use v1
 
 Visit Smart Hands API documentation
 Cross Connect	With the Cross Connect API, you can:
 
-    • Create Cross Connect order
-    • Modify Cross Connect
+ * Create Cross Connect order
+ * Modify Cross Connect
 The Orders API allows you to:
-    • Cancel your cross connect order API
-    • Add additional notes to your cross connect order API	Visit Cross Connect API documentation
+ * Cancel your cross connect order API
+ * Add additional notes to your cross connect order API	Visit Cross Connect API documentation
 
 #### SmartHands Migration Guide
 Equinix Messaging Gateway supports below SmartHands types. The below Operation Code and Service Attributes are passed in the request payload to indicate the SmartHands type. Refer to column ECP API mapping for the equivalent SmartHands API to be called for placing respective smarthands types. EMG uses direct mapping to service details attribute used in SmartHands API service details; the only difference is that EMG uses pascal casing while ECP uses camel casing for service details attribute.
-Smarthands Type	Description	Operation	Service Details Attribute	Mandatory/Optional	Type	Example	ECP API Mapping
-		Category					
-Request photos/documentation	Request an Equinix Data Center Technician to provide cage-related pictures or documentation	0000	CameraProvidedBy	Optional - If documentOnly is true	String	Expected Values: Equinix, Customer	https://api.equinix.com/v1/orders/smarthands/picturesDocument
-				Mandatory - If documentOnly is false			
-			OnDateAndTime	Optional - If documentOnly is true	Boolean	Expected Values: true, false	
-				Mandatory - If documentOnly is false			
-			DocumentOnly	Optional	Boolean	Expected Values: true, false	
-			Summary	Optional - If documentOnly is true	String	"Cage 10 photo requested"	
-				Mandatory - If documentOnly is false			
-SmartHand Other	Request a Smart Hands order not listed here	0001	 	 	 	 	https://api.equinix.com/v1/orders/smarthands/other
-SmartHand Cage Clean up	Request an Equinix Data Center Technician to clean your cage	0002	PermissionToDiscardBoxes	Optional	Boolean	Expected Values: true, false	https://api.equinix.com/v1/orders/smarthands/cageCleanup
-			DampMoistMopRequired	Optional	Boolean	Expected Values: true, false	
-SmartHand Shipment Unpack	Request inbound shipment unpacking and packaging disposal to an Equinix Data Center Technician	0003	InboundShipmentId	Optional	String	Its the Order Number for corresponding Inbound Shipment Order that customer would have placed for its incoming shipment that he/she needs to be unpacked.	https://api.equinix.com/v1/orders/smarthands/shipmentUnpack
-						RequesterId or ServicerId can be provided"	
-			CopyOfPackingSlipNeeded	Optional	Boolean	Expected Values: true, false	
-						This will result in a photo being sent to customer or copy of Packing slip stored for later customer use.	
-			DiscardShipmentMaterial	Optional	Boolean	Expected Values: true, false	
-SmartHand Cage Escort	Request an Equinix IBX security escort for a visitor to access your cage	0004	DurationVisit	Optional	String	Expected Value: "30 Minutes", "60 Minutes", "90 Minutes", "2 Hours", "2 Hours 30 Minutes", "3 Hours", "3 Hours 30 Minutes", "4 Hours"	https://api.equinix.com/v1/orders/smarthands/cageEscort
-						For longer hours, include 4 hours in the request schema and add details in the description field.	
-			OpenCabinetForVisitor	Optional	Boolean	Expected Values: true, false	
-			SupervisionReqForVisitor	Optional	Boolean	Expected Values: true, false	
-						Equinix personnel will be present for entire stay for supervised escort	
-			WorkVisitId	Optional	String	Its the Order Number for corresponding Work Visit Order that customer would have placed for its visitor who needs to be escorted by Equinix Data Center technician.	
-						RequesterId or ServicerId can be provided.	
-Equipment Install	Request equipment installation per your specifications by an Equinix Data Center Technician	0005	DeviceLocation	Optional	String	 	https://api.equinix.com/v1/orders/smarthands/equipmentInstall
-			ElevationDrawingAttached	Optional	Boolean	Expected Values: true, false	
-						Equinix Data Center Technician to review the drawings if available.	
-			InstallationPoint	Optional	String	Textual definition of where to install equipment in cabinet.	
-			InstalledEquipmentPhotoRequired	Optional	Boolean	Expected Values: true, false	
-						Equinix Data Center Technician will send the photos via 2Way.	
-			MountHardwareIncluded	Optional	Boolean	Expected Values: true, false	
-						Equipment specific mounting hardware provided by customer.	
-			PatchDevices	Optional	Boolean	Expected Values: true, false	
-						If this flag is sent as ""true""; after hardware install, patchinfo will be used for further instructions on patching device.	
-			PatchingInfo	Optional - If PatchDevices is 'N'	String	Dependent on PatchDevices for content being used in installation.	
-				Mandatory - If PatchDevices is 'Y'			
-			PowerItOn	Optional	Boolean	Expected Values: true, false	
-						If this flag is sent as ""true""; power will be connected to cabinet after install hardware	
-						If this is true then PatchInfo is required.	
-			NeedSupportFromASubmarine	Optional	Boolean	Expected Values: true, false	
-			CableStationEngineer			Equinix Data Center Specific: Specially trained technician to be available for Equinix Data Centers which can directly access submarine cables	
-Request Cables	Request cables per your specifications	0006	Summary	Optional	String	Any additional details	https://api.equinix.com/v1/orders/smarthands/cableRequest
-			MediaType	Mandatory - If Quantity = 1	String	Expected Values : [ Multi-mode 62.5mic, Multi-mode 50mic, Single-mode, Cat-5, Cat-6, Coax, POTS, T1, E1 ]	
-			ConnectorType	Mandatory - If Quantity = 1	String	Expected Values: [ RJ45, SC, LC, BNC, Other ]	
-			Length	Mandatory - If Quantity = 1	String	User should specify units. Ex: "20 ft"	
-			Quantity	Optional	String	Expected Values: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, >10 ]	
-Locate Packages	Request the location of your packages at the Equinix Data Center	0007	InboundShipmentId	Optional	String	Its the Order Number for corresponding Inbound Shipment Order that customer would have placed for its incoming shipment that he/she needs to be located	https://api.equinix.com/v1/orders/smarthands/locatePackage
-						RequesterId or ServicerId can be provided	
-			CarrierTrackingNumber	Optional	String	"323-12121"	
-			PossibleLocation	Optional	String	"Near cabinet 1010"	
-			PackageDescription	Optional	String	"It's small box with 1kg weight."	
-Run Patch Cables	Request cables to be run between devices by an Equinix Data Center Technician	8	Summary	Optional	String	Any additional details	https://api.equinix.com/v1/orders/smarthands/runJumperCable
-			Quantity	Optional	String	Expected Values: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12+ ]	
-			JumperType	Mandatory - If Quantity = 1	String	Expected Values: [ Jumper, Pre-Wiring, Patch Cable, Other ]	
-			MediaType	Mandatory - If Quantity = 1	String	Expected Values: [ Multi-mode 62.5mic, Multi-mode 50mic, Single-mode, Cat-5, Cat-6, Coax, POTS, T1, E1 ]	
-						Expected Values: [ RJ45, SC, LC, BNC, Other ]	
-			Connector	Mandatory - If Quantity = 1	String	 	
-			CableId	Optional	String	Expected Values: [ RJ45, SC, LC, BNC, Other ]	
-			ProvideTxRxLightLevels	Mandatory - If Quantity = 1	Boolean	Expected Values: true, false	
-						When this flag is set to ""true"", Equinix will report back to customer light levels when turned on"	
-			DeviceDetails	Optional	Array of DeviceDetails	Though DeviceDetails is optional however if supplied all fields within need to be populated	
-						Ex:	
-						[	
-						{	
-						""Name"": ""Device Name"", ""Slot"": ""50"", ""Port"": ""50""	
-						}	
-						]"	
-Patch Cable Install	Request patch cable installations per your specifications by an Equinix Data Center Technician	9	CrossConnects	Optional	Array of CableInstall	"[	https://api.equinix.com/v1/orders/smarthands/patchCableInstall
-						{	
-						""SerialNumber"": ""string"", ""DeviceCabinet"": ""string"", ""DeviceConnectorType"": ""string"", ""DeviceDetails"": ""string"", ""DevicePort"": ""string"", ""LightLinkVerification"": true, //Optional ""Description"": ""string"" //Optional	
-						}	
-						]"	
-Move Patch Cable	Request patch cables to be moved between devices by an Equinix Data Center Technician	10	Summary	Optional	String	Any additional details	https://api.equinix.com/v1/orders/smarthands/moveJumperCable
-			Quantity	Optional	String	Expected Values: : [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12+ ]	
-			CableId	Optional	String	CableId as stored in AssetId and CrossConnect "A01-5-10"" OR ""None"" if not"	
-			CurrentDeviceDetails	Mandatory - If Quantity = 1	DeviceDetails Object	Though DeviceDetails is optional however if supplied all fields within need to be populated.	
-						Ex:	
-						[	
-						{	
-						""Name"": ""Device Name"", ""Slot"": ""50"", ""Port"": ""50""	
-						}	
-						]"	
-			NewDeviceDetails	Mandatory - If Quantity = 1	DeviceDetails Object	Though DeviceDetails is optional however if supplied all fields within need to be populated.	
-						Ex:	
-						[	
-						{	
-						""Name"": ""Device Name"", ""Slot"": ""50"", ""Port"": ""50""	
-						}	
-						]"	
-Patch Cable Removal	Request patch cable removal per your specifications by an Equinix Data Center Technician	11	CrossConnects	Optional	Array of CableDeinstallDetail	"[	https://api.equinix.com/v1/orders/smarthands/patchCableRemoval
-						{	
-						""SerialNumber"": ""string"", ""DeviceCabinet"": ""string"", ""DeviceConnectorType"": ""string"", ""DeviceDetails"": ""string"", ""DevicePort"": ""string"", ""RemoveCableWhileLive"": true, //Optional ""Description"": ""string"" //Optional	
-						}	
-						]"	
-Large SmartHands Order	Request a Large_SmartHands_order.	12	Description	Mandatory	String	Cabling request of 50 cables	https://api.equinix.com/v1/orders/smarthands/largeOrder
-	Any cabling request greater than 24 cables. Maximum limit: 200 cables.						
-	or Install Equipment build greater than 100 RU in total equipment size. Maximum limit: 500 RU’s.						
-	It usually takes 2-3 business days for Equinix to review the request order and assign the earliest available schedule date.						
 
+| Smarthands Type | Description | Operation | Service Details Attribute | Mandatory/Optional | Type | Example | ECP API Mapping |
+|---|---|---|---|---|---|---|---|
+| **Request photos/documentation** | Request an Equinix Data Center Technician to provide cage-related pictures or documentation | `0000` | | | | | `https://api.equinix.com/v1/orders/smarthands/picturesDocument` |
+| | | | `CameraProvidedBy` | Optional - If `documentOnly` is `true`<br>Mandatory - If `documentOnly` is `false` | String | Expected Values: `Equinix`, `Customer` | |
+| | | | `OnDateAndTime` | Optional - If `documentOnly` is `true`<br>Mandatory - If `documentOnly` is `false` | Boolean | Expected Values: `true`, `false` | |
+| | | | `DocumentOnly` | Optional | Boolean | Expected Values: `true`, `false` | |
+| | | | `Summary` | Optional - If `documentOnly` is `true`<br>Mandatory - If `documentOnly` is `false` | String | `"Cage 10 photo requested"` | |
+| **SmartHand Other** | Request a Smart Hands order not listed here | `0001` | | | | | `https://api.equinix.com/v1/orders/smarthands/other` |
+| **SmartHand Cage Clean up** | Request an Equinix Data Center Technician to clean your cage | `0002` | | | | | `https://api.equinix.com/v1/orders/smarthands/cageCleanup` |
+| | | | `PermissionToDiscardBoxes` | Optional | Boolean | Expected Values: `true`, `false` | |
+| | | | `DampMoistMopRequired` | Optional | Boolean | Expected Values: `true`, `false` | |
+| **SmartHand Shipment Unpack** | Request inbound shipment unpacking and packaging disposal to an Equinix Data Center Technician | `0003` | | | | | `https://api.equinix.com/v1/orders/smarthands/shipmentUnpack` |
+| | | | `InboundShipmentId` | Optional | String | It's the Order Number for corresponding Inbound Shipment Order that customer would have placed for its incoming shipment that he/she needs to be unpacked.<br>`RequesterId` or `ServicerId` can be provided. | |
+| | | | `CopyOfPackingSlipNeeded` | Optional | Boolean | Expected Values: `true`, `false`.<br>This will result in a photo being sent to customer or copy of Packing slip stored for later customer use. | |
+| | | | `DiscardShipmentMaterial` | Optional | Boolean | Expected Values: `true`, `false` | |
+| **SmartHand Cage Escort** | Request an Equinix IBX security escort for a visitor to access your cage | `0004` | | | | | `https://api.equinix.com/v1/orders/smarthands/cageEscort` |
+| | | | `DurationVisit` | Optional | String | Expected Value: `"30 Minutes"`, `"60 Minutes"`, `"90 Minutes"`, `"2 Hours"`, `"2 Hours 30 Minutes"`, `"3 Hours"`, `"3 Hours 30 Minutes"`, `"4 Hours"`.<br>For longer hours, include 4 hours in the request schema and add details in the description field. | |
+| | | | `OpenCabinetForVisitor` | Optional | Boolean | Expected Values: `true`, `false` | |
+| | | | `SupervisionReqForVisitor` | Optional | Boolean | Expected Values: `true`, `false`.<br>Equinix personnel will be present for entire stay for supervised escort. | |
+| | | | `WorkVisitId` | Optional | String | It's the Order Number for corresponding Work Visit Order that customer would have placed for its visitor who needs to be escorted by Equinix Data Center technician.<br>`RequesterId` or `ServicerId` can be provided. | |
+| **Equipment Install** | Request equipment installation per your specifications by an Equinix Data Center Technician | `0005` | | | | | `https://api.equinix.com/v1/orders/smarthands/equipmentInstall` |
+| | | | `DeviceLocation` | Optional | String | | |
+| | | | `ElevationDrawingAttached` | Optional | Boolean | Expected Values: `true`, `false`.<br>Equinix Data Center Technician to review the drawings if available. | |
+| | | | `InstallationPoint` | Optional | String | Textual definition of where to install equipment in cabinet. | |
+| | | | `InstalledEquipmentPhotoRequired` | Optional | Boolean | Expected Values: `true`, `false`.<br>Equinix Data Center Technician will send the photos via 2Way. | |
+| | | | `MountHardwareIncluded` | Optional | Boolean | Expected Values: `true`, `false`.<br>Equipment specific mounting hardware provided by customer. | |
+| | | | `PatchDevices` | Optional | Boolean | Expected Values: `true`, `false`.<br>If this flag is sent as `"true"`, after hardware install, `patchinfo` will be used for further instructions on patching device. | |
+| | | | `PatchingInfo` | Optional - If `PatchDevices` is `'N'`<br>Mandatory - If `PatchDevices` is `'Y'` | String | Dependent on `PatchDevices` for content being used in installation. | |
+| | | | `PowerItOn` | Optional | Boolean | Expected Values: `true`, `false`.<br>If this flag is sent as `"true"`, power will be connected to cabinet after install hardware.<br>If this is true then `PatchInfo` is required. | |
+| | | | `NeedSupportFromASubmarineCableStationEngineer` | Optional | Boolean | Expected Values: `true`, `false`.<br>Equinix Data Center Specific: Specially trained technician to be available for Equinix Data Centers which can directly access submarine cables. | |
+| **Request Cables** | Request cables per your specifications | `0006` | | | | | `https://api.equinix.com/v1/orders/smarthands/cableRequest` |
+| | | | `Summary` | Optional | String | Any additional details | |
+| | | | `MediaType` | Mandatory - If `Quantity` = 1 | String | Expected Values : `[ Multi-mode 62.5mic, Multi-mode 50mic, Single-mode, Cat-5, Cat-6, Coax, POTS, T1, E1 ]` | |
+| | | | `ConnectorType` | Mandatory - If `Quantity` = 1 | String | Expected Values: `[ RJ45, SC, LC, BNC, Other ]` | |
+| | | | `Length` | Mandatory - If `Quantity` = 1 | String | User should specify units. Ex: `"20 ft"` | |
+| | | | `Quantity` | Optional | String | Expected Values: `[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, >10 ]` | |
+| **Locate Packages** | Request the location of your packages at the Equinix Data Center | `0007` | | | | | `https://api.equinix.com/v1/orders/smarthands/locatePackage` |
+| | | | `InboundShipmentId` | Optional | String | It's the Order Number for corresponding Inbound Shipment Order that customer would have placed for its incoming shipment that he/she needs to be located.<br>`RequesterId` or `ServicerId` can be provided. | |
+| | | | `CarrierTrackingNumber` | Optional | String | `"323-12121"` | |
+| | | | `PossibleLocation` | Optional | String | `"Near cabinet 1010"` | |
+| | | | `PackageDescription` | Optional | String | `"It's small box with 1kg weight."` | |
+| **Run Patch Cables** | Request cables to be run between devices by an Equinix Data Center Technician | `8` | | | | | `https://api.equinix.com/v1/orders/smarthands/runJumperCable` |
+| | | | `Summary` | Optional | String | Any additional details | |
+| | | | `Quantity` | Optional | String | Expected Values: `[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12+ ]` | |
+| | | | `JumperType` | Mandatory - If `Quantity` = 1 | String | Expected Values: `[ Jumper, Pre-Wiring, Patch Cable, Other ]` | |
+| | | | `MediaType` | Mandatory - If `Quantity` = 1 | String | Expected Values: `[ Multi-mode 62.5mic, Multi-mode 50mic, Single-mode, Cat-5, Cat-6, Coax, POTS, T1, E1 ]` | |
+| | | | `Connector` | Mandatory - If `Quantity` = 1 | String | Expected Values: `[ RJ45, SC, LC, BNC, Other ]` | |
+| | | | `CableId` | Optional | String | | |
+| | | | `ProvideTxRxLightLevels` | Mandatory - If `Quantity` = 1 | Boolean | Expected Values: `true`, `false`.<br>When this flag is set to `"true"`, Equinix will report back to customer light levels when turned on. | |
+| | | | `DeviceDetails` | Optional | Array of `DeviceDetails` | Though `DeviceDetails` is optional however if supplied all fields within need to be populated.<br>Ex: `[ { "Name": "Device Name", "Slot": "50", "Port": "50" } ]` | |
+| **Patch Cable Install** | Request patch cable installations per your specifications by an Equinix Data Center Technician | `9` | | | | | `https://api.equinix.com/v1/orders/smarthands/patchCableInstall` |
+| | | | `CrossConnects` | Optional | Array of `CableInstall` | `[ { "SerialNumber": "string", "DeviceCabinet": "string", "DeviceConnectorType": "string", "DeviceDetails": "string", "DevicePort": "string", "LightLinkVerification": true, //Optional "Description": "string" //Optional } ]` | |
+| **Move Patch Cable** | Request patch cables to be moved between devices by an Equinix Data Center Technician | `10` | | | | | `https://api.equinix.com/v1/orders/smarthands/moveJumperCable` |
+| | | | `Summary` | Optional | String | Any additional details | |
+| | | | `Quantity` | Optional | String | Expected Values: `[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12+ ]` | |
+| | | | `CableId` | Optional | String | `CableId` as stored in `AssetId` and `CrossConnect` `"A01-5-10"` OR `"None"` if not. | |
+| | | | `CurrentDeviceDetails` | Mandatory - If `Quantity` = 1 | `DeviceDetails` Object | Though `DeviceDetails` is optional however if supplied all fields within need to be populated.<br>Ex: `[ { "Name": "Device Name", "Slot": "50", "Port": "50" } ]` | |
+| | | | `NewDeviceDetails` | Mandatory - If `Quantity` = 1 | `DeviceDetails` Object | Though `DeviceDetails` is optional however if supplied all fields within need to be populated.<br>Ex: `[ { "Name": "Device Name", "Slot": "50", "Port": "50" } ]` | |
+| **Patch Cable Removal** | Request patch cable removal per your specifications by an Equinix Data Center Technician | `11` | | | | | `https://api.equinix.com/v1/orders/smarthands/patchCableRemoval` |
+| | | | `CrossConnects` | Optional | Array of `CableDeinstallDetail` | `[ { "SerialNumber": "string", "DeviceCabinet": "string", "DeviceConnectorType": "string", "DeviceDetails": "string", "DevicePort": "string", "RemoveCableWhileLive": true, //Optional "Description": "string" //Optional } ]` | |
+| **Large SmartHands Order** | Request a `Large_SmartHands_order`.<br>Any cabling request greater than 24 cables. Maximum limit: 200 cables.<br>or Install Equipment build greater than 100 RU in total equipment size. Maximum limit: 500 RU’s.<br>It usually takes 2-3 business days for Equinix to review the request order and assign the earliest available schedule date. | `12` | | | | | `https://api.equinix.com/v1/orders/smarthands/largeOrder` |
+| | | | `Description` | Mandatory | String | `Cabling request of 50 cables` | |
 
 Working Example:
 How to get ibxLocation details:
-    • We could obtain ibx, cage, cabinet, account number using the below curl request, and fill into respective fields in ibxLocation.
+ * We could obtain ibx, cage, cabinet, account number using the below curl request, and fill into respective fields in ibxLocation.
 ```sh
 $ curl --request GET \
   --url 'https://api.equinix.com/v1/orders/smarthands/locations?detail=false&ibxs=SOME_STRING_VALUE&cages=SOME_STRING_VALUE' \
@@ -403,7 +368,7 @@ Response:
 ```
 
 How to get attachment id:
-    • We could upload the attachment via attachment API to obtain the attachment name & attachmentId.
+ * We could upload the attachment via attachment API to obtain the attachment name & attachmentId.
 ```sh
 curl --request POST \
   --url 'https://api.equinix.com/v1/attachments/file?purpose=SOME_STRING_VALUE' \
@@ -487,14 +452,14 @@ Success 201Response:
 }
 ```
 Additional notes:
-    • There are 3 types of scheduleType:
-    • STANDARD:
+ * There are 3 types of scheduleType:
+ * STANDARD:
 EMG defaults to standard when both requestedStartDate & requestedCompletionDate are null. Choose this option and we will complete your request in the standard turnaround time pending install base readiness. Most requests are processed within 24 to 72 hours. Requests will be processed on a first come, first served basis unless they are expedited. RequestedStartDate and requestedCompletionDate ignored for standard scheduling
 
 EXPEDITED: EMG automatically fills this type for user when the requestedCompletionDate is >2hr and within 24 hrs from IBX time. Choose this option and Equinix will prioritize your request and attempt to fulfill it as soon as reasonably possible. Additional fees may apply. RequestedCompletionDate is mandatory for expedite scheduling. RequestedStartDate is ignored for expedite scheduling.
 
 SCHEDULED_MAINTENANCE: Choose this option to schedule a request for a specific date and time, including today. RequestedStartDate and requestedCompletionDate are mandatory for schedule maintenance
-    •  When AdditionalContacts object is provided, EMG would overide details of TECHNICAL CONTACT sent as part of "CustomerContact" attribute. You can send details of non-registered contacts with Equinix Customer Portal.
+ *  When AdditionalContacts object is provided, EMG would overide details of TECHNICAL CONTACT sent as part of "CustomerContact" attribute. You can send details of non-registered contacts with Equinix Customer Portal.
 Update SmartHands:
 Responding to 1Way & 2Way Notes, with ServicerId in EMG payload being the orderId. User could retrieve the attachments using the attachment Api as above:
 
@@ -516,8 +481,8 @@ $ curl --request POST \
 ```
 
 Steps to reply to order negotiations:
-    • EMG provide a 1 step process to respond to order negotiation. It would require calling 2 APIs as below:
-    • Getting the referenceId to respond, replacing orderId with ServiceId :
+ * EMG provide a 1 step process to respond to order negotiation. It would require calling 2 APIs as below:
+ * Getting the referenceId to respond, replacing orderId with ServiceId :
 
 ```sh
 curl --request GET \
@@ -550,11 +515,11 @@ curl --request POST \
   --header 'content-type: application/json' \
   --data '{"referenceId":"4-9091830","action":"APPROVE","reason":"Cancelling the new time"}'
 ```
-    • Enum: "APPROVE" "APPROVE_NON_EXPEDITE" "CANCEL". These enum action are originally filled inside the description field in EMG payload.
+ * Enum: "APPROVE" "APPROVE_NON_EXPEDITE" "CANCEL". These enum action are originally filled inside the description field in EMG payload.
 
 Use APPROVE to accept order with new proposed date, APPROVE_NON_EXPEDITE to accept order without expedite and CANCEL to cancel order
 Cancelling Smarthands
-    • Using the servicerId for the orderId as well as the description for the reason, call the below API to cancel the order:
+ * Using the servicerId for the orderId as well as the description for the reason, call the below API to cancel the order:
 ```sh
 curl --request POST \
   --url https://api.equinix.com/colocations/v2/orders/{orderId}/cancel \
