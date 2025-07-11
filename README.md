@@ -2,7 +2,7 @@
 
 ---
 
-## ⚠️ Order Management Deprecation Notice
+## Order Management Deprecation Notice
 
 > **Deprecation Notice**  
 > The following Equinix Messaging Gateway features are being deprecated or removed.  
@@ -63,7 +63,7 @@
 
 ---
 
-## 📦 Overview
+## Overview 
 
 Equinix offers an event-driven system called **Equinix Messaging Gateway (EMG)**.  
 The EMG system enables system-to-system integration from your in-house application to Platform Equinix.  
@@ -87,7 +87,7 @@ To subscribe to EMG, visit the <a href="https://portal.equinix.com/developer-set
 
 ---
 
-## 📝 Template Details
+## Template Details
 
 Equinix Messaging Gateway (EMG) Templates provide reference code to seamlessly integrate with EMG.  
 Templates are available in three versions: **Node.js**, **Python**, and **Java**.
@@ -126,7 +126,7 @@ Templates are available in three versions: **Node.js**, **Python**, and **Java**
 
 ---
 
-## 🔧 Requirements
+## Requirements
 
 ### Node.js Templates &nbsp;![Node.js](https://img.shields.io/badge/Node.js-v10.16.2%2B-green?logo=node.js)
 - [Node.js v10.16.2+](https://nodejs.org/en/download/)
@@ -144,7 +144,7 @@ Templates are available in three versions: **Node.js**, **Python**, and **Java**
 
 ---
 
-## 🛠️ Prerequisites
+## Prerequisites
 
 <ol>
   <li>An active EMG subscription (<a href="https://portal.equinix.com/developer-settings/messaging-gateway">Subscribe here</a>).</li>
@@ -154,7 +154,7 @@ Templates are available in three versions: **Node.js**, **Python**, and **Java**
 
 ---
 
-## 🚀 How to Run Templates
+## How to Run Templates
 
 ### Node.js Templates
 
@@ -241,7 +241,7 @@ mvn install
 
 ---
 
-## 🎓 Tutorials
+## Tutorials
 
 <ul>
   <li><a href="https://youtu.be/RK3b1vO0tuk">Create Order through EMG using Node.js Templates</a></li>
@@ -418,7 +418,7 @@ Use the provided operation codes and service attributes in payloads.
 
 ---
 
-### 🛠️ Working Example
+### Working Example
 
 #### How to Get ibxLocation Details
 
