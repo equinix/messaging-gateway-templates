@@ -335,7 +335,11 @@ curl --request POST \
 ```
 
 #### SmartHands Creation Example
+**Endpoint:**  
+`POST https://api.equinix.com/v1/orders/smarthands/other`
 
+- The order number will be available in the `201 Created` response once successfully created.
+- The mapping of EMG field values to API fields is described in “<>”.
 ```json
 {
   "customerReferenceNumber": "RSS41244 <Task.RequestorId>",
@@ -391,17 +395,75 @@ curl --request POST \
     "OrderNumber": "1-190986534844"
 }
 ```
+---
 
-#### Update SmartHands
+## Schedule Types
 
-Replying to order negotiations:
+There are **3 types** of `scheduleType`:
 
-```sh
+1. **STANDARD**  
+   - EMG defaults to standard when both `requestedStartDate` & `requestedCompletionDate` are null.
+   - Standard turnaround time pending install base readiness.
+   - Most requests are processed within 24 to 72 hours.
+   - Requests are processed first come, first served unless expedited.
+   - `requestedStartDate` and `requestedCompletionDate` are ignored for standard scheduling.
+
+2. **EXPEDITED**  
+   - EMG fills this type when `requestedCompletionDate` is >2hr and within 24 hrs from IBX time.
+   - Equinix prioritizes your request and attempts to fulfill ASAP.
+   - **Additional fees may apply.**
+   - `requestedCompletionDate` is mandatory; `requestedStartDate` is ignored.
+
+3. **SCHEDULED_MAINTENANCE**  
+   - Schedule a request for a specific date and time, including today.
+   - Both `requestedStartDate` and `requestedCompletionDate` are mandatory.
+
+---
+
+## Updating Smart Hands
+
+Responding to 1Way & 2Way Notes, with `ServicerId` in EMG payload as the `orderId`.  
+User can retrieve attachments using the attachment API as shown:
+
+```bash
+curl --request POST \
+  --url https://api.equinix.com/colocations/v2/orders/{orderId}/notes \
+  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+  --header 'content-type: application/json' \
+  --data '{
+    "referenceId":"{orderId}",
+    "text":"The text of the note",
+    "attachments":[{"id":"c77c5f58-a7ea-4e88-9fc4-1a2900027425","name":"error-log"}]
+  }'
+```
+
+**Example Payload:**
+
+```json
+{
+  "text": "problem description <Task.Description>",
+  "attachments": [
+    {
+      "id": "abae6f8c-e168-11ea-87d0-0242ac130003 <attachmentId>",
+      "name": "problem_attachments <attachmentName>"
+    }
+  ]
+}
+```
+
+## Steps to Reply to Order Negotiations
+
+EMG provides a 1-step process to respond to order negotiation, requiring two API calls:
+
+### 1. Get the `referenceId` to respond (replace `orderId` with `ServiceId`):
+
+```bash
 curl --request GET \
   --url https://api.equinix.com/colocations/v2/orders/{orderId}/negotiations \
   --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
 ```
-**Response:**
+
+**Response Example:**
 ```json
 [
   {
@@ -416,6 +478,10 @@ curl --request GET \
 ]
 ```
 
+### 2. Reply to Order Negotiation
+
+Attach the `referenceId` from the first step and use the same EMG `servicerId` for the `orderId`:
+
 Reply to negotiation:
 
 ```sh
@@ -428,6 +494,20 @@ curl --request POST \
 Enum: `"APPROVE"`, `"APPROVE_NON_EXPEDITE"`, `"CANCEL"`
 
 ---
+## Cancelling Smart Hands
 
+Using the `servicerId` for the `orderId` and the description for the reason, call the below API to cancel the order:
+
+```bash
+curl --request POST \
+  --url https://api.equinix.com/colocations/v2/orders/{orderId}/cancel \
+  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+  --header 'content-type: application/json' \
+  --data '{
+    "reason":"string",
+    "attachments":[{"id":"c77c5f58-a7ea-4e88-9fc4-1a2900027425","name":"error-log"}],
+    "lineIds":["1-D89731S"]
+  }'
+```
 ## 💬 Support
 For questions, raise an API Support Case or email [api-support@equinix.com](mailto:api-support@equinix.com).
