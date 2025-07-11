@@ -1,30 +1,8 @@
-# Equinix Messaging Gateway Templates
-
-[![Deprecation Notice](https://img.shields.io/badge/status-deprecated-red)](#order-management-deprecation-notice)
+# Equinix Messaging Gateway Templates &nbsp;&nbsp; ![Deprecated](https://img.shields.io/badge/status-deprecated-red?logo=github)
 
 ---
 
-## Table of Contents
-
-- [Order Management Deprecation Notice](#order-management-deprecation-notice)
-- [Overview](#overview)
-- [Template Details](#template-details)
-- [Requirements](#requirements)
-- [Prerequisites](#prerequisites)
-- [How to Run Templates](#how-to-run-templates)
-  - [Node.js Templates](#nodejs-templates)
-  - [Python Templates](#python-templates)
-  - [Java Templates](#java-templates)
-- [Tutorials](#tutorials)
-- [Migration Guide](#migration-guide)
-  - [Introduction](#introduction)
-  - [Alternatives](#alternatives)
-  - [SmartHands Migration Guide](#smarthands-migration-guide)
-  - [Examples](#working-example)
-
----
-
-## Order Management Deprecation Notice
+## ⚠️ Order Management Deprecation Notice
 
 > **Deprecation Notice**  
 > The following Equinix Messaging Gateway features are being deprecated or removed.  
@@ -37,88 +15,146 @@
 > For migration guidance, see our [migration guide](#migration-guide) and REST APIs.  
 > For questions, raise an API Support Case or email [api-support@equinix.com](mailto:api-support@equinix.com).
 
-| Feature                    | Status      | End of Support | Discontinued   |
-|----------------------------|-------------|----------------|----------------|
-| EMG Order Management       | Deprecated  | 1 April 2025   | 1 October 2025 |
-| EMG Outbound Notifications | Active      | N/A            | N/A            |
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Status</th>
+      <th>End of Support</th>
+      <th>Discontinued</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EMG Order Management</td>
+      <td><strong>Deprecated</strong></td>
+      <td>1 April 2025</td>
+      <td>1 October 2025</td>
+    </tr>
+    <tr>
+      <td>EMG Outbound Notifications</td>
+      <td><strong>Active</strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
-## Overview
+## 📑 Table of Contents
+
+- [⚠️ Order Management Deprecation Notice](#order-management-deprecation-notice)
+- [📦 Overview](#overview)
+- [📝 Template Details](#template-details)
+- [🔧 Requirements](#requirements)
+- [🛠️ Prerequisites](#prerequisites)
+- [🚀 How to Run Templates](#how-to-run-templates)
+  - [Node.js Templates](#nodejs-templates)
+  - [Python Templates](#python-templates)
+  - [Java Templates](#java-templates)
+- [🎓 Tutorials](#tutorials)
+- [Migration Guide](#migration-guide)
+  - [Introduction](#introduction)
+  - [Alternatives](#alternatives)
+  - [SmartHands Migration Guide](#smarthands-migration-guide)
+  - [Examples](#working-example)
+- [💬 Support](#support)
+
+---
+
+## 📦 Overview
 
 Equinix offers an event-driven system called **Equinix Messaging Gateway (EMG)**.  
 The EMG system enables system-to-system integration from your in-house application to Platform Equinix.  
 
+---
+
 **Use EMG to:**
-- Create, update, cancel orders and receive order status notifications for Equinix Products & Services (Cross Connect, Shipments, SmartHands, Trouble Tickets, Work Visit).
-- Receive status notifications on provisioned Equinix Fabric Ports & Virtual Connections.
-- Receive notifications for planned/unplanned maintenance at Equinix DataCenters.
-- Receive billing notifications when your submitted order is closed and billing is started by Equinix.
 
-Learn more about Equinix Messaging Gateway by visiting the [docs](https://docs.equinix.com/incidents-notifications/messaging-gateway/integrate-with-messaging-gateway), or watch the [EMG Overview Video](https://youtu.be/RK3b1vO0tuk).
-
-To subscribe to EMG, visit the [Messaging Gateway Settings](https://portal.equinix.com/developer-settings/messaging-gateway) page in the Equinix Developer Platform to get started.
+<ul>
+  <li>Create, update, cancel orders and receive order status notifications for Equinix Products & Services (Cross Connect, Shipments, SmartHands, Trouble Tickets, Work Visit).</li>
+  <li>Receive status notifications on provisioned Equinix Fabric Ports & Virtual Connections.</li>
+  <li>Receive notifications for planned/unplanned maintenance at Equinix DataCenters.</li>
+  <li>Receive billing notifications when your submitted order is closed and billing is started by Equinix.</li>
+</ul>
 
 ---
 
-## Template Details
+Learn more about Equinix Messaging Gateway by visiting the <a href="https://docs.equinix.com/incidents-notifications/messaging-gateway/integrate-with-messaging-gateway">docs</a>, or watch the <a href="https://youtu.be/RK3b1vO0tuk">EMG Overview Video</a>.
+
+To subscribe to EMG, visit the <a href="https://portal.equinix.com/developer-settings/messaging-gateway">Messaging Gateway Settings</a> page in the Equinix Developer Platform to get started.
+
+---
+
+## 📝 Template Details
 
 Equinix Messaging Gateway (EMG) Templates provide reference code to seamlessly integrate with EMG.  
 Templates are available in three versions: **Node.js**, **Python**, and **Java**.
 
+---
+
 **Included Templates:**
 
-- **Order Templates** (create, update, cancel orders):
-  - `/template-nodejs-v1`
-  - `/template-python-v1`
-  - `/template_java_v1`
-- **Notification Templates** (receive notifications from Equinix):
-  - `/template-nodejs-outgoing-notifications-v1`
-  - `/template-python-outgoing-notifications-v1`
-  - `/template-java-outgoing-notifications-v1`
-- **Individual Service Templates**:
-  - `/EquinixCrossConnectTemplate`
-  - `/EquinixSmartHandsTemplate`
-  - `/EquinixTroubleTicketTemplate`
-  - `/EquinixWorkVisitTemplate`
-  - `/EquinixShipmentsTemplate`
-- **Test Client**:
-  - `/test/TestClient`
-- **Configuration**:
-  - `/config/config`
+<ul>
+  <li><strong>Order Templates</strong> (create, update, cancel orders):
+    <ul>
+      <li>/template-nodejs-v1</li>
+      <li>/template-python-v1</li>
+      <li>/template_java_v1</li>
+    </ul>
+  </li>
+  <li><strong>Notification Templates</strong> (receive notifications from Equinix):
+    <ul>
+      <li>/template-nodejs-outgoing-notifications-v1</li>
+      <li>/template-python-outgoing-notifications-v1</li>
+      <li>/template-java-outgoing-notifications-v1</li>
+    </ul>
+  </li>
+  <li><strong>Individual Service Templates</strong>:
+    <ul>
+      <li>/EquinixCrossConnectTemplate</li>
+      <li>/EquinixSmartHandsTemplate</li>
+      <li>/EquinixTroubleTicketTemplate</li>
+      <li>/EquinixWorkVisitTemplate</li>
+      <li>/EquinixShipmentsTemplate</li>
+    </ul>
+  </li>
+  <li><strong>Test Client</strong>: /test/TestClient</li>
+  <li><strong>Configuration</strong>: /config/config</li>
+</ul>
 
 ---
 
-## Requirements
+## 🔧 Requirements
 
-### Node.js Templates
-
+### Node.js Templates &nbsp;![Node.js](https://img.shields.io/badge/Node.js-v10.16.2%2B-green?logo=node.js)
 - [Node.js v10.16.2+](https://nodejs.org/en/download/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 
-### Python Templates
-
+### Python Templates &nbsp;![Python](https://img.shields.io/badge/Python-v3.8.5%2B-blue?logo=python)
 - [Python v3.8.5+](https://www.python.org/downloads/)
 - [Azure SDK for Python v0.50.3+](https://azuresdkdocs.blob.core.windows.net/%24web/python/azure-servicebus/0.50.3/index.html)
 - [pytest v6.0.1+](https://docs.pytest.org/en/stable/getting-started.html)
 - [pytest-asyncio v0.14.0+](https://pypi.org/project/pytest-asyncio/)
 
-### Java Templates
-
+### Java Templates &nbsp;![Java](https://img.shields.io/badge/Java-8%2B-orange?logo=java)
 - Java 8 or above
 - IntelliJ IDEA or Eclipse IDE
 
 ---
 
-## Prerequisites
+## 🛠️ Prerequisites
 
-1. An active EMG subscription ([Subscribe here](https://portal.equinix.com/developer-settings/messaging-gateway)).
-2. Access to [Equinix Developer Platform](https://developer.equinix.com/) and [get your access token](https://developer.equinix.com/dev-docs/ecp/getting-started/getting-access-token#generating-client-id-and-client-secret).
-3. Authorized permissions by your Master Administrator to order and receive notifications for Equinix Products & Services.
+<ol>
+  <li>An active EMG subscription (<a href="https://portal.equinix.com/developer-settings/messaging-gateway">Subscribe here</a>).</li>
+  <li>Access to <a href="https://developer.equinix.com/">Equinix Developer Platform</a> and <a href="https://developer.equinix.com/dev-docs/ecp/getting-started/getting-access-token#generating-client-id-and-client-secret">get your access token</a>.</li>
+  <li>Authorized permissions by your Master Administrator to order and receive notifications for Equinix Products & Services.</li>
+</ol>
 
 ---
 
-## How to Run Templates
+## 🚀 How to Run Templates
 
 ### Node.js Templates
 
@@ -205,13 +241,15 @@ mvn install
 
 ---
 
-## Tutorials
+## 🎓 Tutorials
 
-- [Create Order through EMG using Node.js Templates](https://youtu.be/RK3b1vO0tuk)
-- [Create Order through EMG using Python Templates](https://youtu.be/iVyYZOUwuag)
-- [Receive EMG Network Notifications](https://youtu.be/hGNEq4KQ4gA)
-- [Receive EMG DataCenter Notifications](https://youtu.be/CdfmjxaSm9U)
-- [Receive EMG Billing Notifications](https://youtu.be/lvRYIry97fA)
+<ul>
+  <li><a href="https://youtu.be/RK3b1vO0tuk">Create Order through EMG using Node.js Templates</a></li>
+  <li><a href="https://youtu.be/iVyYZOUwuag">Create Order through EMG using Python Templates</a></li>
+  <li><a href="https://youtu.be/hGNEq4KQ4gA">Receive EMG Network Notifications</a></li>
+  <li><a href="https://youtu.be/CdfmjxaSm9U">Receive EMG DataCenter Notifications</a></li>
+  <li><a href="https://youtu.be/lvRYIry97fA">Receive EMG Billing Notifications</a></li>
+</ul>
 
 ---
 
@@ -234,37 +272,153 @@ Please migrate to the recommended REST APIs.
 ---
 
 ### Alternatives
-| EMG Feature                | Migration to REST APIs                                                                                                                                                                                                                                                                                                                                                     |
-|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Supporting Functionalities** | [**Orders API**](https://docs.equinix.com/api-catalog/ordersv2/)<br>• Retrieve information on specific orders, such as order status and associated order notes.<br><br>[**Lookup API**](https://docs.equinix.com/api-catalog/lookupv2/)<br>• Retrieve the location of specific service (e.g., Work Visit/Shipment).<br>• Retrieve Patch Panel details and associated port data.<br><br>[**Attachments API**](https://docs.equinix.com/api-catalog/attachmentsv1/)<br>• Upload required documents for your orders. |
-| **Inbound/Outbound Shipments** | [**Shipments API**](https://docs.equinix.com/api-catalog/shipmentsv1)<br>• Create inbound/outbound shipments.<br>• Modify your shipment order.<br><br>[**Orders API**](https://docs.equinix.com/api-catalog/ordersv2/)<br>• Cancel your shipment order.<br>• Add additional notes to your shipment order.                                                                                        |
-| **Work Visit**                 | [**Work Visit API**](https://docs.equinix.com/api-catalog/workvisitv1)<br>• Schedule onsite visit.<br>• Modify your work visit schedule.<br><br>[**Orders API**](https://docs.equinix.com/api-catalog/ordersv2/)<br>• Cancel your work visit.<br>• Add additional notes to your work visit.                                                                                                   |
-| **Smart Hands**                | [**Smart Hands API**](https://docs.equinix.com/api-catalog/smarthandsv1)<br>• Create Smart Hands order.<br><br>[**Orders API**](https://docs.equinix.com/api-catalog/ordersv2/)<br>• Cancel your smart hands order.<br>• Add additional notes to your smart hands order.<br>• View and respond to order negotiations.                                                                         |
-| **Cross Connect**              | [**Cross Connect API**](https://docs.equinix.com/api-catalog/crossconnectsv2)<br>• Create Cross Connect order.<br>• Modify Cross Connect.<br><br>[**Orders API**](https://docs.equinix.com/api-catalog/ordersv2/)<br>• Cancel your cross connect order.<br>• Add additional notes to your cross connect order.                                                                                     |
+
+<table>
+  <thead>
+    <tr>
+      <th>EMG Feature</th>
+      <th>Migration to REST APIs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Supporting Functionalities</strong></td>
+      <td>
+        <a href="https://docs.equinix.com/api-catalog/ordersv2/">Orders API</a>: Retrieve information on specific orders, such as order status and associated order notes.<br>
+        <a href="https://docs.equinix.com/api-catalog/lookupv2/">Lookup API</a>: Retrieve the location of specific service (e.g., Work Visit/Shipment), Patch Panel details and associated port data.<br>
+        <a href="https://docs.equinix.com/api-catalog/attachmentsv1/">Attachments API</a>: Upload required documents for your orders.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Inbound/Outbound Shipments</strong></td>
+      <td>
+        <a href="https://docs.equinix.com/api-catalog/shipmentsv1">Shipments API</a>: Create inbound/outbound shipments, modify your shipment order.<br>
+        <a href="https://docs.equinix.com/api-catalog/ordersv2/">Orders API</a>: Cancel your shipment order, add additional notes to your shipment order.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Work Visit</strong></td>
+      <td>
+        <a href="https://docs.equinix.com/api-catalog/workvisitv1">Work Visit API</a>: Schedule onsite visit, modify your work visit schedule.<br>
+        <a href="https://docs.equinix.com/api-catalog/ordersv2/">Orders API</a>: Cancel your work visit, add additional notes to your work visit.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Smart Hands</strong></td>
+      <td>
+        <a href="https://docs.equinix.com/api-catalog/smarthandsv1">Smart Hands API</a>: Create Smart Hands order.<br>
+        <a href="https://docs.equinix.com/api-catalog/ordersv2/">Orders API</a>: Cancel your smart hands order, add additional notes to your smart hands order, view and respond to order negotiations.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Cross Connect</strong></td>
+      <td>
+        <a href="https://docs.equinix.com/api-catalog/crossconnectsv2">Cross Connect API</a>: Create Cross Connect order, modify Cross Connect.<br>
+        <a href="https://docs.equinix.com/api-catalog/ordersv2/">Orders API</a>: Cancel your cross connect order, add additional notes to your cross connect order.
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### SmartHands Migration Guide
 
 EMG supports the following SmartHands types.  
 Use the provided operation codes and service attributes in payloads.
-| Smarthands Type                | Description                                              | Operation | ECP API Mapping                                                   |
-|------------------------------- |---------------------------------------------------------|-----------|-------------------------------------------------------------------|
-| Request photos/documentation   | Request cage-related photos or documentation            | `0000`    | https://api.equinix.com/v1/orders/smarthands/pictures             |
-| SmartHand Other                | Request a Smart Hands order not listed above            | `0001`    | https://api.equinix.com/v1/orders/smarthands/other                |
-| SmartHand Cage Clean up        | Request a cage clean up                                | `0002`    | https://api.equinix.com/v1/orders/smarthands/cageCleanup          |
-| SmartHand Shipment Unpack      | Unpack inbound shipment and dispose packaging           | `0003`    | https://api.equinix.com/v1/orders/smarthands/shipmentUnpack       |
-| SmartHand Cage Escort          | Request IBX security escort                            | `0004`    | https://api.equinix.com/v1/orders/smarthands/cageEscort           |
-| Equipment Install              | Request equipment installation                         | `0005`    | https://api.equinix.com/v1/orders/smarthands/equipmentInstall     |
-| Request Cables                 | Request cables                                         | `0006`    | https://api.equinix.com/v1/orders/smarthands/cableRequest         |
-| Locate Packages                | Request package location                               | `0007`    | https://api.equinix.com/v1/orders/smarthands/locatePackage        |
-| Run Patch Cables               | Request cables run between devices                     | `0008`       | https://api.equinix.com/v1/orders/smarthands/runJumperCable       |
-| Patch Cable Install            | Request patch cable installation                       | `0009`       | https://api.equinix.com/v1/orders/smarthands/patchCableInstall    |
-| Move Patch Cable               | Move patch cables between devices                      | `0010`      | https://api.equinix.com/v1/orders/smarthands/moveJumperCable      |
-| Patch Cable Removal            | Remove patch cables                                    | `0011`      | https://api.equinix.com/v1/orders/smarthands/patchCableRemoval    |
-| Large SmartHands Order         | Large cable/equipment requests                         | `0012`   | https://api.equinix.com/v1/orders/smarthands/largeOrder                                                                  |
+
+<table>
+  <thead>
+    <tr>
+      <th>Smarthands Type</th>
+      <th>Description</th>
+      <th>Operation</th>
+      <th>ECP API Mapping</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Request photos/documentation</td>
+      <td>Request cage-related photos or documentation</td>
+      <td><code>0000</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/pictures</td>
+    </tr>
+    <tr>
+      <td>SmartHand Other</td>
+      <td>Request a Smart Hands order not listed above</td>
+      <td><code>0001</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/other</td>
+    </tr>
+    <tr>
+      <td>SmartHand Cage Clean up</td>
+      <td>Request a cage clean up</td>
+      <td><code>0002</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/cageCleanup</td>
+    </tr>
+    <tr>
+      <td>SmartHand Shipment Unpack</td>
+      <td>Unpack inbound shipment and dispose packaging</td>
+      <td><code>0003</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/shipmentUnpack</td>
+    </tr>
+    <tr>
+      <td>SmartHand Cage Escort</td>
+      <td>Request IBX security escort</td>
+      <td><code>0004</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/cageEscort</td>
+    </tr>
+    <tr>
+      <td>Equipment Install</td>
+      <td>Request equipment installation</td>
+      <td><code>0005</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/equipmentInstall</td>
+    </tr>
+    <tr>
+      <td>Request Cables</td>
+      <td>Request cables</td>
+      <td><code>0006</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/cableRequest</td>
+    </tr>
+    <tr>
+      <td>Locate Packages</td>
+      <td>Request package location</td>
+      <td><code>0007</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/locatePackage</td>
+    </tr>
+    <tr>
+      <td>Run Patch Cables</td>
+      <td>Request cables run between devices</td>
+      <td><code>0008</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/runJumperCable</td>
+    </tr>
+    <tr>
+      <td>Patch Cable Install</td>
+      <td>Request patch cable installation</td>
+      <td><code>0009</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/patchCableInstall</td>
+    </tr>
+    <tr>
+      <td>Move Patch Cable</td>
+      <td>Move patch cables between devices</td>
+      <td><code>0010</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/moveJumperCable</td>
+    </tr>
+    <tr>
+      <td>Patch Cable Removal</td>
+      <td>Remove patch cables</td>
+      <td><code>0011</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/patchCableRemoval</td>
+    </tr>
+    <tr>
+      <td>Large SmartHands Order</td>
+      <td>Large cable/equipment requests</td>
+      <td><code>0012</code></td>
+      <td>https://api.equinix.com/v1/orders/smarthands/largeOrder</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
-### Working Example
+### 🛠️ Working Example
 
 #### How to Get ibxLocation Details
 
@@ -424,5 +578,5 @@ Enum: `"APPROVE"`, `"APPROVE_NON_EXPEDITE"`, `"CANCEL"`
 
 ---
 
-## Support
+## 💬 Support
 For questions, raise an API Support Case or email [api-support@equinix.com](mailto:api-support@equinix.com).
