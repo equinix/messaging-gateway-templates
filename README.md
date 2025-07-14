@@ -3,7 +3,7 @@
 ---
 
 ## Order Management Deprecation Notice
-
+> [!NOTE]
 > **Deprecation Notice**  
 > The following Equinix Messaging Gateway features are being deprecated or removed.  
 > Please review the status and important dates below:
@@ -24,26 +24,26 @@
 
 ## 📑 Table of Contents
 
-- [⚠️ Order Management Deprecation Notice](#order-management-deprecation-notice)
-- [📦 Overview](#overview)
-- [📝 Template Details](#template-details)
-- [🔧 Requirements](#requirements)
-- [🛠️ Prerequisites](#prerequisites)
-- [🚀 How to Run Templates](#how-to-run-templates)
+- [Order Management Deprecation Notice](#order-management-deprecation-notice)
+- [Overview](#📦overview)
+- [Template Details](#📝template-details)
+- [Requirements](#🔧requirements)
+- [Prerequisites](#🛠️prerequisites)
+- [How to Run Templates](#🚀how-to-run-templates)
   - [Node.js Templates](#nodejs-templates)
   - [Python Templates](#python-templates)
   - [Java Templates](#java-templates)
-- [🎓 Tutorials](#tutorials)
+- [Tutorials](#🎓tutorials)
 - [Migration Guide](#migration-guide)
   - [Introduction](#introduction)
   - [Alternatives](#alternatives)
   - [SmartHands Migration Guide](#smarthands-migration-guide)
   - [Examples](#working-example)
-- [💬 Support](#support)
+- [Support](#💬support)
 
 ---
 
-## 📦 Overview 
+## 📦Overview 
 
 Equinix offers an event-driven system called **Equinix Messaging Gateway (EMG)**.  
 The EMG system enables system-to-system integration from your in-house application to Platform Equinix.  
@@ -65,7 +65,7 @@ To subscribe to EMG, visit the [Messaging Gateway Settings](https://portal.equin
 
 ---
 
-## 📝 Template Details
+## 📝Template Details
 
 Equinix Messaging Gateway (EMG) Templates provide reference code to seamlessly integrate with EMG.
 Templates are available in three versions: **Node.js**, **Python**, and **Java**.
@@ -94,7 +94,7 @@ You can refer, use, modify & extend EMG Templates based on your architecture & s
 
 ---
 
-## 🔧 Requirements
+## 🔧Requirements
 
 ### Node.js Templates &nbsp;![Node.js](https://img.shields.io/badge/Node.js-v10.16.2%2B-green?logo=node.js)
 - [Node.js v10.16.2+](https://nodejs.org/en/download/)
@@ -112,7 +112,7 @@ You can refer, use, modify & extend EMG Templates based on your architecture & s
 
 ---
 
-## 🛠️ Prerequisites
+## 🛠️Prerequisites
 
 1. An active EMG subscription ([Subscribe here](https://portal.equinix.com/developer-settings/messaging-gateway)).
 2. Access to [Equinix Developer Platform](https://developer.equinix.com/) and [get your access token](https://developer.equinix.com/dev-docs/ecp/getting-started/getting-access-token#generating-client-id-and-client-secret).
@@ -120,7 +120,7 @@ You can refer, use, modify & extend EMG Templates based on your architecture & s
 
 ---
 
-## 🚀 How to Run Templates
+## 🚀How to Run Templates
 
 ### Node.js Templates
 - Download & import the Node.JS EMG Template project to Visual Code.
@@ -229,7 +229,7 @@ You can refer, use, modify & extend EMG Templates based on your architecture & s
 
 ---
 
-## 🎓 Tutorials
+## 🎓Tutorials
 
 - [Create Order through EMG using Node.js Templates](https://youtu.be/RK3b1vO0tuk)
 - [Create Order through EMG using Python Templates](https://youtu.be/iVyYZOUwuag)
@@ -533,5 +533,5 @@ curl --request POST \
     "lineIds":["1-D89731S"]
   }'
 ```
-## 💬 Support
-For questions, raise an API Support Case or email [api-support@equinix.com](mailto:api-support@equinix.com).
+## 💬Support
+For questions, raise an API Support Case or email [api-support@equinix.com](mailto:api-support@equinix.com)
